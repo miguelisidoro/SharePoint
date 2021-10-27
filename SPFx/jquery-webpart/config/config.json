@@ -11,7 +11,10 @@
       ]
     }
   },
-  "externals": {},
+  "externals": {
+    "jquery": "node_modules/jquery/dist/jquery.min.js",
+    "jqueryui": "node_modules/jqueryui/jquery-ui.min.js"
+  },
   "localizedResources": {
     "JqueryWebPartStrings": "lib/webparts/jquery/loc/{locale}.js"
   }

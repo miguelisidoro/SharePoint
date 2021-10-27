@@ -8,6 +8,10 @@ import { escape } from '@microsoft/sp-lodash-subset';
 
 import styles from './JqueryWebPart.module.scss';
 import * as strings from 'JqueryWebPartStrings';
+import MyAccordionTemplate from './MyAccordionTemplate';
+import * as jQuery from 'jquery';
+import 'jqueryui';
+import { SPComponentLoader } from '@microsoft/sp-loader';
 
 export interface IJqueryWebPartProps {
   description: string;
@@ -15,22 +19,25 @@ export interface IJqueryWebPartProps {
 
 export default class JqueryWebPart extends BaseClientSideWebPart<IJqueryWebPartProps> {
 
+  public constructor() {
+    super();
+  
+    SPComponentLoader.loadCss('//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css');
+  }
+
   public render(): void {
-    this.domElement.innerHTML = `
-      <div class="${ styles.jquery }">
-        <div class="${ styles.container }">
-          <div class="${ styles.row }">
-            <div class="${ styles.column }">
-              <span class="${ styles.title }">Welcome to SharePoint!</span>
-              <p class="${ styles.subTitle }">Customize SharePoint experiences using Web Parts.</p>
-              <p class="${ styles.description }">${escape(this.properties.description)}</p>
-              <a href="https://aka.ms/spfx" class="${ styles.button }">
-                <span class="${ styles.label }">Learn more</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>`;
+    this.domElement.innerHTML = MyAccordionTemplate.templateHtml;
+  
+    const accordionOptions: JQueryUI.AccordionOptions = {
+      animate: true,
+      collapsible: false,
+      icons: {
+        header: 'ui-icon-circle-arrow-e',
+        activeHeader: 'ui-icon-circle-arrow-s'
+      }
+    };
+  
+    jQuery('.accordion', this.domElement).accordion(accordionOptions);
   }
 
   protected get dataVersion(): Version {
