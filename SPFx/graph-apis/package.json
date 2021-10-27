@@ -9,11 +9,12 @@
     "test": "gulp test"
   },
   "dependencies": {
+    "@microsoft/microsoft-graph-types": "^2.8.0",
     "@microsoft/sp-core-library": "1.12.1",
-    "@microsoft/sp-property-pane": "1.12.1",
-    "@microsoft/sp-webpart-base": "1.12.1",
     "@microsoft/sp-lodash-subset": "1.12.1",
-    "@microsoft/sp-office-ui-fabric-core": "1.12.1"
+    "@microsoft/sp-office-ui-fabric-core": "1.12.1",
+    "@microsoft/sp-property-pane": "1.12.1",
+    "@microsoft/sp-webpart-base": "1.12.1"
   },
   "devDependencies": {
     "@microsoft/sp-build-web": "1.12.1",
