@@ -1,10 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "hello-world-client-side-solution",
-    "id": "1189d5bc-f01b-46c5-9b6f-3b2404ce83dd",
+    "name": "graph-apis-client-side-solution",
+    "id": "1ed14e09-51e7-4d2e-b12f-3c5a555ee63e",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
     "isDomainIsolated": false,
     "developer": {
       "name": "",
@@ -15,6 +16,6 @@
     }
   },
   "paths": {
-    "zippedPackage": "solution/hello-world-sharepoint.sppkg"
+    "zippedPackage": "solution/graph-apis.sppkg"
   }
 }
