@@ -44,12 +44,22 @@ import {
 } from "office-ui-fabric-react";
 import { FontSizes, FontWeights } from "@uifabric/styling";
 import InfiniteScroll from "react-infinite-scroller";
-import * as strings from "PedidosCompraWebPartStrings";
+import * as strings from "InOfficeSpFxWebPartStrings";
 import * as tsStyles from "./InOfficeSpFxStyles";
 
 export default class InOfficeSpFx extends React.Component<
 IInOfficeSpFxProps,
 IInOfficeSpFxState> {
+
+  private _spservices: _spservices = new _spservices(this.props.context);
+  private _pagedResults: PagedItemCollection<any[]>;
+  private _selection: Selection;
+  private _itemIdParameter: string = "";
+  private _disableForm: boolean =this.props.pnanelMode == panelMode.View ? true : false;
+  private theme = getTheme();
+  private _isScrolling:boolean = false;
+  private _isSorting:boolean = false;
+  private _isSearching:boolean = false;
 
   private _selection: Selection;
 
@@ -289,6 +299,106 @@ IInOfficeSpFxState> {
     });
   }
 
+/**
+   * Determines whether column click on
+   */
+ private _onColumnClick = async (
+  ev: React.MouseEvent<HTMLElement>,
+  column: IColumn
+): Promise<void> => {
+  // tslint:disable-next-line: no-shadowed-variable
+  if (this._isSorting) return ;
+  this._isSorting = true;
+  const { columns, hasMore } = this.state;
+  let { items } = this.state;
+  let newItems: IListViewItems[] = [];
+  const newColumns: IColumn[] = columns.slice();
+  const currColumn: IColumn = newColumns.filter(
+    currCol => column.key === currCol.key
+  )[0];
+  newColumns.forEach((newCol: IColumn) => {
+    if (newCol === currColumn) {
+      currColumn.isSortedDescending = !currColumn.isSortedDescending;
+      currColumn.isSorted = true;
+    } else {
+      newCol.isSorted = false;
+      newCol.isSortedDescending = true;
+    }
+  });
+  if (hasMore) {
+    // has more  items to load get items sorted by clicked columns and direction
+    // the pnpjs REST API the sort parameter is controled by Ascending (true or false)
+    //  is diferent from Column.isSortedDescending indication on DataListView Columns Properties
+    // for that is  !currColumn.isSortedDescending
+    await this._getPedidoCompraDetalhe(
+      currColumn.fieldName,
+      !currColumn.isSortedDescending
+    );
+    this._isSorting = false;
+  } else {
+    items = this.state.items;
+    // Sort Items
+    newItems = this._copyAndSort(
+      items,
+      currColumn.fieldName!,
+      currColumn.isSortedDescending
+    );
+    this.setState({
+      columns: newColumns,
+      items: newItems
+    });
+    this._isSorting = false;
+  }
+};
+/**
+ * Copys and sort
+ * @template T
+ * @param items
+ * @param columnKey
+ * @param [isSortedDescending]
+ * @returns and sort
+ */
+private _copyAndSort<T>(
+  items: T[],
+  columnKey: string,
+  isSortedDescending?: boolean
+): T[] {
+  const key = columnKey as keyof T;
+  return items
+    .slice(0)
+    .sort((a: T, b: T) =>
+      (isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1
+    );
+}
+/**
+ * Gets selection details
+ */
+private _getSelectionDetails() {
+  const selectionCount = this._selection.getSelectedCount();
+  const selectedItem = this._selection.getSelection()[0] as IListViewItems;
+
+  switch (selectionCount) {
+    case 0:
+      this.setState({
+        selectItem: null,
+        disableCommandOption: true,
+        disableCommandDelete: true,
+        disableCommandEdit: true
+      });
+      break;
+    case 1:
+      this.setState({
+        selectItem: this._selection.getSelection()[0] as IListViewItems,
+        disableCommandOption: false,
+        disableCommandDelete: this._disableForm ? true : false,
+        disableCommandEdit: this._disableForm ? true : false
+      });
+
+      break;
+    default:
+  }
+}
+  
   public render(): React.ReactElement<IInOfficeSpFxProps> {
     return (
       // <div className={ styles.inOfficeSpFx }>
