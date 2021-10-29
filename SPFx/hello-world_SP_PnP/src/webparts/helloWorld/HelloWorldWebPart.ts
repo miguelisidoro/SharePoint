@@ -101,7 +101,10 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
   private async _getListData(): Promise<ISPLists> {
     
     const lists: ISPLists = { value : [] };   
-    const results = await sp.web.lists.get();
+    const results = await sp.web.lists
+    .filter(`Hidden eq false`)
+    .usingCaching()
+    .get();
 
     for (const result of results) {
       lists.value.push({
