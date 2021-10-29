@@ -49,6 +49,17 @@ import { IListInfo, Lists } from '@pnp/sp/lists';
 
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
 
+  protected async onInit(): Promise<void> {
+
+    console.log("OnInit...");
+
+    await super.onInit();
+  
+    // other init code may be present
+     
+    sp.setup(this.context);
+  }
+
   private _renderListAsync(): void {
     // Local environment
     if (Environment.type === EnvironmentType.Local) {
@@ -88,7 +99,8 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
   // }
 
   private async _getListData(): Promise<ISPLists> {
-    const lists: ISPLists = { value : [] };
+    
+    const lists: ISPLists = { value : [] };   
     const results = await sp.web.lists.get();
 
     for (const result of results) {
