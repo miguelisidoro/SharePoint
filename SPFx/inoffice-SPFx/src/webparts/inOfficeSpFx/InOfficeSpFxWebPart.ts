@@ -8,11 +8,11 @@ import {
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'InOfficeSpFxWebPartStrings';
-import InOfficeSpFx from './components/InOfficeSpFx';
-import { IInOfficeSpFxProps } from './components/IInOfficeSpFxProps';
+import InOfficeSpFx from './components/InOfficeSpFxComponent/InOfficeSpFx';
+import { IInOfficeSpFxProps } from './components/InOfficeSpFxComponent/IInOfficeSpFxProps';
 
 export interface IInOfficeSpFxWebPartProps {
-  description: string;
+  title: string;
 }
 
 export default class InOfficeSpFxWebPart extends BaseClientSideWebPart<IInOfficeSpFxWebPartProps> {
@@ -21,7 +21,12 @@ export default class InOfficeSpFxWebPart extends BaseClientSideWebPart<IInOffice
     const element: React.ReactElement<IInOfficeSpFxProps> = React.createElement(
       InOfficeSpFx,
       {
-        description: this.properties.description
+        title: this.properties.title,
+        context: this.context,
+        displayMode: this.displayMode,
+        updateProperty: (value: string) => {
+          this.properties.title = value;
+        }
       }
     );
 

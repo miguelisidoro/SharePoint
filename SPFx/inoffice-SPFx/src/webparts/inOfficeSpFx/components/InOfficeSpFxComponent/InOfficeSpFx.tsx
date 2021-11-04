@@ -3,7 +3,9 @@ import styles from './InOfficeSpFx.module.scss';
 import { IInOfficeSpFxProps } from './IInOfficeSpFxProps';
 import { IInOfficeSpFxState } from "./IInOfficeSpFxState";
 import { escape } from '@microsoft/sp-lodash-subset';
-import { panelMode } from "../../../spservices/IEnumPanel";
+import { panelMode } from "../../../../spservices/IEnumPanel";
+import _spservices from "../../../../spservices/spservices";
+import { PagedItemCollection } from "@pnp/sp/items";
 
 const LOG_SOURCE: string = "In Office SPFx";
 const IMAGE_LIST_NO_ITEMS: string =
@@ -60,8 +62,6 @@ IInOfficeSpFxState> {
   private _isScrolling:boolean = false;
   private _isSorting:boolean = false;
   private _isSearching:boolean = false;
-
-  private _selection: Selection;
 
   constructor(props: IInOfficeSpFxProps) {
     super(props);

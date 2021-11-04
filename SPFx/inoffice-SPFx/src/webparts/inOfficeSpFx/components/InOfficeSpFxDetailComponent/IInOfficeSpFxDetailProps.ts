@@ -1,9 +1,9 @@
 
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { DisplayMode } from "@microsoft/sp-core-library";
-import { panelMode } from "../../../spservices/IEnumPanel";
-import spservices from "../../../spservices/spservices";
-import {IOfficeRecord} from "../../interfaces/IOfficeRecord";
+import { panelMode } from "../../../../spservices/IEnumPanel";
+import spservices from "../../../../spservices/spservices";
+import {IOfficeRecord} from "../../../interfaces/IOfficeRecord";
 
 export interface IInOfficeSpFxProps {
   context: WebPartContext;
@@ -13,3 +13,4 @@ export interface IInOfficeSpFxProps {
   onDismissPanel?: (refresh:boolean) => void;
   ShowPanel: boolean;
 }
+

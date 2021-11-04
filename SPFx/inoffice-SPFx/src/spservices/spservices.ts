@@ -17,6 +17,11 @@ import {
    sp
 } from "@pnp/sp";
 
+import "@pnp/sp/webs";
+import "@pnp/sp/lists";
+import "@pnp/sp/items";
+import { PagedItemCollection } from "@pnp/sp/items";
+
 // import { format, parseISO } from "date-fns/esm";
 
 import { ApplicationCustomizerContext } from "@microsoft/sp-application-base";
@@ -784,93 +789,93 @@ export default class spservices {
   //  * @param ascending
   //  * @returns pedidos compra
   //  */
-  // public async getPedidosCompra(
-  //   sortField: string,
-  //   ascending: boolean
-  // ): Promise<PagedItemCollection<IPedidoCompra[]>> {
-  //   console.log("Start getPedidoCompra..");
-  //   Log.verbose(
-  //     LOG_SOURCE,
-  //     "Start getPedidoCompra..",
-  //     this._context.serviceScope
-  //   );
-  //   const isApprover = await this.checkUserIsApprover();
-  //   try {
-  //     const pedidosCompraListId = await this.getConfigurationValue(
-  //       PEDIDO_COMPRA_CONF_KEY
-  //     );
-  //     //const pedidosCompraListId = await this.getConfigurationValue("Pedidocompra");
-  //     if (pedidosCompraListId) {
-  //       // if current user is not approver show only his items
-  //       if (!isApprover) {
-  //         const results = await sp.web.lists
-  //           .getById(pedidosCompraListId)
-  //           .items.select(
-  //             "Id",
-  //             "Empresa",
-  //             "Fornecedor",
-  //             "NIF",
-  //             "GrupoCompradores",
-  //             "Solicitante",
-  //             "DataPedido",
-  //             "EstadoPedido",
-  //             "ComentariosDoAprovador",
-  //             "DescricaoEmpresa",
-  //             "Total",
-  //             "Numero",
-  //             "Moeda",
-  //             "DescricaoFornecedor",
-  //             "Observacoes"
-  //           )
-  //           .filter(`Solicitante eq '${this._context.pageContext.user.email}'`)
-  //           .orderBy(`${sortField}`, ascending)
-  //           .top(10)
-  //           .getPaged();
-  //         return results;
-  //       }
-  //       // if current user is  approver show all items
-  //       if (isApprover) {
-  //         const results = await sp.web.lists
-  //           .getById(pedidosCompraListId)
-  //           .items.select(
-  //             "Id",
-  //             "Empresa",
-  //             "Fornecedor",
-  //             "NIF",
-  //             "GrupoCompradores",
-  //             "Solicitante",
-  //             "DataPedido",
-  //             "EstadoPedido",
-  //             "ComentariosDoAprovador",
-  //             "DescricaoEmpresa",
-  //             "Total",
-  //             "Numero",
-  //             "Moeda",
-  //             "DescricaoFornecedor",
-  //             "Observacoes"
-  //           )
-  //           .orderBy(`${sortField}`, ascending)
-  //           .top(10)
-  //           .getPaged();
-  //         Log.verbose(
-  //           LOG_SOURCE,
-  //           "End getPedidoCompra..",
-  //           this._context.serviceScope
-  //         );
-  //         return results;
-  //       }
-  //     } else {
-  //       const error: Error = new Error(strings.GetPedidosCompraErrorMessage);
-  //       console.log(error);
-  //       Log.error(LOG_SOURCE, error, this._context.serviceScope);
-  //       throw new Error(error.message);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     Log.error(LOG_SOURCE, error, this._context.serviceScope);
-  //     throw new Error(error.message);
-  //   }
-  // }
+   public async getPedidosCompra(
+    sortField: string,
+    ascending: boolean
+  ): Promise<PagedItemCollection<IPedidoCompra[]>> {
+    console.log("Start getPedidoCompra..");
+    Log.verbose(
+      LOG_SOURCE,
+      "Start getPedidoCompra..",
+      this._context.serviceScope
+    );
+    const isApprover = await this.checkUserIsApprover();
+    try {
+      const pedidosCompraListId = await this.getConfigurationValue(
+        PEDIDO_COMPRA_CONF_KEY
+      );
+      //const pedidosCompraListId = await this.getConfigurationValue("Pedidocompra");
+      if (pedidosCompraListId) {
+        // if current user is not approver show only his items
+        if (!isApprover) {
+          const results = await sp.web.lists
+            .getById(pedidosCompraListId)
+            .items.select(
+               "Id",
+              "Empresa",
+              "Fornecedor",
+              "NIF",
+              "GrupoCompradores",
+              "Solicitante",
+              "DataPedido",
+              "EstadoPedido",
+              "ComentariosDoAprovador",
+              "DescricaoEmpresa",
+              "Total",
+              "Numero",
+              "Moeda",
+              "DescricaoFornecedor",
+              "Observacoes"
+            )
+            .filter(`Solicitante eq '${this._context.pageContext.user.email}'`)
+            .orderBy(`${sortField}`, ascending)
+            .top(10)
+            .getPaged();
+          return results;
+        }
+        // if current user is  approver show all items
+        if (isApprover) {
+          const results = await sp.web.lists
+            .getById(pedidosCompraListId)
+            .items.select(
+              "Id",
+              "Empresa",
+              "Fornecedor",
+              "NIF",
+              "GrupoCompradores",
+              "Solicitante",
+              "DataPedido",
+              "EstadoPedido",
+              "ComentariosDoAprovador",
+              "DescricaoEmpresa",
+              "Total",
+              "Numero",
+              "Moeda",
+              "DescricaoFornecedor",
+              "Observacoes"
+            )
+            .orderBy(`${sortField}`, ascending)
+            .top(10)
+            .getPaged();
+          Log.verbose(
+            LOG_SOURCE,
+            "End getPedidoCompra..",
+            this._context.serviceScope
+          );
+          return results;
+        }
+      } else {
+        const error: Error = new Error(strings.GetPedidosCompraErrorMessage);
+        console.log(error);
+        Log.error(LOG_SOURCE, error, this._context.serviceScope);
+        throw new Error(error.message);
+      }
+    } catch (error) {
+      console.log(error);
+      Log.error(LOG_SOURCE, error, this._context.serviceScope);
+      throw new Error(error.message);
+    }
+  }
 
   // public async getTotalPedidosCompraDetalhe(
   //   pedidoCompraId: string
