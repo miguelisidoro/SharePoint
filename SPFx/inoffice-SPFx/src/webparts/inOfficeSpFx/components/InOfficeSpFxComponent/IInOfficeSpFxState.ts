@@ -1,7 +1,7 @@
 import { IColumn, IContextualMenuProps } from "office-ui-fabric-react";
 
 import { IListViewItems } from "./IListViewItems";
-import { panelMode } from "../../../spservices/IEnumPanel";
+import { panelMode } from "../../../../spservices/IEnumPanel";
 
 export interface IInOfficeSpFxState {
   items:  IListViewItems[];

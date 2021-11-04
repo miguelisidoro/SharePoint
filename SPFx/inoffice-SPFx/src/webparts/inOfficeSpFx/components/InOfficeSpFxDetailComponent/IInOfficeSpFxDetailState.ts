@@ -1,10 +1,12 @@
 import { IColumn, IContextualMenuProps } from "office-ui-fabric-react";
 
-import { IListViewItems } from "./IListViewItems";
-import { panelMode } from "../../../spservices/IEnumPanel";
+import {IInOfficeAppointment} from "../../../../interfaces/IInOfficeAppointment" 
+
+//import { IListViewItems } from "./IListViewItems";
+import { panelMode } from "../../../../spservices/IEnumPanel";
 
 export interface IInOfficeSpFxState {
-  items:  IListViewItems[];
+  items:  IInOfficeAppointment[];
   isLoading:boolean;
   disableCommandOption:boolean;
   disableCommandEdit:boolean;
@@ -16,7 +18,7 @@ export interface IInOfficeSpFxState {
   showPanelView:boolean;
   showPanelDetalhe:boolean;
   showPanelFlow: boolean;
-  selectItem: IListViewItems;
+  selectItem: IInOfficeAppointment;
   panelMode: panelMode;
   hasError: boolean;
   errorMessage: string;

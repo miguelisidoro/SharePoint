@@ -48,6 +48,7 @@ import { FontSizes, FontWeights } from "@uifabric/styling";
 import InfiniteScroll from "react-infinite-scroller";
 import * as strings from "InOfficeSpFxWebPartStrings";
 import * as tsStyles from "./InOfficeSpFxStyles";
+import { IListViewItems } from "./IListViewItems";
 
 export default class InOfficeSpFx extends React.Component<
 IInOfficeSpFxProps,
@@ -57,7 +58,7 @@ IInOfficeSpFxState> {
   private _pagedResults: PagedItemCollection<any[]>;
   private _selection: Selection;
   private _itemIdParameter: string = "";
-  private _disableForm: boolean =this.props.pnanelMode == panelMode.View ? true : false;
+  private _disableForm: boolean =this.props.panelMode == panelMode.View ? true : false;
   private theme = getTheme();
   private _isScrolling:boolean = false;
   private _isSorting:boolean = false;
@@ -66,28 +67,39 @@ IInOfficeSpFxState> {
   constructor(props: IInOfficeSpFxProps) {
     super(props);
 
+    const listItemMenuProps: IContextualMenuProps = {
+      items: [
+        {
+          key: "0",
+          text: strings.CommandbarEditLabel,
+          iconProps: { iconName: "Edit" },
+          onClick: () => {
+            this.setState({ showPanelEdit: true });
+          }
+        },
+        {
+          key: "1",
+          text: strings.CommandbarViewLabel,
+          iconProps: { iconName: "View" },
+          onClick: () => {
+            this.setState({ showPanelView: true });
+          }
+        },
+        {
+          key: "2",
+          text: strings.CommandbarDeleteLabel,
+          iconProps: { iconName: "Delete" },
+          onClick: () => {
+            this.setState({ showConfirmDelete: true });
+          }
+        }
+      ]
+    };
+
     const columns: IColumn[] = [
       {
-        key: "column1",
-        name: "File_x0020_Type",
-        className: tsStyles.classNames.fileIconCell,
-        iconClassName: tsStyles.classNames.fileIconHeaderIcon,
-        iconName: "TextDocument",
-        isIconOnly: true,
-        fieldName: "name",
-        minWidth: 20,
-        maxWidth: 20,
-        onColumnClick: this._onColumnClick,
-        onRender: (item: IListViewItems) => {
-          const renderFileType: JSX.Element = (
-            <FontIcon iconName="TextDocument" className={styles.iconClass} />
-          );
-          return renderFileType;
-        }
-      },
-      {
         name: strings.IDFieldLabel,
-        key: "column2",
+        key: "column1",
         fieldName: "Id",
         minWidth: 20,
         maxWidth: 40,
@@ -102,7 +114,7 @@ IInOfficeSpFxState> {
       },
       {
         name: "",
-        key: "column3",
+        key: "column2",
         minWidth: 40,
         maxWidth: 40,
         isResizable: false,
@@ -118,7 +130,7 @@ IInOfficeSpFxState> {
                 text={""}
                 width="30"
                 split={false}
-                onMenuClick={this._onListItemIdMenuClick}
+                //onMenuClick={this._onListItemIdMenuClick}
                 menuIconProps={{ iconName: "" }}
                 menuProps={listItemMenuProps}
               />
@@ -127,9 +139,9 @@ IInOfficeSpFxState> {
         }
       },
       {
-        key: "column4",
-        name: strings.DataFieldLabel,
-        fieldName: "DataPedido",
+        key: "column3",
+        name: strings.DateFieldLabel,
+        fieldName: "Data",
         minWidth: 70,
         maxWidth: 90,
         isResizable: true,
@@ -140,32 +152,9 @@ IInOfficeSpFxState> {
         isPadded: true
       },
       {
-        key: "column5",
-        name: strings.SolicitanteFieldLabel,
-        fieldName: "Solicitante",
-        minWidth: 150,
-        maxWidth: 150,
-        isResizable: true,
-        isSorted: false,
-        isSortedDescending: false,
-        onColumnClick: this._onColumnClick,
-        data: "string",
-        isPadded: true,
-        onRender: (item: IListViewItems) => {
-          const userProfileInfo = {
-            imageUrl: item.SolicitantePhotoUrl,
-            text: item.SolicitanteDisplayName
-          };
-          const renderFileType: JSX.Element = (
-            <Persona {...userProfileInfo} size={PersonaSize.size24} />
-          );
-          return renderFileType;
-        }
-      },
-      {
-        key: "column6",
-        name: strings.FornecedorFieldLabel,
-        fieldName: "Fornecedor",
+        key: "column4",
+        name: strings.NotesFieldLabel,
+        fieldName: "Notas",
         minWidth: 70,
         maxWidth: 90,
         isResizable: true,

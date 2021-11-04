@@ -21,6 +21,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { PagedItemCollection } from "@pnp/sp/items";
+import {IInOfficeAppointment} from "../interfaces/IInOfficeAppointment"
 
 // import { format, parseISO } from "date-fns/esm";
 
@@ -58,7 +59,8 @@ import { graph } from "@pnp/graph";
 // import { IMarca } from "./IMarca";
 
 // const CONFIGURATION_LIST: string = "Configuration List";
-// const LOG_SOURCE: string = "Pedido de Compra";
+const LOG_SOURCE: string = "In Office Appointment";
+const IN_OFFICE_APPOINTMENT_LIST_NAME: string = "InOfficeAppointments";
 // const PEDIDO_COMPRA_CONF_KEY = "Pedidocompra";
 // const PEDIDO_COMPRA_DETALHE_CONF_KEY = "Pedidocompradetalhe";
 
@@ -108,7 +110,51 @@ export default class spservices {
   // OnInit Function
   private async onInit() {}
 
-  // public getUnidadeMedida = async (): Promise<IUnidadeMedida[]> => {
+   // /**
+  //  * Gets In Office Appointments
+  //  * @param sortField
+  //  * @param ascending
+  //  * @returns pedidos compra
+  //  */
+   public async getInOfficeAppointments(
+    sortField: string,
+    ascending: boolean
+  ): Promise<PagedItemCollection<IInOfficeAppointment[]>> {
+    console.log("Start getInOfficeAppointments..");
+    Log.verbose(
+      LOG_SOURCE,
+      "Start getInOfficeAppointments..",
+      this._context.serviceScope
+    );
+    
+    try {
+          const results = await sp.web.lists
+            .getByTitle(IN_OFFICE_APPOINTMENT_LIST_NAME)
+            .items.select(
+              "Id",
+              "Colaborador",
+              "Data",
+              "Notas",
+              "ContactosPr_x00f3_ximos"
+            )
+            .orderBy(`${sortField}`, ascending)
+            .top(10)
+            .getPaged();
+          Log.verbose(
+            LOG_SOURCE,
+            "End getInOfficeAppointments..",
+            this._context.serviceScope
+          );
+          return results;
+      }
+    } catch (error) {
+      console.log(error);
+      Log.error(LOG_SOURCE, error, this._context.serviceScope);
+      throw new Error(error.message);
+    }
+  }
+
+ // public getUnidadeMedida = async (): Promise<IUnidadeMedida[]> => {
   //   try {
   //     const unidadeMedidaListId = await this.getConfigurationValue(
   //       UNIDADE_MEDIDA_CONF_KEY
@@ -782,100 +828,6 @@ export default class spservices {
   //     throw new Error(error.message);
   //   }
   // }
-
-  // /**
-  //  * Gets pedidos compra
-  //  * @param sortField
-  //  * @param ascending
-  //  * @returns pedidos compra
-  //  */
-   public async getPedidosCompra(
-    sortField: string,
-    ascending: boolean
-  ): Promise<PagedItemCollection<IPedidoCompra[]>> {
-    console.log("Start getPedidoCompra..");
-    Log.verbose(
-      LOG_SOURCE,
-      "Start getPedidoCompra..",
-      this._context.serviceScope
-    );
-    const isApprover = await this.checkUserIsApprover();
-    try {
-      const pedidosCompraListId = await this.getConfigurationValue(
-        PEDIDO_COMPRA_CONF_KEY
-      );
-      //const pedidosCompraListId = await this.getConfigurationValue("Pedidocompra");
-      if (pedidosCompraListId) {
-        // if current user is not approver show only his items
-        if (!isApprover) {
-          const results = await sp.web.lists
-            .getById(pedidosCompraListId)
-            .items.select(
-               "Id",
-              "Empresa",
-              "Fornecedor",
-              "NIF",
-              "GrupoCompradores",
-              "Solicitante",
-              "DataPedido",
-              "EstadoPedido",
-              "ComentariosDoAprovador",
-              "DescricaoEmpresa",
-              "Total",
-              "Numero",
-              "Moeda",
-              "DescricaoFornecedor",
-              "Observacoes"
-            )
-            .filter(`Solicitante eq '${this._context.pageContext.user.email}'`)
-            .orderBy(`${sortField}`, ascending)
-            .top(10)
-            .getPaged();
-          return results;
-        }
-        // if current user is  approver show all items
-        if (isApprover) {
-          const results = await sp.web.lists
-            .getById(pedidosCompraListId)
-            .items.select(
-              "Id",
-              "Empresa",
-              "Fornecedor",
-              "NIF",
-              "GrupoCompradores",
-              "Solicitante",
-              "DataPedido",
-              "EstadoPedido",
-              "ComentariosDoAprovador",
-              "DescricaoEmpresa",
-              "Total",
-              "Numero",
-              "Moeda",
-              "DescricaoFornecedor",
-              "Observacoes"
-            )
-            .orderBy(`${sortField}`, ascending)
-            .top(10)
-            .getPaged();
-          Log.verbose(
-            LOG_SOURCE,
-            "End getPedidoCompra..",
-            this._context.serviceScope
-          );
-          return results;
-        }
-      } else {
-        const error: Error = new Error(strings.GetPedidosCompraErrorMessage);
-        console.log(error);
-        Log.error(LOG_SOURCE, error, this._context.serviceScope);
-        throw new Error(error.message);
-      }
-    } catch (error) {
-      console.log(error);
-      Log.error(LOG_SOURCE, error, this._context.serviceScope);
-      throw new Error(error.message);
-    }
-  }
 
   // public async getTotalPedidosCompraDetalhe(
   //   pedidoCompraId: string
@@ -2012,4 +1964,53 @@ export default class spservices {
   //     throw new Error(error.message);
   //   }
   // }
+}
+
+export declare class Log {
+  private static _logHandler;
+  /* Excluded from this release type: _initialize */
+  /**
+   * Logs a message which contains detailed information that is generally only needed for
+   * troubleshooting.
+   * @param   source - the source from where the message is logged, e.g., the class name.
+   *          The source provides context information for the logged message.
+   *          If the source's length is more than 20, only the first 20 characters are kept.
+   * @param   message - the message to be logged
+   *          If the message's length is more than 100, only the first 100 characters are kept.
+   * @param   scope - the service scope that the source uses. A service scope can provide
+    *         more context information (e.g., web part information) to the logged message.
+   */
+  static verbose(source: string, message: string, scope?: ServiceScope): void;
+  /**
+   * Logs a general informational message.
+   * @param   source - the source from where the message is logged, e.g., the class name.
+   *          The source provides context information for the logged message.
+   *          If the source's length is more than 20, only the first 20 characters are kept.
+   * @param   message - the message to be logged
+   *          If the message's length is more than 100, only the first 100 characters are kept.
+   * @param   scope - the service scope that the source uses. A service scope can provide
+    *         more context information (e.g., web part information) to the logged message.
+   */
+  static info(source: string, message: string, scope?: ServiceScope): void;
+  /**
+   * Logs a warning.
+   * @param   source - the source from where the message is logged, e.g., the class name.
+   *          The source provides context information for the logged message.
+   *          If the source's length is more than 20, only the first 20 characters are kept.
+   * @param   message - the message to be logged
+   *          If the message's length is more than 100, only the first 100 characters are kept.
+   * @param   scope - the service scope that the source uses. A service scope can provide
+    *         more context information (e.g., web part information) to the logged message.
+   */
+  static warn(source: string, message: string, scope?: ServiceScope): void;
+  /**
+   * Logs an error.
+   * @param   source - the source from where the error is logged, e.g., the class name.
+   *          The source provides context information for the logged error.
+   *          If the source's length is more than 20, only the first 20 characters are kept.
+   * @param   error - the error to be logged
+   * @param   scope - the service scope that the source uses. A service scope can provide
+    *         more context information (e.g., web part information) to the logged error.
+   */
+  static error(source: string, error: Error, scope?: ServiceScope): void;
 }

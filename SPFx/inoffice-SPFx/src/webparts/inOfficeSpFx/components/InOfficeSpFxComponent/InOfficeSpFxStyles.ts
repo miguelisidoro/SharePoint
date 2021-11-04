@@ -15,7 +15,7 @@ import {
   calculatePrecision,
 } from 'office-ui-fabric-react';
 
-import { CommunicationColors } from '@uifabric/fluent-theme/lib/fluent/FluentColors';
+//import { CommunicationColors } from '@uifabric/fluent-theme/lib/fluent/FluentColors';
 
 // Styles definition
 export const stackStyles: IStackStyles = {
