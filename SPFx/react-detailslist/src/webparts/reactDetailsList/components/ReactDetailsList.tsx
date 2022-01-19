@@ -5,8 +5,11 @@ import { DetailsList, DetailsListLayoutMode, Selection, IColumn } from '@fluentu
 import { MarqueeSelection } from '@fluentui/react/lib/MarqueeSelection';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { Text } from '@fluentui/react/lib/Text';
-import {IReactDetailsListProps} from './IReactDetailsListProps'
+import { IReactDetailsListProps } from './IReactDetailsListProps'
 import { sp } from "@pnp/sp/presets/all";
+import "@pnp/sp/webs";
+import "@pnp/sp/lists";
+import "@pnp/sp/items";
 
 const exampleChildClass = mergeStyles({
   display: 'block',
@@ -42,6 +45,20 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       onSelectionChanged: () => this.setState({ selectionDetails: this._getSelectionDetails() }),
     });
 
+    this._allItems = [];
+
+    this.state = {
+      items: this._allItems,
+      selectionDetails: this._getSelectionDetails(),
+    };
+
+    this._columns = [
+      { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
+      { key: 'column2', name: 'Value', fieldName: 'value', minWidth: 100, maxWidth: 200, isResizable: true },
+    ];
+  }
+
+  public async componentDidMount(): Promise<void> {
     // Populate with items for demos.
     this._allItems = [];
     for (let i = 0; i < 200; i++) {
@@ -52,51 +69,50 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       });
     }
 
-    this._columns = [
-      { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
-      { key: 'column2', name: 'Value', fieldName: 'value', minWidth: 100, maxWidth: 200, isResizable: true },
-    ];
-
-    this.state = {
-      items: this._allItems,
-      selectionDetails: this._getSelectionDetails(),
-    };
+    this.setState({items: this._allItems, selectionDetails: this._getSelectionDetails()});
   }
 
   public render(): JSX.Element {
-    const { items, selectionDetails } = this.state;
 
-    return (
-      <div>
-        <div className={exampleChildClass}>{selectionDetails}</div>
-        <Text>
-          Note: While focusing a row, pressing enter or double clicking will execute onItemInvoked, which in this
-          example will show an alert.
-        </Text>
-        <Announced message={selectionDetails} />
-        <TextField
-          className={exampleChildClass}
-          label="Filter by name:"
-          onChange={this._onFilter}
-          styles={textFieldStyles}
-        />
-        <Announced message={`Number of items after filter applied: ${items.length}.`} />
-        <MarqueeSelection selection={this._selection}>
-          <DetailsList
-            items={items}
-            columns={this._columns}
-            setKey="set"
-            layoutMode={DetailsListLayoutMode.justified}
-            selection={this._selection}
-            selectionPreservedOnEmptyClick={true}
-            ariaLabelForSelectionColumn="Toggle selection"
-            ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-            checkButtonAriaLabel="select row"
-            onItemInvoked={this._onItemInvoked}
+    if (this.state.items != null && this.state.items.length > 0) {
+      const { items, selectionDetails } = this.state;
+
+      return (
+        <div>
+          <div className={exampleChildClass}>{selectionDetails}</div>
+          <Text>
+            Note: While focusing a row, pressing enter or double clicking will execute onItemInvoked, which in this
+            example will show an alert.
+          </Text>
+          <Announced message={selectionDetails} />
+          <TextField
+            className={exampleChildClass}
+            label="Filter by name:"
+            onChange={this._onFilter}
+            styles={textFieldStyles}
           />
-        </MarqueeSelection>
-      </div>
-    );
+          <Announced message={`Number of items after filter applied: ${items.length}.`} />
+          <MarqueeSelection selection={this._selection}>
+            <DetailsList
+              items={items}
+              columns={this._columns}
+              setKey="set"
+              layoutMode={DetailsListLayoutMode.justified}
+              selection={this._selection}
+              selectionPreservedOnEmptyClick={true}
+              ariaLabelForSelectionColumn="Toggle selection"
+              ariaLabelForSelectAllCheckbox="Toggle selection for all items"
+              checkButtonAriaLabel="select row"
+              onItemInvoked={this._onItemInvoked}
+            />
+          </MarqueeSelection>
+        </div>
+      );
+    }
+    else
+    {
+      return (<div></div>);
+    }
   }
 
   private _getSelectionDetails(): string {
