@@ -8,7 +8,7 @@ import {
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'ReactDetailsListWebPartStrings';
-import ReactDetailsList from './components/ReactDetailsList';
+import {ReactDetailsList} from './components/ReactDetailsList';
 import { IReactDetailsListProps } from './components/IReactDetailsListProps';
 
 export interface IReactDetailsListWebPartProps {
