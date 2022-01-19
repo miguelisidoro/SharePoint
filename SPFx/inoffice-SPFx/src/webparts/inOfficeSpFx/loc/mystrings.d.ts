@@ -8,6 +8,7 @@ declare interface IInOfficeSpFxWebPartStrings {
   CommandbarDeleteLabel: string;
   DateFieldLabel:string;
   NotesFieldLabel: string;
+  NearContactsFieldLabel: string;
 }
 
 declare module 'InOfficeSpFxWebPartStrings' {

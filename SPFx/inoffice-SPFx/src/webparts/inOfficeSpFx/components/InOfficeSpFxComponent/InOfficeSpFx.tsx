@@ -165,84 +165,9 @@ IInOfficeSpFxState> {
         isPadded: true
       },
       {
-        key: "column7",
-        name: strings.DescricaoFornecedorFieldLabel,
-        fieldName: "DescricaoFornecedor",
-        minWidth: 150,
-        maxWidth: 200,
-        isResizable: true,
-        isSorted: false,
-        isSortedDescending: false,
-        onColumnClick: this._onColumnClick,
-        data: "string",
-        isPadded: true
-      },
-      {
-        key: "column8",
-        name: "Total",
-        fieldName: "Total",
-        minWidth: 90,
-        maxWidth: 90,
-        isResizable: true,
-        isSorted: false,
-        isSortedDescending: false,
-        //  onColumnClick: this._onColumnClick,
-        data: "string",
-        isPadded: true
-      },
-      {
-        key: "column9",
-        name: strings.EstadoFieldLabel,
-        fieldName: "EstadoPedido",
-        minWidth: 100,
-        maxWidth: 110,
-        isResizable: true,
-        isSorted: false,
-        isSortedDescending: false,
-        onColumnClick: this._onColumnClick,
-        data: "string",
-        isPadded: true,
-        onRender: this._renderEstadoPedido
-      },
-      {
-        key: "column10",
-        name: strings.NumeroPedidoCompraLabel,
-        fieldName: "Numero",
-        minWidth: 100,
-        maxWidth: 110,
-        isResizable: true,
-        isSorted: false,
-        isSortedDescending: false,
-        onColumnClick: this._onColumnClick,
-        data: "string",
-        isPadded: true,
-        onRender: (item: IListViewItems) => {
-          let renderNumeroPedidoSAP: JSX.Element = null;
-          if (item.EstadoPedido === estadoPedido.Liberado) {
-            renderNumeroPedidoSAP = (
-              <Label className={styles.label}>{item.Numero}</Label>
-            );
-          }
-          return renderNumeroPedidoSAP;
-        }
-      },
-      {
-        key: "column11",
-        name: strings.EmpresaFieldLabel,
-        fieldName: "Empresa",
-        minWidth: 70,
-        maxWidth: 90,
-        isResizable: true,
-        isSorted: false,
-        isSortedDescending: false,
-        onColumnClick: this._onColumnClick,
-        data: "string",
-        isPadded: true
-      },
-      {
-        key: "column12",
-        name: strings.DescricaoFieldLabel,
-        fieldName: "DescricaoEmpresa",
+        key: "column5",
+        name: strings.NearContactsFieldLabel,
+        fieldName: "ContactosPr_x00f3_ximos",
         minWidth: 150,
         maxWidth: 200,
         isResizable: true,

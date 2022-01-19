@@ -9,5 +9,6 @@ define([], function() {
     "CommandbarDeleteLabel": "Delete",
     "DateFieldLabel": "Data",
     "NotesFieldLabel": "Notas",
+    "NearContactsFieldLabel": "Contactos Próximos"
   }
 });
