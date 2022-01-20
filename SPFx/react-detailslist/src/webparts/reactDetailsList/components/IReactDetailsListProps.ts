@@ -1,3 +1,4 @@
+import { WebPartContext } from "@microsoft/sp-webpart-base";
 export interface IReactDetailsListProps {
-  description: string;
+  context: WebPartContext;
 }

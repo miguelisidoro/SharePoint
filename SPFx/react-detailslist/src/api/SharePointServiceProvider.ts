@@ -4,8 +4,10 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import {IContact} from '../models/IContact'
+import { IContactSharePoint } from "../models/IContactSharePoint";
+import { ContactMapper } from "../mappers/ContactMapper";
 
-export default class spservices {
+export default class sharePointServiceProvider {
     constructor(private _context: WebPartContext) {
         // Setuo Context to PnPjs and MSGraph
         sp.setup({
@@ -18,14 +20,18 @@ export default class spservices {
     private async onInit() { }
 
     public async getContacts(): Promise<IContact[]> {
-        const results: IContact[] = await sp.web.lists
+        const results: IContactSharePoint[] = await sp.web.lists
           .getByTitle("Contacts")
           .items.select("Title", "Email", "Telemovel")
           .usingCaching()
-          .orderBy("DescricaoItem")
+          .orderBy("Title")
           .get();
 
-        return results;
+        let contacts : IContact[];
+
+        contacts = ContactMapper.MapToContact(results);
+
+        return contacts;
     }
 }
 

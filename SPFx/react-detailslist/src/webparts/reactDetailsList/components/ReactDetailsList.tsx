@@ -10,6 +10,8 @@ import { sp } from "@pnp/sp/presets/all";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
+import {IContact} from "../../../models/IContact";
+import SharePointServiceProvider from '../../../api/sharePointServiceProvider';
 
 const exampleChildClass = mergeStyles({
   display: 'block',
@@ -25,25 +27,26 @@ export interface IReactDetailsListItem {
 }
 
 export interface IReactDetailsListState {
-  items: IReactDetailsListItem[];
+  //items: IReactDetailsListItem[];
+  items: IContact[];
   selectionDetails: string;
 }
 
 export class ReactDetailsList extends React.Component<IReactDetailsListProps, IReactDetailsListState> {
   private _selection: Selection;
-  private _allItems: IReactDetailsListItem[];
+  //private _allItems: IReactDetailsListItem[];
+  private _allItems: IContact[];
   private _columns: IColumn[];
+  private sharePointServiceProvider: SharePointServiceProvider;
 
   constructor(props: IReactDetailsListProps) {
     super(props);
 
-    sp.setup({
-      spfxContext: this.context
-    });
-
     this._selection = new Selection({
       onSelectionChanged: () => this.setState({ selectionDetails: this._getSelectionDetails() }),
     });
+
+    this.sharePointServiceProvider = new SharePointServiceProvider(this.props.context);
 
     this._allItems = [];
 
@@ -52,22 +55,49 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       selectionDetails: this._getSelectionDetails(),
     };
 
+    // this._columns = [
+    //   { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
+    //   { key: 'column2', name: 'Value', fieldName: 'value', minWidth: 100, maxWidth: 200, isResizable: true },
+    // ];
+
     this._columns = [
-      { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
-      { key: 'column2', name: 'Value', fieldName: 'value', minWidth: 100, maxWidth: 200, isResizable: true },
+      { key: 'column1', name: 'Name', fieldName: 'Name', minWidth: 100, maxWidth: 200, isResizable: true },
+      { key: 'column2', name: 'Email', fieldName: 'Email', minWidth: 100, maxWidth: 200, isResizable: true },
+      { key: 'column3', name: 'MobileNumber', fieldName: 'MobileNumber', minWidth: 100, maxWidth: 200, isResizable: true },
     ];
   }
 
   public async componentDidMount(): Promise<void> {
     // Populate with items for demos.
+    
+    console.log("componentDidMount: begin...");
     this._allItems = [];
-    for (let i = 0; i < 200; i++) {
-      this._allItems.push({
-        key: i,
-        name: 'Item ' + i,
-        value: i,
-      });
-    }
+    
+    console.log("componentDidMount: before getting contacts...");
+
+    let contacts : IContact[] = await this.sharePointServiceProvider.getContacts();
+
+    console.log("componentDidMount: after getting contacts...");
+
+    this._allItems = contacts;
+
+    console.log("All items count: " + this._allItems.length);
+
+    // contacts.forEach(contact => {
+    //   this._allItems.push({
+    //         Name: contact.Name,
+    //         Email: contact.Email,
+    //         MobileNumber: contact.MobileNumber,
+    //       });
+    // });
+
+    // for (let i = 0; i < 200; i++) {
+    //   this._allItems.push({
+    //     key: i,
+    //     name: 'Item ' + i,
+    //     value: i,
+    //   });
+    // }
 
     this.setState({items: this._allItems, selectionDetails: this._getSelectionDetails()});
   }
@@ -122,7 +152,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       case 0:
         return 'No items selected';
       case 1:
-        return '1 item selected: ' + (this._selection.getSelection()[0] as IReactDetailsListItem).name;
+        return '1 item selected: ' + (this._selection.getSelection()[0] as IContact).Name;
       default:
         return `${selectionCount} items selected`;
     }
@@ -130,11 +160,11 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
 
   private _onFilter = (ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, text: string): void => {
     this.setState({
-      items: text ? this._allItems.filter(i => i.name.toLowerCase().indexOf(text) > -1) : this._allItems,
+      items: text ? this._allItems.filter(i => i.Name.toLowerCase().indexOf(text) > -1) : this._allItems,
     });
   };
 
-  private _onItemInvoked = (item: IReactDetailsListItem): void => {
-    alert(`Item invoked: ${item.name}`);
+  private _onItemInvoked = (item: IContact): void => {
+    alert(`Item invoked: ${item.Name}`);
   };
 }
