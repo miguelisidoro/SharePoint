@@ -10,8 +10,34 @@ import { sp } from "@pnp/sp/presets/all";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import {IContact} from "../../../models";
+import {IContact, panelMode} from "../../../models";
 import SharePointServiceProvider from '../../../api/SharePointServiceProvider';
+import {
+  CommandBar,
+  DefaultButton,
+  Dialog,
+  DialogFooter,
+  DialogType,
+  IContextualMenuProps,
+  IconButton,
+  ImageFit,
+  Label,
+  Link,
+  MessageBar,
+  MessageBarType,
+  Persona,
+  PersonaSize,
+  PrimaryButton,
+  SearchBox,
+  Separator,
+  ShimmeredDetailsList,
+  Spinner,
+  SpinnerSize,
+  Stack,
+  getTheme
+} from '@fluentui/react';
+import * as strings from 'ReactDetailsListWebPartStrings';
+import { IReactDetailsListState } from './IReactDetailsListState';
 
 const exampleChildClass = mergeStyles({
   display: 'block',
@@ -26,11 +52,7 @@ export interface IReactDetailsListItem {
   value: number;
 }
 
-export interface IReactDetailsListState {
-  //items: IReactDetailsListItem[];
-  items: IContact[];
-  selectionDetails: string;
-}
+
 
 export class ReactDetailsList extends React.Component<IReactDetailsListProps, IReactDetailsListState> {
   private _selection: Selection;
@@ -43,7 +65,10 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     super(props);
 
     this._selection = new Selection({
-      onSelectionChanged: () => this.setState({ selectionDetails: this._getSelectionDetails() }),
+      onSelectionChanged: () => {
+        this.setState({ selectionDetails: this._getSelectionDetails() });
+        this._onSelectionChanged();
+      }
     });
 
     this.sharePointServiceProvider = new SharePointServiceProvider(this.props.context);
@@ -53,6 +78,13 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     this.state = {
       items: this._allItems,
       selectionDetails: this._getSelectionDetails(),
+      isDeleteting: false,
+      panelMode: panelMode.New,
+      readOnly: false,
+      selectedItem: null,
+      disableCommandSelectionOption: true,
+      showConfirmDelete: false,
+      showPanel: false 
     };
     
     // this._columns = [
@@ -83,23 +115,71 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
 
     console.log("All items count: " + this._allItems.length);
 
-    // contacts.forEach(contact => {
-    //   this._allItems.push({
-    //         Name: contact.Name,
-    //         Email: contact.Email,
-    //         MobileNumber: contact.MobileNumber,
-    //       });
-    // });
+    this.setState({items: this._allItems, selectionDetails: this._getSelectionDetails()});
+  }
 
-    // for (let i = 0; i < 200; i++) {
-    //   this._allItems.push({
-    //     key: i,
-    //     name: 'Item ' + i,
-    //     value: i,
+  // On New Item
+  private onNewItem(e: React.MouseEvent<HTMLElement>) {
+    e.preventDefault();
+    this.setState({
+      panelMode: panelMode.New,
+      showPanel: true,
+      readOnly: false
+    });
+  }
+  // On Delete
+  private async onDeleteItem() {
+    // try {
+    //   this.setState({
+    //     isDeleteting: true
+    //   });
+    //   await this.spService.deleteImmobilizedRequest(Number(this.state.selectedItem.id));
+    //   var partialImobilizedRequests = this.state.partialImobilizedRequests.filter(x => x.id !== this.state.selectedItem.id);
+    //   //TODO check if its deleted by getting service with id
+    //   //clears selection
+    //   this._selection.selectToKey(null, true);
+    //   this.setState({
+    //     partialImobilizedRequests: partialImobilizedRequests,
+    //     hasErrorOnDelete: false,
+    //     errorMessage: "",
+    //     isDeleteting: false,
+    //     showConfirmDelete: false,
+    //     hasError: false,
+    //     selectedItem: null,
+    //     disableCommandOption: true
+    //   });
+
+    // } catch (error) {
+    //   Log.error(LOG_SOURCE, error, this.context.serviceScope);
+    //   console.log("Error on _onDeletePedidoCompra,", error.message);
+    //   this.setState({
+    //     hasErrorOnDelete: true,
+    //     errorMessage: `${error.message}`,
+    //     isDeleteting: false
     //   });
     // }
+  }
+  // On Edit item
+  private onEditItem(e: React.MouseEvent<HTMLElement>) {
+    e.preventDefault();
+    this.setState({
+      panelMode: panelMode.Edit,
+      showPanel: true,
+      readOnly: false
 
-    this.setState({items: this._allItems, selectionDetails: this._getSelectionDetails()});
+    });
+  }
+  private onViewItem(e: React.MouseEvent<HTMLElement>) {
+    e.preventDefault();
+    this.setState({
+      panelMode: panelMode.Edit,
+      showPanel: true,
+      readOnly: true,
+    });
+  }
+
+  private _openDialogDelete = async () => {
+    this.setState({ showConfirmDelete: true });
   }
 
   public render(): JSX.Element {
@@ -109,6 +189,47 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
 
       return (
         <div>
+          <CommandBar
+            items={[
+              {
+                key: 'newItem',
+                name: strings.CommandbarNewLabel,
+                iconProps: {
+                  iconName: 'Add',
+                },
+                onClick: this.onNewItem,
+              },
+
+              {
+                key: 'edit',
+                name: strings.CommandbarEditLabel,
+                iconProps: {
+                  iconName: 'Edit'
+                },
+                onClick: this.onEditItem,
+                disabled: this.state.disableCommandSelectionOption,
+              },
+              {
+                key: 'view',
+                name: strings.CommandbarViewLabel,
+                iconProps: {
+                  iconName: 'View'
+                },
+                onClick: this.onViewItem,
+                disabled: this.state.disableCommandSelectionOption,
+              },
+              {
+                key: 'delete',
+                name: strings.CommandbarDeleteLabel,
+                iconProps: {
+                  iconName: 'Delete'
+                },
+                onClick: this._openDialogDelete,
+                disabled: this.state.disableCommandSelectionOption,
+              }
+            ]}
+          />
+
           <div className={exampleChildClass}>{selectionDetails}</div>
           <Text>
             Note: While focusing a row, pressing enter or double clicking will execute onItemInvoked, which in this
@@ -155,6 +276,31 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
         return '1 item selected: ' + (this._selection.getSelection()[0] as IContact).Name;
       default:
         return `${selectionCount} items selected`;
+    }
+  }
+
+  // handles the on selection changed in the DetailsList control
+  private _onSelectionChanged() {
+    const selectionCount = this._selection.getSelectedCount();
+
+    switch (selectionCount) {
+      case 0:
+        this.setState({
+          selectedItem: null,
+          disableCommandSelectionOption: true
+        });
+        break;
+      case 1:
+        let contact = (this._selection.getSelection()[0] as IContact);
+        this.setState({
+          selectedItem: this._selection.getSelection()[0] as IContact,
+          disableCommandSelectionOption: false
+        });
+        break;
+      default:
+        this.setState({
+          disableCommandSelectionOption: true
+        });
     }
   }
 
