@@ -7,7 +7,7 @@ import {IContact} from '../models/IContact'
 import { IContactSharePoint } from "../models/IContactSharePoint";
 import { ContactMapper } from "../mappers/ContactMapper";
 
-export default class sharePointServiceProvider {
+export default class SharePointServiceProvider {
     constructor(private _context: WebPartContext) {
         // Setuo Context to PnPjs and MSGraph
         sp.setup({

@@ -10,8 +10,8 @@ import { sp } from "@pnp/sp/presets/all";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import {IContact} from "../../../models/IContact";
-import SharePointServiceProvider from '../../../api/sharePointServiceProvider';
+import {IContact} from "../../../models";
+import SharePointServiceProvider from '../../../api/SharePointServiceProvider';
 
 const exampleChildClass = mergeStyles({
   display: 'block',
@@ -54,7 +54,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       items: this._allItems,
       selectionDetails: this._getSelectionDetails(),
     };
-
+    
     // this._columns = [
     //   { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
     //   { key: 'column2', name: 'Value', fieldName: 'value', minWidth: 100, maxWidth: 200, isResizable: true },
