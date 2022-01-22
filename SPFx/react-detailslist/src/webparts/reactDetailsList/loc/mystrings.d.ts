@@ -9,6 +9,9 @@ declare interface IReactDetailsListWebPartStrings {
   PrimaryButtonLabelSave: string;
   PrimaryButtonLabelInsert: string;
   PrimaryButtonLabelCancel: string;
+  NameFieldLabel: string;
+  EmailFieldLabel: string;
+  MobileNumberFieldLabel: string;
 }
 
 declare module 'ReactDetailsListWebPartStrings' {

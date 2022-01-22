@@ -11,5 +11,7 @@ define([], function() {
     "PrimaryButtonLabelSave": "Save",
     "PrimaryButtonLabelInsert": "Add",
     "PrimaryButtonLabelCancel": "Cancel",
-  }
+    "NameFieldLabel": "Name",
+    "EmailFieldLabel": "Email",
+    "MobileNumberFieldLabel": "Mobile Number"
 });

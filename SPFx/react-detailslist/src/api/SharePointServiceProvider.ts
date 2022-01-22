@@ -21,18 +21,39 @@ export default class SharePointServiceProvider {
   private async onInit() { }
 
   public async getContacts(): Promise<IContact[]> {
-    const results: IContactSharePoint[] = await sp.web.lists
-      .getByTitle(SharePointListNames.Contacts)
-      .items.select(SharePointFieldNames.Title, SharePointFieldNames.Email, SharePointFieldNames.MobileNumber)
-      .usingCaching()
-      .orderBy(SharePointFieldNames.Title)
-      .get();
+    try {
+      const results: IContactSharePoint[] = await sp.web.lists
+        .getByTitle(SharePointListNames.Contacts)
+        .items.select(SharePointFieldNames.Title, SharePointFieldNames.Email, SharePointFieldNames.MobileNumber)
+        .usingCaching()
+        .orderBy(SharePointFieldNames.Title)
+        .get();
 
-    let contacts: IContact[];
+      let contacts: IContact[];
 
-    contacts = ContactMapper.MapToContact(results);
+      contacts = ContactMapper.MapToContacts(results);
 
-    return contacts;
+      return contacts;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  public async getContactDetailById(id: number): Promise<IContact> {
+    try {
+      const results: IContactSharePoint = await sp.web.lists
+        .getByTitle(SharePointListNames.Contacts)
+        .items.getById(id)
+        .get();
+
+      let contact: IContact;
+
+      contact = ContactMapper.MapToContact(results);
+
+      return contact;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   // Add Contact to SharePoint List
