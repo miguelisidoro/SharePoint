@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "crud-operations-spx-client-side-solution",
+    "id": "5fe869f7-31c9-46ee-a6cc-b45655fd7292",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "isDomainIsolated": false
+  },
+  "paths": {
+    "zippedPackage": "solution/crud-operations-spx.sppkg"
+  }
+}

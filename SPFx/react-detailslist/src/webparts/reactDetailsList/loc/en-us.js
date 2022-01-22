@@ -8,5 +8,8 @@ define([], function() {
     "CommandbarViewLabel": "View",
     "CommandbarDeleteLabel": "Delete",
     "CommandbarRefreshLabel": "Refresh",
+    "PrimaryButtonLabelSave": "Save",
+    "PrimaryButtonLabelInsert": "Add",
+    "PrimaryButtonLabelCancel": "Cancel",
   }
 });

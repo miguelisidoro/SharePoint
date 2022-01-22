@@ -52,8 +52,6 @@ export interface IReactDetailsListItem {
   value: number;
 }
 
-
-
 export class ReactDetailsList extends React.Component<IReactDetailsListProps, IReactDetailsListState> {
   private _selection: Selection;
   //private _allItems: IReactDetailsListItem[];

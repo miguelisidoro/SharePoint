@@ -6,6 +6,9 @@ declare interface IReactDetailsListWebPartStrings {
   CommandbarEditLabel: string;
   CommandbarViewLabel: string;
   CommandbarDeleteLabel: string;
+  PrimaryButtonLabelSave: string;
+  PrimaryButtonLabelInsert: string;
+  PrimaryButtonLabelCancel: string;
 }
 
 declare module 'ReactDetailsListWebPartStrings' {
