@@ -5,13 +5,26 @@ export class ContactMapper
     // Maps the list of contacts from SharePoint into an array of Contact model class
     static MapToContacts(contacts : IContactSharePoint[]) : IContact[]
     {
-        const mappedContacts = contacts.map(contactSharePoint => 
-            new Contact({
+        let mappedContacts: Contact[] = new Array<Contact>();
+
+        contacts.forEach(contactSharePoint => {
+            let mappedContact: Contact = new Contact({
                 Id: contactSharePoint.Id,
                 Name: contactSharePoint.Title,
                 Email: contactSharePoint.Email,
                 MobileNumber: contactSharePoint.Telemovel
-            }));
+            })
+            
+            mappedContacts.push(mappedContact);
+        });
+
+        // const mappedContacts = contacts.map(contactSharePoint => 
+        //     new Contact({
+        //         Id: contactSharePoint.Id,
+        //         Name: contactSharePoint.Title,
+        //         Email: contactSharePoint.Email,
+        //         MobileNumber: contactSharePoint.Telemovel
+        //     }));
 
         return mappedContacts;
     }

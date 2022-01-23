@@ -43,11 +43,11 @@ export default class SharePointServiceProvider {
     }
   }
 
-  public async getContactDetailById(id: number): Promise<IContact> {
+  public async getContactDetailById(id: string): Promise<IContact> {
     try {
       const results: IContactSharePoint = await sp.web.lists
         .getByTitle(SharePointListNames.Contacts)
-        .items.getById(id)
+        .items.getById(Number(id))
         .get();
 
       let contact: IContact;

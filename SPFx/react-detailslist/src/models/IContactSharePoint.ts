@@ -1,5 +1,5 @@
 export interface IContactSharePoint {
-    Id?: number;  
+    Id: string;  
     Title:string;
     Email:string;
     Telemovel:string;
