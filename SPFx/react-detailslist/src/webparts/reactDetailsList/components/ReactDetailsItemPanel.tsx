@@ -33,13 +33,33 @@ import SharePointServiceProvider from '../../../api/SharePointServiceProvider';
 import { IReactDetailsItemPanelProps } from './IReactDetailsItemPanelProps';
 
 export default class ReactDetailsItemPanel extends React.Component<IReactDetailsItemPanelProps, IReactDetailsItemPanelState> {
-
   private sharePointServiceProvider: SharePointServiceProvider;
 
   constructor(props) {
     super(props);
 
     this.sharePointServiceProvider = new SharePointServiceProvider(this.props.context);
+
+    this.state = ({
+      showPanel: true,
+      readOnly: true,
+      visible: true,
+      multiline: true,
+      primaryButtonLabel: strings.PrimaryButtonLabelSave,
+      disableButton: false,
+      errorMessage: '',
+      Contact: null,
+      showPanelConfirmation: false,
+      isLoading: true,
+    });
+
+    this.onCancel = this.onCancel.bind(this);
+    this.onSave = this.onSave.bind(this);
+    this._onChangeEmail = this._onChangeEmail.bind(this);
+    this._onChangeMobileNumber = this._onChangeMobileNumber.bind(this);
+    this._onChangeName = this._onChangeName.bind(this);
+    this._onDismiss = this._onDismiss.bind(this);
+    this._onRenderFooterContent = this._onRenderFooterContent.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
@@ -54,6 +74,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
       <div>
         <Separator></Separator>
         <PrimaryButton text={this.props.mode === panelMode.Edit ? strings.PrimaryButtonLabelSave : strings.PrimaryButtonLabelInsert} disabled={this.props.readOnly} onClick={this.onSave} style={{ marginRight: "8px" }}>
+          {/* {this.state.isAddingPedidoCompra ? <Spinner size={SpinnerSize.small} /> : 'Criar'} */}
         </PrimaryButton>
         <DefaultButton text={strings.PrimaryButtonLabelCancel} onClick={this.onCancel} />
       </div>
@@ -167,16 +188,17 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
 
   private _onDismiss = (ev?: React.SyntheticEvent<HTMLElement, Event>) => {
     ev.preventDefault();
-   ev.stopPropagation();
-   // this.setState({showPanel: false});
+    ev.stopPropagation();
+    // this.setState({showPanel: false});
     this.props.onDismiss();
   };
 
   // Render
   public render(): React.ReactElement<IReactDetailsItemPanelProps> {
     alert("render panel");
-    return (
-      <Panel
+    if (this.state.Contact != null) {
+      return (
+        <Panel
           closeButtonAriaLabel="Close"
           isOpen={this.state.showPanel}
           type={PanelType.medium}
@@ -184,28 +206,33 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
           isFooterAtBottom={true}
           headerText={this.props.mode == panelMode.Edit ? (this.props.readOnly ? strings.PanelHeaderTextVisualize : strings.PanelHeaderTextEdit) : strings.PanelHeaderTextAdd}
           onRenderFooterContent={this._onRenderFooterContent}
-      >
-        <Stack>
-          <TextField
-            label={strings.NameFieldLabel}
-            readOnly={this.props.readOnly}
-            value={this.state.Contact.Name}
-            onChange={this._onChangeName}
-          />
-          <TextField
-            label={strings.EmailFieldLabel}
-            readOnly={this.props.readOnly}
-            value={this.state.Contact.Email}
-            onChange={this._onChangeEmail}
-          />
-          <TextField
-            label={strings.MobileNumberFieldLabel}
-            readOnly={this.props.readOnly}
-            value={this.state.Contact.MobileNumber}
-            onChange={this._onChangeMobileNumber}
-          />
-        </Stack>
-      </Panel>
-    );
+        >
+          <Stack>
+            <TextField
+              label={strings.NameFieldLabel}
+              readOnly={this.props.readOnly}
+              value={this.state.Contact.Name}
+              onChange={this._onChangeName}
+            />
+            <TextField
+              label={strings.EmailFieldLabel}
+              readOnly={this.props.readOnly}
+              value={this.state.Contact.Email}
+              onChange={this._onChangeEmail}
+            />
+            <TextField
+              label={strings.MobileNumberFieldLabel}
+              readOnly={this.props.readOnly}
+              value={this.state.Contact.MobileNumber}
+              onChange={this._onChangeMobileNumber}
+            />
+          </Stack>
+        </Panel>
+      );
+    }
+    else
+    {
+      return (<div></div>);
+    }
   }
 }
