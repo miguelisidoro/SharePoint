@@ -43,6 +43,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
   }
 
   public async componentDidMount(): Promise<void> {
+    alert("Panel componentDidMount")
     if (this.props.mode === panelMode.Edit) {
       this.getContactDetails();
     }
@@ -53,7 +54,6 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
       <div>
         <Separator></Separator>
         <PrimaryButton text={this.props.mode === panelMode.Edit ? strings.PrimaryButtonLabelSave : strings.PrimaryButtonLabelInsert} disabled={this.props.readOnly} onClick={this.onSave} style={{ marginRight: "8px" }}>
-          {/* {this.state.isAddingPedidoCompra ? <Spinner size={SpinnerSize.small} /> : 'Criar'} */}
         </PrimaryButton>
         <DefaultButton text={strings.PrimaryButtonLabelCancel} onClick={this.onCancel} />
       </div>
@@ -174,7 +174,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
 
   // Render
   public render(): React.ReactElement<IReactDetailsItemPanelProps> {
-    const requiredTag = <label style={{ color: "rgb(168, 0, 0)" }}>*</label>;
+    alert("render panel");
     return (
       <Panel
           closeButtonAriaLabel="Close"

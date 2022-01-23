@@ -91,6 +91,12 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       { key: 'column2', name: 'Email', fieldName: 'Email', minWidth: 100, maxWidth: 200, isResizable: true },
       { key: 'column3', name: 'MobileNumber', fieldName: 'MobileNumber', minWidth: 100, maxWidth: 200, isResizable: true },
     ];
+
+    this.onNewItem = this.onNewItem.bind(this);
+    this.onEditItem = this.onEditItem.bind(this);
+    this.onViewItem = this.onViewItem.bind(this);
+    this.onDeleteItem = this.onViewItem.bind(this);
+    this.onDismissPanel = this.onDismissPanel.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
@@ -113,17 +119,23 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
 
     console.log("All items count: " + this._allItems.length);
 
-    this.setState({ items: this._allItems, selectionDetails: this._getSelectionDetails() });
+    this.setState({ 
+      items: this._allItems, 
+      selectionDetails: this._getSelectionDetails()
+     });
   }
 
   // On New Item
   private onNewItem(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
+    alert("New Item");
+    
     this.setState({
       panelMode: panelMode.New,
       showPanel: true,
       readOnly: false
     });
+    alert("New Item State Set");
   }
   // On Delete
   private async onDeleteItem() {
@@ -161,20 +173,23 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
   // On Edit item
   private onEditItem(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
+    alert("Edit Item");
     this.setState({
       panelMode: panelMode.Edit,
       showPanel: true,
       readOnly: false
-
     });
+    alert("Edit Item State Set");
   }
   private onViewItem(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
+    alert("View Item");
     this.setState({
       panelMode: panelMode.Edit,
       showPanel: true,
       readOnly: true,
     });
+    alert("View Item State Set");
   }
 
   private _openDialogDelete = async () => {
@@ -200,6 +215,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
 
   public render(): JSX.Element {
 
+    alert("render");
     if (this.state.items != null && this.state.items.length > 0) {
       const { items, selectionDetails } = this.state;
 
