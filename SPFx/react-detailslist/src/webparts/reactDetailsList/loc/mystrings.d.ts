@@ -12,6 +12,9 @@ declare interface IReactDetailsListWebPartStrings {
   NameFieldLabel: string;
   EmailFieldLabel: string;
   MobileNumberFieldLabel: string;
+  PanelHeaderTextEdit: string;
+  PanelHeaderTextAdd: string;
+  PanelHeaderTextVisualize: string;
 }
 
 declare module 'ReactDetailsListWebPartStrings' {

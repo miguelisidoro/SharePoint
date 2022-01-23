@@ -23,7 +23,8 @@ import {
   SpinnerSize,
   Stack,
   getTheme,
-  TextField
+  TextField,
+  PanelType
 } from '@fluentui/react';
 import { IReactDetailsItemPanelState } from './IReactDetailsItemPanelState';
 import { IContact, panelMode } from '../../../models';
@@ -72,20 +73,20 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
     );
 
     if (contact) {
-      this.setState ({Contact: contact});
+      this.setState({ Contact: contact });
     }
   }
 
   private validateForm(): boolean {
     let contact: IContact = this.state.Contact;
     if (contact == null)
-      throw "Erro ao processar o pedido";
+      throw "Error processing request!";
     if (contact.Email == null)
-      throw "Invalid Email";
+      throw "Invalid Email!";
     if (contact.MobileNumber == null)
-      throw "Invalid Mobile Number";
+      throw "Invalid Mobile Number!";
     if (contact.Name == null)
-      throw "Invalid Name";
+      throw "Invalid Name!";
 
     return true;
   }
@@ -101,9 +102,6 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
               await this.sharePointServiceProvider.addContact(this.state.Contact);
               this.props.addItemToList(ev, this.state.Contact);
               this.setState({ showPanel: false });
-              // this.setState({
-              //   showPanelConfirmation: true,
-              // });
             } catch (error) {
               this.setState({ errorMessage: error });
             }
@@ -120,10 +118,6 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
           default:
             break;
         }
-      }
-      //TODO ERRROR
-      else {
-
       }
     } catch (e) {
       this.setState({
@@ -171,30 +165,47 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
     });
   };
 
+  private _onDismiss = (ev?: React.SyntheticEvent<HTMLElement, Event>) => {
+    ev.preventDefault();
+   ev.stopPropagation();
+   // this.setState({showPanel: false});
+    this.props.onDismiss();
+  };
+
   // Render
   public render(): React.ReactElement<IReactDetailsItemPanelProps> {
     const requiredTag = <label style={{ color: "rgb(168, 0, 0)" }}>*</label>;
     return (
-      <Stack>
-        <TextField
-          label={strings.NameFieldLabel}
-          readOnly={this.props.readOnly}
-          value={this.state.Contact.Name}
-          onChange={this._onChangeName}
-        />
-        <TextField
-          label={strings.EmailFieldLabel}
-          readOnly={this.props.readOnly}
-          value={this.state.Contact.Email}
-          onChange={this._onChangeEmail}
-        />
-        <TextField
-          label={strings.MobileNumberFieldLabel}
-          readOnly={this.props.readOnly}
-          value={this.state.Contact.MobileNumber}
-          onChange={this._onChangeMobileNumber}
-        />
-      </Stack>
+      <Panel
+          closeButtonAriaLabel="Close"
+          isOpen={this.state.showPanel}
+          type={PanelType.medium}
+          onDismiss={this.props.onDismiss}
+          isFooterAtBottom={true}
+          headerText={this.props.mode == panelMode.Edit ? (this.props.readOnly ? strings.PanelHeaderTextVisualize : strings.PanelHeaderTextEdit) : strings.PanelHeaderTextAdd}
+          onRenderFooterContent={this._onRenderFooterContent}
+      >
+        <Stack>
+          <TextField
+            label={strings.NameFieldLabel}
+            readOnly={this.props.readOnly}
+            value={this.state.Contact.Name}
+            onChange={this._onChangeName}
+          />
+          <TextField
+            label={strings.EmailFieldLabel}
+            readOnly={this.props.readOnly}
+            value={this.state.Contact.Email}
+            onChange={this._onChangeEmail}
+          />
+          <TextField
+            label={strings.MobileNumberFieldLabel}
+            readOnly={this.props.readOnly}
+            value={this.state.Contact.MobileNumber}
+            onChange={this._onChangeMobileNumber}
+          />
+        </Stack>
+      </Panel>
     );
   }
 }

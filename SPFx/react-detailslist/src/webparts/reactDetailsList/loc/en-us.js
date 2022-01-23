@@ -13,5 +13,9 @@ define([], function() {
     "PrimaryButtonLabelCancel": "Cancel",
     "NameFieldLabel": "Name",
     "EmailFieldLabel": "Email",
-    "MobileNumberFieldLabel": "Mobile Number"
+    "MobileNumberFieldLabel": "Mobile Number",
+    "PanelHeaderTextEdit": "Edit Contact",
+    "PanelHeaderTextAdd": "New Contact",
+    "PanelHeaderTextVisualize": "View Contact",
+  }
 });

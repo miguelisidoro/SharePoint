@@ -85,11 +85,6 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       showPanel: false 
     };
     
-    // this._columns = [
-    //   { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
-    //   { key: 'column2', name: 'Value', fieldName: 'value', minWidth: 100, maxWidth: 200, isResizable: true },
-    // ];
-
     this._columns = [
       { key: 'column1', name: 'Name', fieldName: 'Name', minWidth: 100, maxWidth: 200, isResizable: true },
       { key: 'column2', name: 'Email', fieldName: 'Email', minWidth: 100, maxWidth: 200, isResizable: true },
@@ -157,6 +152,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     //   });
     // }
   }
+
   // On Edit item
   private onEditItem(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
@@ -197,7 +193,6 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
                 },
                 onClick: this.onNewItem,
               },
-
               {
                 key: 'edit',
                 name: strings.CommandbarEditLabel,
