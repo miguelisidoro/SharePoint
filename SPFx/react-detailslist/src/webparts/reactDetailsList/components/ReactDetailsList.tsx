@@ -10,7 +10,7 @@ import { sp } from "@pnp/sp/presets/all";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import {IContact, panelMode} from "../../../models";
+import { IContact, panelMode } from "../../../models";
 import SharePointServiceProvider from '../../../api/SharePointServiceProvider';
 import {
   CommandBar,
@@ -38,6 +38,7 @@ import {
 } from '@fluentui/react';
 import * as strings from 'ReactDetailsListWebPartStrings';
 import { IReactDetailsListState } from './IReactDetailsListState';
+import ReactDetailsItemPanel from './ReactDetailsItemPanel';
 
 const exampleChildClass = mergeStyles({
   display: 'block',
@@ -82,9 +83,9 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       selectedItem: null,
       disableCommandSelectionOption: true,
       showConfirmDelete: false,
-      showPanel: false 
+      showPanel: false
     };
-    
+
     this._columns = [
       { key: 'column1', name: 'Name', fieldName: 'Name', minWidth: 100, maxWidth: 200, isResizable: true },
       { key: 'column2', name: 'Email', fieldName: 'Email', minWidth: 100, maxWidth: 200, isResizable: true },
@@ -94,13 +95,17 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
 
   public async componentDidMount(): Promise<void> {
     // Populate with items for demos.
-    
+
+    await this.loadContacts();
+  }
+
+  private async loadContacts() {
     console.log("componentDidMount: begin...");
     this._allItems = [];
-    
+
     console.log("componentDidMount: before getting contacts...");
 
-    let contacts : IContact[] = await this.sharePointServiceProvider.getContacts();
+    let contacts: IContact[] = await this.sharePointServiceProvider.getContacts();
 
     console.log("componentDidMount: after getting contacts...");
 
@@ -108,7 +113,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
 
     console.log("All items count: " + this._allItems.length);
 
-    this.setState({items: this._allItems, selectionDetails: this._getSelectionDetails()});
+    this.setState({ items: this._allItems, selectionDetails: this._getSelectionDetails() });
   }
 
   // On New Item
@@ -174,6 +179,23 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
 
   private _openDialogDelete = async () => {
     this.setState({ showConfirmDelete: true });
+  }
+
+  private async onDismissPanel(ev?: React.SyntheticEvent<HTMLElement>) {
+    if (ev)
+      ev.preventDefault();
+    this.setState({
+      showPanel: false
+    });
+  }
+
+  private refreshData(ev: React.MouseEvent<HTMLElement>) {
+    this.loadContacts();
+    //clears selection
+    this._selection.selectToKey(null, true);
+    this.setState({
+      selectedItem: null,
+    });
   }
 
   public render(): JSX.Element {
@@ -250,11 +272,24 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
               onItemInvoked={this._onItemInvoked}
             />
           </MarqueeSelection>
+          {
+            this.state.showPanel &&
+            <div>
+              <ReactDetailsItemPanel
+                mode={this.state.panelMode}
+                Contact={this.state.selectedItem}
+                onDismiss={this.onDismissPanel}
+                showPanel={this.state.showPanel}
+                context={this.props.context}
+                readOnly={this.state.readOnly}
+                addItemToList={this.refreshData}
+              />
+            </div>
+          }
         </div>
       );
     }
-    else
-    {
+    else {
       return (<div></div>);
     }
   }
