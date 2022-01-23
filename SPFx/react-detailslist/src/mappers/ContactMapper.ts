@@ -7,6 +7,7 @@ export class ContactMapper
     {
         const mappedContacts = contacts.map(contactSharePoint => 
             new Contact({
+                Id: contactSharePoint.Id,
                 Name: contactSharePoint.Title,
                 Email: contactSharePoint.Email,
                 MobileNumber: contactSharePoint.Telemovel
@@ -19,6 +20,7 @@ export class ContactMapper
     static MapToContact(contactSharePoint : IContactSharePoint) : IContact
     {
         const mappedContact = new Contact({
+                Id: contactSharePoint.Id,
                 Name: contactSharePoint.Title,
                 Email: contactSharePoint.Email,
                 MobileNumber: contactSharePoint.Telemovel

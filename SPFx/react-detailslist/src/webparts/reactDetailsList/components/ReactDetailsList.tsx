@@ -87,9 +87,10 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     };
 
     this._columns = [
-      { key: 'column1', name: 'Name', fieldName: 'Name', minWidth: 100, maxWidth: 200, isResizable: true },
-      { key: 'column2', name: 'Email', fieldName: 'Email', minWidth: 100, maxWidth: 200, isResizable: true },
-      { key: 'column3', name: 'MobileNumber', fieldName: 'MobileNumber', minWidth: 100, maxWidth: 200, isResizable: true },
+      { key: 'column1', name: 'ID', fieldName: 'ID', minWidth: 10, maxWidth: 200, isResizable: true },
+      { key: 'column2', name: 'Name', fieldName: 'Name', minWidth: 100, maxWidth: 200, isResizable: true },
+      { key: 'column3', name: 'Email', fieldName: 'Email', minWidth: 100, maxWidth: 200, isResizable: true },
+      { key: 'column4', name: 'MobileNumber', fieldName: 'MobileNumber', minWidth: 100, maxWidth: 200, isResizable: true },
     ];
 
     this.onNewItem = this.onNewItem.bind(this);
@@ -128,14 +129,14 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
   // On New Item
   private onNewItem(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
-    alert("New Item");
+    console.log("New Item");
     
     this.setState({
       panelMode: panelMode.New,
       showPanel: true,
       readOnly: false
     });
-    alert("New Item State Set");
+    console.log("New Item State Set");
   }
   // On Delete
   private async onDeleteItem() {
@@ -173,23 +174,23 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
   // On Edit item
   private onEditItem(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
-    alert("Edit Item");
+    console.log("Edit Item");
     this.setState({
       panelMode: panelMode.Edit,
       showPanel: true,
       readOnly: false
     });
-    alert("Edit Item State Set");
+    console.log("Edit Item State Set");
   }
   private onViewItem(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
-    alert("View Item");
+    console.log("View Item");
     this.setState({
       panelMode: panelMode.Edit,
       showPanel: true,
       readOnly: true,
     });
-    alert("View Item State Set");
+    console.log("View Item State Set");
   }
 
   private _openDialogDelete = async () => {
@@ -215,7 +216,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
 
   public render(): JSX.Element {
 
-    alert("render");
+    console.log("render");
     if (this.state.items != null && this.state.items.length > 0) {
       const { items, selectionDetails } = this.state;
 
@@ -355,6 +356,6 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
   };
 
   private _onItemInvoked = (item: IContact): void => {
-    alert(`Item invoked: ${item.Name}`);
+    console.log(`Item invoked: ${item.Name}`);
   };
 }

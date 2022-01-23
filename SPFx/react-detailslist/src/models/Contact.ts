@@ -2,6 +2,7 @@ import { IContact } from "./IContact"
 
 export class Contact implements IContact
 {
+    Id?: number;
     Name: string;
     Email: string;
     MobileNumber: string;

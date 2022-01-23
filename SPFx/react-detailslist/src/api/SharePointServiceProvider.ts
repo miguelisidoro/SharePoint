@@ -24,7 +24,11 @@ export default class SharePointServiceProvider {
     try {
       const results: IContactSharePoint[] = await sp.web.lists
         .getByTitle(SharePointListNames.Contacts)
-        .items.select(SharePointFieldNames.Title, SharePointFieldNames.Email, SharePointFieldNames.MobileNumber)
+        .items.select(
+          SharePointFieldNames.Id, 
+          SharePointFieldNames.Title, 
+          SharePointFieldNames.Email, 
+          SharePointFieldNames.MobileNumber)
         .usingCaching()
         .orderBy(SharePointFieldNames.Title)
         .get();

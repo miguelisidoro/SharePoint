@@ -63,7 +63,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
   }
 
   public async componentDidMount(): Promise<void> {
-    alert("Panel componentDidMount")
+    console.log("Panel componentDidMount")
     if (this.props.mode === panelMode.Edit) {
       this.getContactDetails();
     }
@@ -88,7 +88,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
   }
 
   private async getContactDetails(): Promise<void> {
-    //TODO: implement get contact details
+    debugger;
     const contact: IContact = await this.sharePointServiceProvider.getContactDetailById(
       this.props.Contact.Id
     );
@@ -195,7 +195,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
 
   // Render
   public render(): React.ReactElement<IReactDetailsItemPanelProps> {
-    alert("render panel");
+    console.log("render panel");
     if (this.state.Contact != null) {
       return (
         <Panel

@@ -1,4 +1,4 @@
-import { IContact, panelMode } from "../../../models";
+import { IContact, IContactSharePoint, panelMode } from "../../../models";
 
 export interface IReactDetailsListState {
     //items: IReactDetailsListItem[];
