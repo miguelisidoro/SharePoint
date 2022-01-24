@@ -27,7 +27,7 @@ import {
   PanelType
 } from '@fluentui/react';
 import { IReactDetailsItemPanelState } from './IReactDetailsItemPanelState';
-import { IContact, panelMode } from '../../../models';
+import { IContact, Contact, panelMode } from '../../../models';
 import * as strings from 'ReactDetailsListWebPartStrings';
 import SharePointServiceProvider from '../../../api/SharePointServiceProvider';
 import { IReactDetailsItemPanelProps } from './IReactDetailsItemPanelProps';
@@ -67,6 +67,10 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
     if (this.props.mode === panelMode.Edit) {
       this.getContactDetails();
     }
+    else
+    {
+      this.initializeEmptyContact();
+    }
   }
 
   private _onRenderFooterContent = (): JSX.Element => {
@@ -88,7 +92,6 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
   }
 
   private async getContactDetails(): Promise<void> {
-    debugger;
     const contact: IContact = await this.sharePointServiceProvider.getContactDetailById(
       this.props.Contact.Id
     );
@@ -96,6 +99,18 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
     if (contact) {
       this.setState({ Contact: contact });
     }
+  }
+
+  private async initializeEmptyContact(): Promise<void> {
+    const contact: IContact = new Contact(
+      {
+        Name: '',
+        Email: '',
+        MobileNumber: ''
+      }
+      );
+
+      this.setState({ Contact: contact });
   }
 
   private validateForm(): boolean {
