@@ -9,12 +9,13 @@ export class ContactMapper
 
         contacts.forEach(contactSharePoint => {
             let mappedContact: Contact = new Contact({
-                Id: contactSharePoint.Id,
                 Name: contactSharePoint.Title,
                 Email: contactSharePoint.Email,
                 MobileNumber: contactSharePoint.Telemovel
             })
             
+            mappedContact.Id = contactSharePoint.Id;
+
             mappedContacts.push(mappedContact);
         });
 

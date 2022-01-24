@@ -87,10 +87,10 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     };
 
     this._columns = [
-      { key: 'column1', name: 'ID', fieldName: 'ID', minWidth: 10, maxWidth: 200, isResizable: true },
-      { key: 'column2', name: 'Name', fieldName: 'Name', minWidth: 100, maxWidth: 200, isResizable: true },
-      { key: 'column3', name: 'Email', fieldName: 'Email', minWidth: 100, maxWidth: 200, isResizable: true },
-      { key: 'column4', name: 'MobileNumber', fieldName: 'MobileNumber', minWidth: 100, maxWidth: 200, isResizable: true },
+      { key: 'idColumn', name: 'Id', fieldName: 'Id', minWidth: 10, maxWidth: 200, isResizable: true },
+      { key: 'nameColumn', name: 'Name', fieldName: 'Name', minWidth: 100, maxWidth: 200, isResizable: true },
+      { key: 'emailColumn', name: 'Email', fieldName: 'Email', minWidth: 100, maxWidth: 200, isResizable: true },
+      { key: 'mobileNumberColumn', name: 'MobileNumber', fieldName: 'MobileNumber', minWidth: 100, maxWidth: 200, isResizable: true },
     ];
 
     this.onNewItem = this.onNewItem.bind(this);
