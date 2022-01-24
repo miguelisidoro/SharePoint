@@ -115,13 +115,13 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
 
   private validateForm(): boolean {
     let contact: IContact = this.state.Contact;
-    if (contact == null)
+    if (contact === null)
       throw "Error processing request!";
-    if (contact.Email == null)
+    if (contact.Email === null || contact.Email === '')
       throw "Invalid Email!";
-    if (contact.MobileNumber == null)
+    if (contact.MobileNumber === null || contact.MobileNumber === '')
       throw "Invalid Mobile Number!";
-    if (contact.Name == null)
+    if (contact.Name === null || contact.Name === '')
       throw "Invalid Name!";
 
     return true;
@@ -129,10 +129,11 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
 
   private async onSave(ev: React.MouseEvent<HTMLButtonElement>) {
     ev.preventDefault();
+    console.log("onSave");
     try {
       if (this.validateForm()) {
         switch (this.props.mode) {
-          // add immobilized request
+          // add contact
           case (panelMode.New):
             try {
               await this.sharePointServiceProvider.addContact(this.state.Contact);
@@ -142,7 +143,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
               this.setState({ errorMessage: error });
             }
             break;
-          //edit immobilized request
+          //edit contact
           case (panelMode.Edit):
             try {
               await this.sharePointServiceProvider.updateContact(this.state.Contact);
@@ -222,6 +223,11 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
           headerText={this.props.mode == panelMode.Edit ? (this.props.readOnly ? strings.PanelHeaderTextVisualize : strings.PanelHeaderTextEdit) : strings.PanelHeaderTextAdd}
           onRenderFooterContent={this._onRenderFooterContent}
         >
+          {
+            this.state.errorMessage && (
+              <MessageBar messageBarType={MessageBarType.error}>{this.state.errorMessage}</MessageBar>
+            )
+          }
           <Stack>
             <TextField
               label={strings.NameFieldLabel}

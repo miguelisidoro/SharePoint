@@ -206,6 +206,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
   }
 
   private refreshData(ev: React.MouseEvent<HTMLElement>) {
+    console.log("refreshData");
     this.loadContacts();
     //clears selection
     this._selection.selectToKey(null, true);
