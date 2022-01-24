@@ -29,7 +29,7 @@ export default class SharePointServiceProvider {
           SharePointFieldNames.Title, 
           SharePointFieldNames.Email, 
           SharePointFieldNames.MobileNumber)
-        .usingCaching()
+        //.usingCaching()
         .orderBy(SharePointFieldNames.Title)
         .get();
 

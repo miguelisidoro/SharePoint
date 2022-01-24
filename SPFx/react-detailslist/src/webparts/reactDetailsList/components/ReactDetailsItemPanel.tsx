@@ -117,12 +117,12 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
     let contact: IContact = this.state.Contact;
     if (contact === null)
       throw "Error processing request!";
-    if (contact.Email === null || contact.Email === '')
+      if (contact.Name === null || contact.Name === '')
+      throw "Invalid Name!";
+      if (contact.Email === null || contact.Email === '')
       throw "Invalid Email!";
     if (contact.MobileNumber === null || contact.MobileNumber === '')
       throw "Invalid Mobile Number!";
-    if (contact.Name === null || contact.Name === '')
-      throw "Invalid Name!";
 
     return true;
   }
@@ -137,7 +137,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
           case (panelMode.New):
             try {
               await this.sharePointServiceProvider.addContact(this.state.Contact);
-              this.props.addItemToList(ev, this.state.Contact);
+              this.props.refreshData(ev, this.state.Contact);
               this.setState({ showPanel: false });
             } catch (error) {
               this.setState({ errorMessage: error });
@@ -147,6 +147,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
           case (panelMode.Edit):
             try {
               await this.sharePointServiceProvider.updateContact(this.state.Contact);
+              this.props.refreshData(ev, this.state.Contact);
               this.setState({ showPanel: false });
             } catch (error) {
               this.setState({ errorMessage: error });

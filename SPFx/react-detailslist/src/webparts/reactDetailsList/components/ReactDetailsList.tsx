@@ -106,7 +106,8 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     await this.loadContacts();
   }
 
-  private async loadContacts() {
+  loadContacts = async () => {
+    debugger;
     console.log("componentDidMount: begin...");
     this._allItems = [];
 
@@ -205,9 +206,9 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     });
   }
 
-  private refreshData(ev: React.MouseEvent<HTMLElement>) {
+  refreshData = async (ev: React.MouseEvent<HTMLElement>) => {
     console.log("refreshData");
-    this.loadContacts();
+    await this.loadContacts();
     //clears selection
     this._selection.selectToKey(null, true);
     this.setState({
@@ -300,7 +301,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
                 showPanel={this.state.showPanel}
                 context={this.props.context}
                 readOnly={this.state.readOnly}
-                addItemToList={this.refreshData}
+                refreshData={this.refreshData}
               />
             </div>
           }

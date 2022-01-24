@@ -8,5 +8,5 @@ export interface IReactDetailsItemPanelProps {
   onDismiss(ev?: React.SyntheticEvent<HTMLElement>): void;
   context: WebPartContext;
   readOnly?: boolean;
-  addItemToList(ev, contact: IContact): void;
+  refreshData(ev, contact: IContact): void;
 }

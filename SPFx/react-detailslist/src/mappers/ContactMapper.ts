@@ -1,10 +1,8 @@
 import { Contact, IContact, IContactSharePoint } from "../models";
 
-export class ContactMapper
-{
+export class ContactMapper {
     // Maps the list of contacts from SharePoint into an array of Contact model class
-    static MapToContacts(contacts : IContactSharePoint[]) : IContact[]
-    {
+    static MapToContacts(contacts: IContactSharePoint[]): IContact[] {
         let mappedContacts: Contact[] = new Array<Contact>();
 
         contacts.forEach(contactSharePoint => {
@@ -13,7 +11,7 @@ export class ContactMapper
                 Email: contactSharePoint.Email,
                 MobileNumber: contactSharePoint.Telemovel
             })
-            
+
             mappedContact.Id = contactSharePoint.Id;
 
             mappedContacts.push(mappedContact);
@@ -31,14 +29,14 @@ export class ContactMapper
     }
 
     // Maps the contact from SharePoint into the Contact model
-    static MapToContact(contactSharePoint : IContactSharePoint) : IContact
-    {
-        const mappedContact = new Contact({
-                Id: contactSharePoint.Id,
-                Name: contactSharePoint.Title,
-                Email: contactSharePoint.Email,
-                MobileNumber: contactSharePoint.Telemovel
-            });
+    static MapToContact(contactSharePoint: IContactSharePoint): IContact {
+        let mappedContact = new Contact({
+            Name: contactSharePoint.Title,
+            Email: contactSharePoint.Email,
+            MobileNumber: contactSharePoint.Telemovel
+        });
+
+        mappedContact.Id = contactSharePoint.Id;
 
         return mappedContact;
     }
