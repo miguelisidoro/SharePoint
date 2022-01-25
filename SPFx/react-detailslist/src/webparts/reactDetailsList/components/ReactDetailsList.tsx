@@ -97,20 +97,20 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
           key: "0",
           text: strings.CommandbarEditLabel,
           iconProps: { iconName: "Edit" },
-          onClick: this.onEditItem,
+          onClick: this.onEditItem.bind(this),
           disabled: this.state ? this.state.disableCommandSelectionOption : true,
         },
         {
           key: "1",
           text: strings.CommandbarViewLabel,
           iconProps: { iconName: "View" },
-          onClick: this.onViewItem,
+          onClick: this.onViewItem.bind(this),
         },
         {
           key: "2",
           text: strings.CommandbarDeleteLabel,
           iconProps: { iconName: "Delete" },
-          onClick: this.onDeleteItem,
+          onClick: this.onDeleteItem.bind(this),
           disabled: this.state ? this.state.disableCommandSelectionOption : true,
         }
       ]
