@@ -10,6 +10,7 @@ define([], function() {
     "CommandbarRefreshLabel": "Refresh",
     "PrimaryButtonLabelSave": "Save",
     "PrimaryButtonLabelInsert": "Add",
+    "PrimaryButtonLabelDelete": "Delete",
     "PrimaryButtonLabelCancel": "Cancel",
     "NameFieldLabel": "Name",
     "EmailFieldLabel": "Email",
@@ -20,5 +21,6 @@ define([], function() {
     "DeleteTitle": "Delete Contact",
     "DeleteLabelId": "Id",
     "DeleteLabelName": "Name",
+    "DeletingMessage": "Deleting contact..."
   }
 });

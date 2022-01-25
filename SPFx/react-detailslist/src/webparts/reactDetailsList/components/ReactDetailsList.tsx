@@ -110,7 +110,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
           key: "2",
           text: strings.CommandbarDeleteLabel,
           iconProps: { iconName: "Delete" },
-          onClick: this.onDeleteItem.bind(this),
+          onClick: this._openDialogDelete.bind(this),
           disabled: this.state ? this.state.disableCommandSelectionOption : true,
         }
       ]
@@ -151,7 +151,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     this.onNewItem = this.onNewItem.bind(this);
     this.onEditItem = this.onEditItem.bind(this);
     this.onViewItem = this.onViewItem.bind(this);
-    this.onDeleteItem = this.onViewItem.bind(this);
+    this.onDeleteItem = this.onDeleteItem.bind(this);
     this.onDismissPanel = this.onDismissPanel.bind(this);
     this.loadContacts = this.loadContacts.bind(this);
     this._openDialogDelete = this._openDialogDelete.bind(this);
@@ -202,6 +202,11 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     });
     console.log("New Item State Set");
   }
+
+  private _closeDialogDelete = async () => {
+    this.setState({ showConfirmDelete: false });
+  }
+
   // On Delete
   private async onDeleteItem() {
     try {
@@ -210,18 +215,17 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       });
       await this.sharePointServiceProvider.deleteContact(this.state.selectedItem.Id);
       var contactsAterDelete = this.state.items.filter(x => x.Id !== this.state.selectedItem.Id);
-      //TODO check if its deleted by getting service with id
       //clears selection
       this._selection.selectToKey(null, true);
       this.setState({
         items: contactsAterDelete,
         hasErrorOnDelete: false,
-        errorMessage: "",
+        errorMessage: '',
         isDeleteting: false,
         showConfirmDelete: false,
         hasError: false,
         selectedItem: null,
-        disableCommandSelectionOption: true
+        disableCommandSelectionOption: true,
       });
 
     } catch (error) {
@@ -393,12 +397,12 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
                   defaultValue={this.state.selectedItem ? this.state.selectedItem.Name : ""}
                   style={{ color: this.theme.palette.neutralPrimary }}
                 />
-                {this.state.isDeleteting && <Spinner size={SpinnerSize.medium} label={"Deleting contact..."} />}
+                {this.state.isDeleteting && <Spinner size={SpinnerSize.medium} label={strings.DeletingMessage} />}
                 {this.state.hasErrorOnDelete && <MessageBar messageBarType={MessageBarType.error}>{this.state.errorMessage}</MessageBar>}
               </Stack>
               <DialogFooter>
-                <PrimaryButton disabled={this.state.isDeleteting} onClick={this.onDeleteItem} text="Eliminar" />
-                <DefaultButton onClick={this._closeDialogDelete} text="Cancelar" />
+                <PrimaryButton disabled={this.state.isDeleteting} onClick={this.onDeleteItem} text={strings.PrimaryButtonLabelDelete} />
+                <DefaultButton onClick={this._closeDialogDelete} text={strings.PrimaryButtonLabelCancel} />
               </DialogFooter>
             </Dialog>
           )
@@ -409,10 +413,6 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     else {
       return (<div></div>);
     }
-  }
-
-  private _closeDialogDelete = async () => {
-    this.setState({ showConfirmDelete: false });
   }
 
   private _getSelectionDetails(): string {

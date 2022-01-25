@@ -8,6 +8,7 @@ declare interface IReactDetailsListWebPartStrings {
   CommandbarDeleteLabel: string;
   PrimaryButtonLabelSave: string;
   PrimaryButtonLabelInsert: string;
+  PrimaryButtonLabelDelete: string;
   PrimaryButtonLabelCancel: string;
   NameFieldLabel: string;
   EmailFieldLabel: string;
@@ -18,6 +19,7 @@ declare interface IReactDetailsListWebPartStrings {
   DeleteTitle: string;
   DeleteLabelId: string;
   DeleteLabelName: string;
+  DeletingMessage: string;
 }
 
 declare module 'ReactDetailsListWebPartStrings' {
