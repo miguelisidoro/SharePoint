@@ -15,6 +15,9 @@ declare interface IReactDetailsListWebPartStrings {
   PanelHeaderTextEdit: string;
   PanelHeaderTextAdd: string;
   PanelHeaderTextVisualize: string;
+  DeleteTitle: string;
+  DeleteLabelId: string;
+  DeleteLabelName: string;
 }
 
 declare module 'ReactDetailsListWebPartStrings' {

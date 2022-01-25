@@ -17,5 +17,8 @@ define([], function() {
     "PanelHeaderTextEdit": "Edit Contact",
     "PanelHeaderTextAdd": "New Contact",
     "PanelHeaderTextVisualize": "View Contact",
+    "DeleteTitle": "Delete Contact",
+    "DeleteLabelId": "Id",
+    "DeleteLabelName": "Name",
   }
 });

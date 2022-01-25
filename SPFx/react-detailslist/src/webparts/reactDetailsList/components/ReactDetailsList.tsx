@@ -59,6 +59,7 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
   //private _allItems: IReactDetailsListItem[];
   private _allItems: IContact[];
   private _columns: IColumn[];
+  private theme = getTheme();
   private sharePointServiceProvider: SharePointServiceProvider;
 
   constructor(props: IReactDetailsListProps) {
@@ -154,7 +155,8 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     this.onDismissPanel = this.onDismissPanel.bind(this);
     this.loadContacts = this.loadContacts.bind(this);
     this._openDialogDelete = this._openDialogDelete.bind(this);
-    this._onListItemIdMenuClick = this._onListItemIdMenuClick.bind(this)
+    this._onListItemIdMenuClick = this._onListItemIdMenuClick.bind(this);
+    this._closeDialogDelete = this._closeDialogDelete.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
@@ -365,12 +367,52 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
               />
             </div>
           }
+          {
+          this.state.showConfirmDelete && (
+            <Dialog
+              hidden={!this.state.showConfirmDelete}
+              onDismiss={this._closeDialogDelete}
+              dialogContentProps={{
+                type: DialogType.largeHeader,
+                title: strings.DeleteTitle
+              }}
+              modalProps={{
+                isBlocking: true,
+                styles: { main: { maxWidth: 450 } }
+              }}>
+              <Stack>
+                <Label>{strings.DeleteLabelId}</Label>
+                <TextField
+                  disabled
+                  defaultValue={this.state.selectedItem ? String(this.state.selectedItem.Id) : ""}
+                  style={{ color: this.theme.palette.neutralPrimary }}
+                />
+                <Label>{strings.DeleteLabelName}</Label>
+                <TextField
+                  disabled
+                  defaultValue={this.state.selectedItem ? this.state.selectedItem.Name : ""}
+                  style={{ color: this.theme.palette.neutralPrimary }}
+                />
+                {this.state.isDeleteting && <Spinner size={SpinnerSize.medium} label={"Deleting contact..."} />}
+                {this.state.hasErrorOnDelete && <MessageBar messageBarType={MessageBarType.error}>{this.state.errorMessage}</MessageBar>}
+              </Stack>
+              <DialogFooter>
+                <PrimaryButton disabled={this.state.isDeleteting} onClick={this.onDeleteItem} text="Eliminar" />
+                <DefaultButton onClick={this._closeDialogDelete} text="Cancelar" />
+              </DialogFooter>
+            </Dialog>
+          )
+        }
         </div>
       );
     }
     else {
       return (<div></div>);
     }
+  }
+
+  private _closeDialogDelete = async () => {
+    this.setState({ showConfirmDelete: false });
   }
 
   private _getSelectionDetails(): string {
