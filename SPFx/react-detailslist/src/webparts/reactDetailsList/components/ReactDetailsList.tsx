@@ -84,7 +84,10 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       selectedItem: null,
       disableCommandSelectionOption: true,
       showConfirmDelete: false,
-      showPanel: false
+      showPanel: false,
+      hasError: false,
+      hasErrorOnDelete: false,
+      errorMessage: ''
     };
 
     const listItemMenuProps: IContextualMenuProps = {
@@ -93,20 +96,20 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
           key: "0",
           text: strings.CommandbarEditLabel,
           iconProps: { iconName: "Edit" },
-          onClick: this.onEditItem.bind(this),
+          onClick: this.onEditItem,
           disabled: this.state ? this.state.disableCommandSelectionOption : true,
         },
         {
           key: "1",
           text: strings.CommandbarViewLabel,
           iconProps: { iconName: "View" },
-          onClick: this.onViewItem.bind(this),
+          onClick: this.onViewItem,
         },
         {
           key: "2",
           text: strings.CommandbarDeleteLabel,
           iconProps: { iconName: "Delete" },
-          onClick: this.onDeleteItem.bind(this),
+          onClick: this.onDeleteItem,
           disabled: this.state ? this.state.disableCommandSelectionOption : true,
         }
       ]
@@ -166,8 +169,6 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
   }
 
   private async loadContacts() {
-  //loadContacts = async () => {
-    debugger;
     console.log("componentDidMount: begin...");
     this._allItems = [];
 
@@ -201,35 +202,34 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
   }
   // On Delete
   private async onDeleteItem() {
-    // try {
-    //   this.setState({
-    //     isDeleteting: true
-    //   });
-    //   await this.spService.deleteImmobilizedRequest(Number(this.state.selectedItem.id));
-    //   var partialImobilizedRequests = this.state.partialImobilizedRequests.filter(x => x.id !== this.state.selectedItem.id);
-    //   //TODO check if its deleted by getting service with id
-    //   //clears selection
-    //   this._selection.selectToKey(null, true);
-    //   this.setState({
-    //     partialImobilizedRequests: partialImobilizedRequests,
-    //     hasErrorOnDelete: false,
-    //     errorMessage: "",
-    //     isDeleteting: false,
-    //     showConfirmDelete: false,
-    //     hasError: false,
-    //     selectedItem: null,
-    //     disableCommandOption: true
-    //   });
+    try {
+      this.setState({
+        isDeleteting: true
+      });
+      await this.sharePointServiceProvider.deleteContact(this.state.selectedItem.Id);
+      var contactsAterDelete = this.state.items.filter(x => x.Id !== this.state.selectedItem.Id);
+      //TODO check if its deleted by getting service with id
+      //clears selection
+      this._selection.selectToKey(null, true);
+      this.setState({
+        items: contactsAterDelete,
+        hasErrorOnDelete: false,
+        errorMessage: "",
+        isDeleteting: false,
+        showConfirmDelete: false,
+        hasError: false,
+        selectedItem: null,
+        disableCommandSelectionOption: true
+      });
 
-    // } catch (error) {
-    //   Log.error(LOG_SOURCE, error, this.context.serviceScope);
-    //   console.log("Error on _onDeletePedidoCompra,", error.message);
-    //   this.setState({
-    //     hasErrorOnDelete: true,
-    //     errorMessage: `${error.message}`,
-    //     isDeleteting: false
-    //   });
-    // }
+    } catch (error) {
+      console.log("Error on onDeleteItem,", error.message);
+      this.setState({
+        hasErrorOnDelete: true,
+        errorMessage: `${error.message}`,
+        isDeleteting: false
+      });
+    }
   }
 
   // On Edit item

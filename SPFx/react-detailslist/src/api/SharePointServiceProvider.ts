@@ -25,9 +25,9 @@ export default class SharePointServiceProvider {
       const results: IContactSharePoint[] = await sp.web.lists
         .getByTitle(SharePointListNames.Contacts)
         .items.select(
-          SharePointFieldNames.Id, 
-          SharePointFieldNames.Title, 
-          SharePointFieldNames.Email, 
+          SharePointFieldNames.Id,
+          SharePointFieldNames.Title,
+          SharePointFieldNames.Email,
           SharePointFieldNames.MobileNumber)
         //.usingCaching()
         .orderBy(SharePointFieldNames.Title)
@@ -84,6 +84,18 @@ export default class SharePointServiceProvider {
           Email: `${contact.Email}`,
           Telemovel: `${contact.MobileNumber}`
         });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  public deleteContact = async (id: string): Promise<void> => {
+    try {
+      // try to delete all details items
+      await sp.web.lists
+        .getByTitle(SharePointListNames.Contacts)
+        .items.getById(Number(id))
+        .recycle();
     } catch (error) {
       throw new Error(error.message);
     }

@@ -11,4 +11,7 @@ export interface IReactDetailsListState {
     showConfirmDelete: boolean;
     disableCommandSelectionOption: boolean;
     selectedItem: IContact;
+    hasError: boolean;
+    hasErrorOnDelete: boolean;
+    errorMessage: string;
   }
