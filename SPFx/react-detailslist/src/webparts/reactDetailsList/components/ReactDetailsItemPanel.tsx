@@ -31,6 +31,7 @@ import { IContact, Contact, panelMode } from '../../../models';
 import * as strings from 'ReactDetailsListWebPartStrings';
 import SharePointServiceProvider from '../../../api/SharePointServiceProvider';
 import { IReactDetailsItemPanelProps } from './IReactDetailsItemPanelProps';
+import * as tsStyles from "./ReactDetailsListStyles";
 
 export default class ReactDetailsItemPanel extends React.Component<IReactDetailsItemPanelProps, IReactDetailsItemPanelState> {
   private sharePointServiceProvider: SharePointServiceProvider;
@@ -70,8 +71,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
     if (this.props.mode === panelMode.Edit) {
       this.getContactDetails();
     }
-    else
-    {
+    else {
       this.initializeEmptyContact();
     }
   }
@@ -99,7 +99,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
     );
 
     if (contact) {
-      this.setState({ Contact: contact });
+      this.setState({ Contact: contact, isLoading: false });
     }
   }
 
@@ -110,18 +110,18 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
         Email: '',
         MobileNumber: ''
       }
-      );
+    );
 
-      this.setState({ Contact: contact });
+    this.setState({ Contact: contact, isLoading: false });
   }
 
   private validateForm(): boolean {
     let contact: IContact = this.state.Contact;
     if (contact === null)
       throw "Error processing request!";
-      if (contact.Name === null || contact.Name === '')
+    if (contact.Name === null || contact.Name === '')
       throw "Invalid Name!";
-      if (contact.Email === null || contact.Email === '')
+    if (contact.Email === null || contact.Email === '')
       throw "Invalid Email!";
     if (contact.MobileNumber === null || contact.MobileNumber === '')
       throw "Invalid Mobile Number!";
@@ -140,7 +140,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
             try {
               await this.sharePointServiceProvider.addContact(this.state.Contact);
               this.props.refreshData(ev, this.state.Contact);
-              this.setState({ showPanel: false });
+              this.props.onDismiss();
             } catch (error) {
               this.setState({ errorMessage: error });
             }
@@ -150,7 +150,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
             try {
               await this.sharePointServiceProvider.updateContact(this.state.Contact);
               this.props.refreshData(ev, this.state.Contact);
-              this.setState({ showPanel: false });
+              this.props.onDismiss();
             } catch (error) {
               this.setState({ errorMessage: error });
             }
@@ -208,7 +208,6 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
   private _onDismiss = (ev?: React.SyntheticEvent<HTMLElement, Event>) => {
     ev.preventDefault();
     ev.stopPropagation();
-    // this.setState({showPanel: false});
     this.props.onDismiss();
   };
 
@@ -231,31 +230,40 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
               <MessageBar messageBarType={MessageBarType.error}>{this.state.errorMessage}</MessageBar>
             )
           }
-          <Stack>
-            <TextField
-              label={strings.NameFieldLabel}
-              readOnly={this.props.readOnly}
-              value={this.state.Contact.Name}
-              onChange={this._onChangeName}
-            />
-            <TextField
-              label={strings.EmailFieldLabel}
-              readOnly={this.props.readOnly}
-              value={this.state.Contact.Email}
-              onChange={this._onChangeEmail}
-            />
-            <TextField
-              label={strings.MobileNumberFieldLabel}
-              readOnly={this.props.readOnly}
-              value={this.state.Contact.MobileNumber}
-              onChange={this._onChangeMobileNumber}
-            />
-          </Stack>
+          {
+            this.state.isLoading ? (
+              <Stack disableShrink styles={tsStyles.stackStyles}   >
+                <Stack.Item align="stretch">
+                  <Spinner size={SpinnerSize.large} />
+                </Stack.Item>
+              </Stack>
+            ) : (
+              <Stack>
+                <TextField
+                  label={strings.NameFieldLabel}
+                  readOnly={this.props.readOnly}
+                  value={this.state.Contact.Name}
+                  onChange={this._onChangeName}
+                />
+                <TextField
+                  label={strings.EmailFieldLabel}
+                  readOnly={this.props.readOnly}
+                  value={this.state.Contact.Email}
+                  onChange={this._onChangeEmail}
+                />
+                <TextField
+                  label={strings.MobileNumberFieldLabel}
+                  readOnly={this.props.readOnly}
+                  value={this.state.Contact.MobileNumber}
+                  onChange={this._onChangeMobileNumber}
+                />
+              </Stack>
+            )
+          }
         </Panel>
       );
     }
-    else
-    {
+    else {
       return (<div></div>);
     }
   }

@@ -1,4 +1,13 @@
+import { IStackStyles } from '@fluentui/react';
 import { FontSizes, FontWeights, DefaultPalette, mergeStyleSets } from '@fluentui/react/lib/Styling';
+
+export const stackStyles: IStackStyles = {
+  root: {
+    alignItems: 'flex-start',
+    margin: 0,
+    width: '100%'
+  }
+};
 
 export const classNames = mergeStyleSets({
     centerColumn: { display: 'flex', alignItems:'center', height:'100%'},
