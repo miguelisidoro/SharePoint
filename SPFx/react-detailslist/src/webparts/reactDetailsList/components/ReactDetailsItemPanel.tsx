@@ -55,6 +55,9 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
 
     this.onCancel = this.onCancel.bind(this);
     this.onSave = this.onSave.bind(this);
+    this.getContactDetails = this.getContactDetails.bind(this);
+    this.initializeEmptyContact = this.initializeEmptyContact.bind(this);
+    this.validateForm = this.validateForm.bind(this);
     this._onChangeEmail = this._onChangeEmail.bind(this);
     this._onChangeMobileNumber = this._onChangeMobileNumber.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
@@ -78,7 +81,6 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
       <div>
         <Separator></Separator>
         <PrimaryButton text={this.props.mode === panelMode.Edit ? strings.PrimaryButtonLabelSave : strings.PrimaryButtonLabelInsert} disabled={this.props.readOnly} onClick={this.onSave} style={{ marginRight: "8px" }}>
-          {/* {this.state.isAddingPedidoCompra ? <Spinner size={SpinnerSize.small} /> : 'Criar'} */}
         </PrimaryButton>
         <DefaultButton text={strings.PrimaryButtonLabelCancel} onClick={this.onCancel} />
       </div>

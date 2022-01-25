@@ -9,6 +9,7 @@
     "test": "gulp test"
   },
   "dependencies": {
+    "@fluentui/merge-styles": "^8.2.3",
     "@fluentui/react": "^8.49.7",
     "@microsoft/sp-core-library": "1.13.1",
     "@microsoft/sp-lodash-subset": "1.13.1",

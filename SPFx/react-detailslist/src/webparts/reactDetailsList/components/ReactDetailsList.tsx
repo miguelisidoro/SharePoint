@@ -39,6 +39,7 @@ import {
 import * as strings from 'ReactDetailsListWebPartStrings';
 import { IReactDetailsListState } from './IReactDetailsListState';
 import ReactDetailsItemPanel from './ReactDetailsItemPanel';
+import * as tsStyles from "./ReactDetailsListStyles";
 
 const exampleChildClass = mergeStyles({
   display: 'block',
@@ -86,8 +87,58 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
       showPanel: false
     };
 
+    const listItemMenuProps: IContextualMenuProps = {
+      items: [
+        {
+          key: "0",
+          text: strings.CommandbarEditLabel,
+          iconProps: { iconName: "Edit" },
+          onClick: this.onEditItem.bind(this),
+          disabled: this.state ? this.state.disableCommandSelectionOption : true,
+        },
+        {
+          key: "1",
+          text: strings.CommandbarViewLabel,
+          iconProps: { iconName: "View" },
+          onClick: this.onViewItem.bind(this),
+        },
+        {
+          key: "2",
+          text: strings.CommandbarDeleteLabel,
+          iconProps: { iconName: "Delete" },
+          onClick: this.onDeleteItem.bind(this),
+          disabled: this.state ? this.state.disableCommandSelectionOption : true,
+        }
+      ]
+    };
+
     this._columns = [
       { key: 'idColumn', name: 'Id', fieldName: 'Id', minWidth: 10, maxWidth: 200, isResizable: true },
+      {
+        name: "",
+        key: "menuPropsColumn",
+        minWidth: 40,
+        maxWidth: 40,
+        isResizable: false,
+        isSorted: false,
+        isSortedDescending: false,
+        onRender: (item: IContact) => {
+          return (
+            <div className={tsStyles.classNames.centerColumn}>
+              <IconButton
+                style={{ backgroundColor: "#1fe0" }}
+                iconProps={{ iconName: "MoreVertical" }}
+                text={""}
+                width="30"
+                split={false}
+                onMenuClick={this._onListItemIdMenuClick}
+                menuIconProps={{ iconName: "" }}
+                menuProps={listItemMenuProps}
+              />
+            </div>
+          );
+        }
+      },
       { key: 'nameColumn', name: 'Name', fieldName: 'Name', minWidth: 100, maxWidth: 200, isResizable: true },
       { key: 'emailColumn', name: 'Email', fieldName: 'Email', minWidth: 100, maxWidth: 200, isResizable: true },
       { key: 'mobileNumberColumn', name: 'MobileNumber', fieldName: 'MobileNumber', minWidth: 100, maxWidth: 200, isResizable: true },
@@ -98,6 +149,9 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     this.onViewItem = this.onViewItem.bind(this);
     this.onDeleteItem = this.onViewItem.bind(this);
     this.onDismissPanel = this.onDismissPanel.bind(this);
+    this.loadContacts = this.loadContacts.bind(this);
+    this._openDialogDelete = this._openDialogDelete.bind(this);
+    this._onListItemIdMenuClick = this._onListItemIdMenuClick.bind(this)
   }
 
   public async componentDidMount(): Promise<void> {
@@ -106,7 +160,13 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
     await this.loadContacts();
   }
 
-  loadContacts = async () => {
+  private _onListItemIdMenuClick = (ev: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>, button: any) => {
+    button.menuProps.items[0].disabled = this.state.disableCommandSelectionOption;
+    button.menuProps.items[2].disabled = this.state.disableCommandSelectionOption;
+  }
+
+  private async loadContacts() {
+  //loadContacts = async () => {
     debugger;
     console.log("componentDidMount: begin...");
     this._allItems = [];
