@@ -77,9 +77,9 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
   constructor(props) {
     super(props);
 
-    sp.setup({
-      spfxContext: this.props.context
-    });
+    // sp.setup({
+    //   spfxContext: this.props.context
+    // });
 
     this.state = ({
       year: '',
@@ -96,19 +96,12 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
     this.onDownloadReceipt = this.onDownloadReceipt.bind(this);
     this.base64ToArrayBuffer = this.base64ToArrayBuffer.bind(this);
     this.createAndDownloadBlobFile = this.createAndDownloadBlobFile.bind(this);
-    this.loadUserDetails = this.loadUserDetails.bind(this);
+    //this.loadUserDetails = this.loadUserDetails.bind(this);
     //this.getSharePointLoggedInUserDetails = this.getSharePointLoggedInUserDetails.bind(this);
   }
 
-  public onInit()  {
-      // sp.setup({
-      //   spfxContext: this.context
-      // });
-  }
-  
-
   public async componentDidMount(): Promise<void> {
-    await this.loadUserDetails();
+    //await this.loadUserDetails();
   }
 
   private onYearChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
@@ -139,7 +132,9 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
 
     //const userDetails = this.getUserDetails();
 
-    const receiptFileNameForDownload = "Recibo_" + this.state.userName;
+    //const receiptFileNameForDownload = "Recibo_" + this.state.userName;
+
+    const receiptFileNameForDownload = "Recibo_" + this.props.context.pageContext.user.displayName;
 
     //const profile = await sp.profiles.userProfile;
 
@@ -176,12 +171,12 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
   //   }
   // }
 
-  private async loadUserDetails(): Promise<void> {
-    const { Title: userName } = await sp.web.currentUser.select('Title').get();
-    //this.setState({userName: "Miguel Isidoro"})
-    console.log({ userName });
-    this.setState({userName: userName})
-  }
+  // private async loadUserDetails(): Promise<void> {
+  //   const { Title: userName } = await sp.web.currentUser.select('Title').get();
+  //   //this.setState({userName: "Miguel Isidoro"})
+  //   console.log({ userName });
+  //   this.setState({userName: userName})
+  // }
 
   private createAndDownloadBlobFile(body, filename, extension = 'pdf') {
     const blob = new Blob([body]);

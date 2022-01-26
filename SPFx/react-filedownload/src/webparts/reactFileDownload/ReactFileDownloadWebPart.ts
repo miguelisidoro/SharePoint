@@ -10,6 +10,10 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'ReactFileDownloadWebPartStrings';
 import ReactFileDownload from './components/ReactFileDownload';
 import { IReactFileDownloadProps } from './components/IReactFileDownloadProps';
+import { sp } from "@pnp/sp";
+//import "@pnp/sp/profiles";
+import '@pnp/sp/webs';
+import '@pnp/sp/site-users';
 
 export interface IReactFileDownloadWebPartProps {
   description: string;
@@ -21,11 +25,19 @@ export default class ReactFileDownloadWebPart extends BaseClientSideWebPart<IRea
     const element: React.ReactElement<IReactFileDownloadProps> = React.createElement(
       ReactFileDownload,
       {
-        description: this.properties.description
+        context: this.context
       }
     );
 
     ReactDom.render(element, this.domElement);
+  }
+
+  protected onInit(): Promise<void> {
+    sp.setup({
+      spfxContext: this.context
+    });
+
+    return Promise.resolve();
   }
 
   protected onDispose(): void {
