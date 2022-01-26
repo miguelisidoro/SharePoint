@@ -174,7 +174,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
     this.setState({
       Contact: {
         ...this.state.Contact,
-        Name: newValue.substring(0, 40)
+        Name: newValue
       }
     });
   };
@@ -187,7 +187,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
     this.setState({
       Contact: {
         ...this.state.Contact,
-        Email: newValue.substring(0, 40)
+        Email: newValue
       }
     });
   };
@@ -200,7 +200,7 @@ export default class ReactDetailsItemPanel extends React.Component<IReactDetails
     this.setState({
       Contact: {
         ...this.state.Contact,
-        MobileNumber: newValue.substring(0, 40)
+        MobileNumber: newValue
       }
     });
   };
