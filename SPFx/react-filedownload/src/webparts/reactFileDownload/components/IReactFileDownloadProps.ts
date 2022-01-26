@@ -1,3 +1,5 @@
+import { WebPartContext } from "@microsoft/sp-webpart-base";
+
 export interface IReactFileDownloadProps {
-  description: string;
+  context: WebPartContext;
 }
