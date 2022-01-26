@@ -77,10 +77,6 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
   constructor(props) {
     super(props);
 
-    // sp.setup({
-    //   spfxContext: this.props.context
-    // });
-
     this.state = ({
       year: '',
       month: '',
@@ -96,12 +92,9 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
     this.onDownloadReceipt = this.onDownloadReceipt.bind(this);
     this.base64ToArrayBuffer = this.base64ToArrayBuffer.bind(this);
     this.createAndDownloadBlobFile = this.createAndDownloadBlobFile.bind(this);
-    //this.loadUserDetails = this.loadUserDetails.bind(this);
-    //this.getSharePointLoggedInUserDetails = this.getSharePointLoggedInUserDetails.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
-    //await this.loadUserDetails();
   }
 
   private onYearChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
@@ -130,15 +123,7 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
 
     const arrayBuffer = this.base64ToArrayBuffer(base64Pdf);
 
-    //const userDetails = this.getUserDetails();
-
-    //const receiptFileNameForDownload = "Recibo_" + this.state.userName;
-
-    const receiptFileNameForDownload = "Recibo_" + this.props.context.pageContext.user.displayName;
-
-    //const profile = await sp.profiles.userProfile;
-
-    //const receiptFileNameForDownload = "Recibo_" + userDetails.Title;
+    const receiptFileNameForDownload = "Recibo_" + this.props.context.pageContext.user.displayName.replace(/\s/g, '');
 
     this.createAndDownloadBlobFile(arrayBuffer, receiptFileNameForDownload);
   }
@@ -148,35 +133,6 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
     const bytes = new Uint8Array(binaryString.length);
     return bytes.map((byte, i) => binaryString.charCodeAt(i));
   }
-
-  // public async getSharePointLoggedInUserDetails(ctx: any): Promise<any> {
-  //   try {
-  //     const web = new pnp.Web(ctx.pageContext.site.absoluteUrl);
-  //     return await web.currentUser.get();
-  //   } catch (error) {
-  //     console.log("Error in spLoggedInUserDetails : " + error);
-  //   }
-  // }
-
-  // private async loadUserDetails(): Promise<void> {
-  //   try {
-  //     let userDetails = await this.getSharePointLoggedInUserDetails(this.props.context);
-  //     this.setState({
-  //       userName: userDetails.Title,
-  //       userId: userDetails.Id,
-  //       userEmail: userDetails.Email,
-  //     });
-  //   } catch (error) {
-  //     console.log("Error in loadUserDetails : ", error);
-  //   }
-  // }
-
-  // private async loadUserDetails(): Promise<void> {
-  //   const { Title: userName } = await sp.web.currentUser.select('Title').get();
-  //   //this.setState({userName: "Miguel Isidoro"})
-  //   console.log({ userName });
-  //   this.setState({userName: userName})
-  // }
 
   private createAndDownloadBlobFile(body, filename, extension = 'pdf') {
     const blob = new Blob([body]);
