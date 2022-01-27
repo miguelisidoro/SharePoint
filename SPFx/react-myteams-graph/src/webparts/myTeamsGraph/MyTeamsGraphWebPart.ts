@@ -21,7 +21,7 @@ export default class MyTeamsGraphWebPart extends BaseClientSideWebPart<IMyTeamsG
     const element: React.ReactElement<IMyTeamsGraphProps> = React.createElement(
       MyTeamsGraph,
       {
-        description: this.properties.description
+        context: this.context
       }
     );
 
