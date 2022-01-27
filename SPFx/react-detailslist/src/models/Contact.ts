@@ -11,7 +11,5 @@ export class Contact implements IContact
         this.Name = obj.Name;
         this.Email = obj.Email;
         this.MobileNumber = obj.MobileNumber;
-
-        // Object.assign(this, obj);
     }
 }

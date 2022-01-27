@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@fluentui/react": "^8.51.1",
+    "@microsoft/microsoft-graph-types": "^2.13.0",
     "@microsoft/sp-core-library": "1.13.1",
+    "@microsoft/sp-http": "^1.13.1",
     "@microsoft/sp-loader": "^1.13.1",
     "@microsoft/sp-lodash-subset": "1.13.1",
     "@microsoft/sp-office-ui-fabric-core": "1.13.1",
