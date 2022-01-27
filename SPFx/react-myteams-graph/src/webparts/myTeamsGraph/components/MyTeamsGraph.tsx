@@ -25,17 +25,20 @@ import {
   getTheme
 } from '@fluentui/react';
 
+const userProfileInfo = {
+  imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=miguel.isidoro@createdevpt.onmicrosoft.com',
+  text: 'Miguel Isidoro'
+};
+
 export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, {}> {
   
-  
-
   constructor(props) {
     super(props);
   }
   
   public render(): React.ReactElement<IMyTeamsGraphProps> {
     return (
-      <Persona >
+      <Persona {...userProfileInfo}>
       </Persona>
     );
   }
