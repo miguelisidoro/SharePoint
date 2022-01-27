@@ -4,5 +4,4 @@ export interface IReactFileDownloadState {
     password: string;
     userName: string;
     userEmail:string;
-    userId: string;
 }

@@ -41,18 +41,12 @@ import { IReactDetailsListState } from './IReactDetailsListState';
 import ReactDetailsItemPanel from './ReactDetailsItemPanel';
 import * as tsStyles from "./ReactDetailsListStyles";
 
-const exampleChildClass = mergeStyles({
+const childClass = mergeStyles({
   display: 'block',
   marginBottom: '10px',
 });
 
 const textFieldStyles: Partial<ITextFieldStyles> = { root: { maxWidth: '300px' } };
-
-export interface IReactDetailsListItem {
-  key: number;
-  name: string;
-  value: number;
-}
 
 export class ReactDetailsList extends React.Component<IReactDetailsListProps, IReactDetailsListState> {
   private _selection: Selection;
@@ -330,14 +324,14 @@ export class ReactDetailsList extends React.Component<IReactDetailsListProps, IR
             ]}
           />
 
-          <div className={exampleChildClass}>{selectionDetails}</div>
+          <div className={childClass}>{selectionDetails}</div>
           <Text>
             Note: While focusing a row, pressing enter or double clicking will execute onItemInvoked, which in this
             example will show an alert.
           </Text>
           <Announced message={selectionDetails} />
           <TextField
-            className={exampleChildClass}
+            className={childClass}
             label="Filter by name:"
             onChange={this._onFilter}
             styles={textFieldStyles}

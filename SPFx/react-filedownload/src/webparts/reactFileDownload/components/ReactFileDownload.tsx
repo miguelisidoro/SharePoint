@@ -1,10 +1,5 @@
 import * as React from 'react';
 import { IReactFileDownloadProps } from './IReactFileDownloadProps';
-//import * as pnp from 'sp-pnp-js';
-import { sp } from "@pnp/sp";
-//import "@pnp/sp/profiles";
-import '@pnp/sp/webs';
-import '@pnp/sp/site-users';
 
 import {
   DefaultButton,
@@ -83,7 +78,6 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
       password: '',
       userName: '',
       userEmail: '',
-      userId: '',
     });
 
     this.onYearChange = this.onYearChange.bind(this);
@@ -95,15 +89,17 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
   }
 
   public async componentDidMount(): Promise<void> {
+    this.setState({
+      userEmail: this.props.context.pageContext.user.email,
+      userName: this.props.context.pageContext.user.displayName,
+    }) 
   }
 
   private onYearChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
-    event.preventDefault();
     this.setState({ year: item.key.toString() });
   };
 
   private onMonthChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
-    event.preventDefault();
     this.setState({ month: item.key.toString() });
   };
 
@@ -123,7 +119,7 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
 
     const arrayBuffer = this.base64ToArrayBuffer(base64Pdf);
 
-    const receiptFileNameForDownload = "Recibo_" + this.props.context.pageContext.user.displayName.replace(/\s/g, '');
+    const receiptFileNameForDownload = "Recibo_" + this.state.userName.replace(/\s/g, '');
 
     this.createAndDownloadBlobFile(arrayBuffer, receiptFileNameForDownload);
   }

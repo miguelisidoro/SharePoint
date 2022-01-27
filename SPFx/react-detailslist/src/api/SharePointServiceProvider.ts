@@ -10,7 +10,7 @@ import { SharePointFieldNames, SharePointListNames } from "../constants";
 
 export default class SharePointServiceProvider {
   constructor(private _context: WebPartContext) {
-    // Setuo Context to PnPjs and MSGraph
+    // Setup Context to PnPjs and MSGraph
     sp.setup({
       spfxContext: this._context
     });

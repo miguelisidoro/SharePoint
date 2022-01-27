@@ -18,8 +18,7 @@
     "@pnp/sp": "^2.11.0",
     "office-ui-fabric-react": "7.174.1",
     "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "sp-pnp-js": "^3.0.10"
+    "react-dom": "16.13.1"
   },
   "devDependencies": {
     "@types/react": "16.9.51",
