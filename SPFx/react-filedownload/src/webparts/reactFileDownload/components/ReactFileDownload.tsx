@@ -129,22 +129,29 @@ export default class ReactFileDownload extends React.Component<IReactFileDownloa
   }
 
   private base64ToArrayBuffer(base64: string) {
+    console.log("base64ToArrayBuffer");
     const binaryString = window.atob(base64); // Comment this if not using base64
     const bytes = new Uint8Array(binaryString.length);
+    
+    console.log("base64ToArrayBuffer before return");
+
     return bytes.map((byte, i) => binaryString.charCodeAt(i));
   }
 
   private createAndDownloadBlobFile(body, filename, extension = 'pdf') {
+    console.log("createAndDownloadBlobFile");
     const blob = new Blob([body]);
     const fileName = `${filename}.${extension}`;
     const link = document.createElement('a');
-    // Browsers that support HTML5 download attribute
     if (link.download !== undefined) {
+      console.log("createAndDownloadBlobFile not null");
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
       link.setAttribute('download', fileName);
+      link.dataset.interception = 'off'
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
+      console.log("createAndDownloadBlobFile before link click");
       link.click();
       document.body.removeChild(link);
     }
