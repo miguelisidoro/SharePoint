@@ -20,16 +20,18 @@ export class GraphServiceProvider {
         });
     }
 
-    public async getCurrentUserGroups(): Promise<Microsoft365Group[]> {
+    public async getMicrosoft365Groups(): Promise<Microsoft365Group[]> {
         debugger;
-        const members = await graph.groups.get();
+        const allGroups: MicrosoftGraph.Group[] = await graph.groups
+        .filter("groupTypes/any(a:a%20eq%20'unified')")
+        .select("displayName, id")
+        .usingCaching()
+        .get();
         
-        return null;
-
-        //let currentUserGroups: Microsoft365Group[];
+        let allMappedGroups: Microsoft365Group[] = Microsoft365GroupMapper.MapToMicrosoft365Groups(allGroups);
 
         //const currentUserGroupsGraph = await Providers.globalProvider.graph.api('/me/transitiveMemberOf').select('').get();
 
-        //eturn currentUserGroups;
+        return allMappedGroups;
     }
 }

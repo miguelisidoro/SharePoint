@@ -58,7 +58,7 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
   private async loadCurrentUserGroups() {
     console.log("componentDidMount: begin...");
 
-    let currentUserGroups: Microsoft365Group[] = await this.graphServiceProvider.getCurrentUserGroups();
+    let currentUserGroups: Microsoft365Group[] = await this.graphServiceProvider.getMicrosoft365Groups();
 
     this.setState({
       currentUserGroups: currentUserGroups,
