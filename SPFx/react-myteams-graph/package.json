@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@fluentui/react": "^8.51.1",
+    "@microsoft/mgt-element": "^2.3.1",
+    "@microsoft/mgt-sharepoint-provider": "^2.3.1",
     "@microsoft/microsoft-graph-types": "^2.13.0",
     "@microsoft/sp-core-library": "1.13.1",
     "@microsoft/sp-http": "^1.13.1",
@@ -18,6 +20,7 @@
     "@microsoft/sp-office-ui-fabric-core": "1.13.1",
     "@microsoft/sp-property-pane": "1.13.1",
     "@microsoft/sp-webpart-base": "1.13.1",
+    "@pnp/graph": "^2.11.0",
     "@pnp/sp": "^2.11.0",
     "office-ui-fabric-react": "7.174.1",
     "react": "16.13.1",

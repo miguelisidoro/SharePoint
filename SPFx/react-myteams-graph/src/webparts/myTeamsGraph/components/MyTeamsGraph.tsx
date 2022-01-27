@@ -24,10 +24,15 @@ import {
   Stack,
   getTheme
 } from '@fluentui/react';
-import { PersonInformation } from '../../../data/PersonInformation'
-export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, {}> {
+import { PersonInformation } from '../../../data/PersonInformation';
+import { GraphServiceProvider, SharePointServiceProvider } from '../../../api';
+import { Microsoft365Group } from '../../../data';
+import { IMyTeamsGraphState } from './IMyTeamsGraphPropsState';
+export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IMyTeamsGraphState> {
 
   private _userProfileInfo: PersonInformation[];
+  private sharePointServiceProvider: SharePointServiceProvider;
+  private graphServiceProvider: GraphServiceProvider;
 
   constructor(props) {
     super(props);
@@ -40,6 +45,24 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, {}
       imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=david.oliveira@createdevpt.onmicrosoft.com',
       text: 'David Oliveira'
     }];
+
+    this.graphServiceProvider = new GraphServiceProvider(this.props.context);
+
+    this.loadCurrentUserGroups = this.loadCurrentUserGroups.bind(this);
+  }
+
+  public async componentDidMount(): Promise<void> {
+    await this.loadCurrentUserGroups();
+  }
+
+  private async loadCurrentUserGroups() {
+    console.log("componentDidMount: begin...");
+
+    let currentUserGroups: Microsoft365Group[] = await this.graphServiceProvider.getCurrentUserGroups();
+
+    this.setState({
+      currentUserGroups: currentUserGroups,
+    });
   }
 
   public render(): React.ReactElement<IMyTeamsGraphProps> {

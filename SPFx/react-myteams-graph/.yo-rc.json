@@ -7,7 +7,7 @@
     "libraryName": "react-myteams-graph",
     "libraryId": "9909a1f0-3ffa-4ae8-a1ee-6983c2c185d4",
     "packageManager": "npm",
-    "isDomainIsolated": true,
+    "isDomainIsolated": false,
     "componentType": "webpart"
   }
 }
