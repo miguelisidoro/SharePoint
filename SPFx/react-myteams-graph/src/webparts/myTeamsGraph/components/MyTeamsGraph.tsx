@@ -24,22 +24,33 @@ import {
   Stack,
   getTheme
 } from '@fluentui/react';
-
-const userProfileInfo = {
-  imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=miguel.isidoro@createdevpt.onmicrosoft.com',
-  text: 'Miguel Isidoro'
-};
-
+import { PersonInformation } from '../../../data/PersonInformation'
 export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, {}> {
-  
+
+  private _userProfileInfo: PersonInformation[];
+
   constructor(props) {
     super(props);
+
+    this._userProfileInfo = [{
+      imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=miguel.isidoro@createdevpt.onmicrosoft.com',
+      text: 'Miguel Isidoro'
+    },
+    {
+      imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=david.oliveira@createdevpt.onmicrosoft.com',
+      text: 'David Oliveira'
+    }];
   }
-  
+
   public render(): React.ReactElement<IMyTeamsGraphProps> {
     return (
-      <Persona {...userProfileInfo}>
-      </Persona>
+      <div>
+        {
+          this._userProfileInfo.map(profile =>
+            <Persona {...profile}>
+            </Persona>
+          )}
+      </div>
     );
   }
 }
