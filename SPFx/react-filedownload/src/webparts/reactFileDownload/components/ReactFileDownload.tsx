@@ -69,6 +69,8 @@ const textFieldStyes = () => {
 
 export default class ReactFileDownload extends React.Component<IReactFileDownloadProps, IReactFileDownloadState> {
 
+  const [count, setCount] = useState(0);
+
   constructor(props) {
     super(props);
 
