@@ -102,18 +102,18 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
           <Dropdown styles={dropdownStyles} options={this.state.microsoftGroupOptions} placeholder="Team" onChange={this.onGroupChange} />
           <Label>Team Members</Label>
           {
-            this.state.selectedGroupMembers !== null && this.state.selectedGroupMembers.map(profile =>
-              <Persona {...profile}>
-              </Persona>
+            this.state.selectedGroupMembers !== null && this.state.selectedGroupMembers.map(groupMember =>
+              <LivePersona serviceScope={this._serviceScope} upn={groupMember.userPrincipalName}
+                template={
+                  <>
+                    <Persona {...groupMember} coinSize={48} />
+                  </>
+                }
+                context={this.props.context}
+              />
+              // <Persona {...groupMember}>
+              // </Persona>
             )}
-            <LivePersona serviceScope={this._serviceScope} upn="miguel.isidoro@createdevpt.onmicrosoft.com"
-              template={
-                <>
-                  <Persona imageUrl='/_layouts/15/userphoto.aspx?size=M&accountname=miguel.isidoro@createdevpt.onmicrosoft.com' text='Miguel Isidoro' secondaryText='Senior Dev' coinSize={48} />
-                </>
-              }
-              context={this.props.context}
-            />
         </div>
       );
     }

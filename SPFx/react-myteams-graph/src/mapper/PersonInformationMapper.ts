@@ -10,7 +10,8 @@ export class PersonInformationMapper
             new PersonInformation({
                 imageUrl: UserProfileInformation.profilePictureUrlPrefix + user.userPrincipalName,
                 text: user.name,
-                secondaryText: user.jobTitle
+                secondaryText: user.jobTitle,
+                userPrincipalName: user.userPrincipalName
             }));
 
         return mappedUsers;
