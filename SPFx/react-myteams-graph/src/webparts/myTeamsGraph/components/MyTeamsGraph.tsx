@@ -22,22 +22,38 @@ import {
   Spinner,
   SpinnerSize,
   Stack,
-  getTheme
+  getTheme,
+  Dropdown,
+  IDropdownStyles,
+  IDropdownOption
 } from '@fluentui/react';
 import { PersonInformation } from '../../../data/PersonInformation';
 import { GraphServiceProvider, SharePointServiceProvider } from '../../../api';
 import { Microsoft365Group } from '../../../data';
 import { IMyTeamsGraphState } from './IMyTeamsGraphPropsState';
+import { DropDownItemMapper } from '../../../mapper';
+
+const dropdownStyles: Partial<IDropdownStyles> = {
+  dropdown: { width: 100 },
+  dropdownOptionText: { overflow: 'visible', whiteSpace: 'normal' },
+  dropdownItem: { height: 'auto' },
+};
 export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IMyTeamsGraphState> {
 
-  private _userProfileInfo: PersonInformation[];
+  private userProfileInfo: PersonInformation[];
   private sharePointServiceProvider: SharePointServiceProvider;
   private graphServiceProvider: GraphServiceProvider;
 
   constructor(props) {
     super(props);
 
-    this._userProfileInfo = [{
+    this.state = ({
+      microsoft365Groups: null,
+      microsoftGroupOptions: null,
+      selectedGroupId: '',
+    });
+
+    this.userProfileInfo = [{
       imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=miguel.isidoro@createdevpt.onmicrosoft.com',
       text: 'Miguel Isidoro'
     },
@@ -48,32 +64,52 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
 
     this.graphServiceProvider = new GraphServiceProvider(this.props.context);
 
-    this.loadCurrentUserGroups = this.loadCurrentUserGroups.bind(this);
+    this.loadMicrosoft365Groups = this.loadMicrosoft365Groups.bind(this);
+    this.onTeamChange = this.onTeamChange.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
-    await this.loadCurrentUserGroups();
-  }
+    await this.loadMicrosoft365Groups();
 
-  private async loadCurrentUserGroups() {
-    console.log("componentDidMount: begin...");
-
-    let currentUserGroups: Microsoft365Group[] = await this.graphServiceProvider.getMicrosoft365Groups();
+    let groupOptions: any[] = DropDownItemMapper.MapToDropDownItems(this.state.microsoft365Groups);
 
     this.setState({
-      currentUserGroups: currentUserGroups,
+      microsoftGroupOptions: groupOptions,
     });
   }
 
+  private async loadMicrosoft365Groups() {
+    console.log("componentDidMount: begin...");
+
+    let microsoft365Groups: Microsoft365Group[] = await this.graphServiceProvider.getMicrosoft365Groups();
+
+    this.setState({
+      microsoft365Groups: microsoft365Groups,
+    });
+  }
+
+  private onTeamChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
+    this.setState({ selectedGroupId: item.key.toString() });
+  };
+
   public render(): React.ReactElement<IMyTeamsGraphProps> {
-    return (
-      <div>
-        {
-          this._userProfileInfo.map(profile =>
-            <Persona {...profile}>
-            </Persona>
-          )}
-      </div>
-    );
+
+    if (this.state.microsoftGroupOptions !== null) {
+      return (
+        <div>
+          <Label>Select Team</Label>
+          <Dropdown styles={dropdownStyles} options={this.state.microsoftGroupOptions} placeholder="Team" onChange={this.onTeamChange} />
+          <Label>Team Members</Label>
+          {
+            this.userProfileInfo.map(profile =>
+              <Persona {...profile}>
+              </Persona>
+            )}
+        </div>
+      );
+    }
+    else {
+      return (<div></div>);
+    }
   }
 }

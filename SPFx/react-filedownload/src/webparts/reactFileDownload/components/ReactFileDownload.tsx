@@ -32,12 +32,6 @@ import {
 import { DropdownMenuItemType, IDropdownStyles } from 'office-ui-fabric-react';
 import { IReactFileDownloadState } from './IReactFileDownloadState';
 
-const yearOptions = [
-  { key: '2022', text: '2022' },
-  { key: '2021', text: '2021' },
-  { key: '2020', text: '2020' },
-];
-
 const monthOptions = [
   { key: '1', text: '1' },
   { key: '2', text: '2' },
@@ -68,8 +62,6 @@ const textFieldStyes = () => {
 };
 
 export default class ReactFileDownload extends React.Component<IReactFileDownloadProps, IReactFileDownloadState> {
-
-  const [count, setCount] = useState(0);
 
   constructor(props) {
     super(props);
