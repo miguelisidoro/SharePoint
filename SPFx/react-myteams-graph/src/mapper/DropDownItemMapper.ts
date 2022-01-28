@@ -1,8 +1,7 @@
-import { IDropdownOption } from '@fluentui/react';
 import { Microsoft365Group } from '../data';
 
 export class DropDownItemMapper {
-    public static MapToDropDownItems(microsoft365Groups: Microsoft365Group[]): any[] {
+    public static mapToDropDownItems(microsoft365Groups: Microsoft365Group[]): any[] {
         let mappedDropDownItems: any[] = [];
 
         microsoft365Groups.forEach(microsoft365Group =>

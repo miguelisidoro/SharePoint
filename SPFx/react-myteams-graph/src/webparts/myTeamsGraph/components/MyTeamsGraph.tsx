@@ -31,7 +31,8 @@ import { PersonInformation } from '../../../data/PersonInformation';
 import { GraphServiceProvider, SharePointServiceProvider } from '../../../api';
 import { Microsoft365Group } from '../../../data';
 import { IMyTeamsGraphState } from './IMyTeamsGraphPropsState';
-import { DropDownItemMapper } from '../../../mapper';
+import { DropDownItemMapper, PersonInformationMapper } from '../../../mapper';
+import { Microsoft365GroupUser } from '../../../data/Microsoft365GroupUser';
 
 const dropdownStyles: Partial<IDropdownStyles> = {
   dropdown: { width: '300px', marginBottom: 10 },
@@ -50,28 +51,19 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
     this.state = ({
       microsoft365Groups: null,
       microsoftGroupOptions: null,
-      selectedGroupId: '',
+      selectedGroupMembers: null,
     });
-
-    this.userProfileInfo = [{
-      imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=miguel.isidoro@createdevpt.onmicrosoft.com',
-      text: 'Miguel Isidoro'
-    },
-    {
-      imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=david.oliveira@createdevpt.onmicrosoft.com',
-      text: 'David Oliveira'
-    }];
 
     this.graphServiceProvider = new GraphServiceProvider(this.props.context);
 
     this.loadMicrosoft365Groups = this.loadMicrosoft365Groups.bind(this);
-    this.onTeamChange = this.onTeamChange.bind(this);
+    this.onGroupChange = this.onGroupChange.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
     await this.loadMicrosoft365Groups();
 
-    let groupOptions: any[] = DropDownItemMapper.MapToDropDownItems(this.state.microsoft365Groups);
+    let groupOptions: any[] = DropDownItemMapper.mapToDropDownItems(this.state.microsoft365Groups);
 
     this.setState({
       microsoftGroupOptions: groupOptions,
@@ -79,7 +71,7 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
   }
 
   private async loadMicrosoft365Groups() {
-    console.log("componentDidMount: begin...");
+    console.log("componentDidMount...");
 
     let microsoft365Groups: Microsoft365Group[] = await this.graphServiceProvider.getMicrosoft365Groups();
 
@@ -88,8 +80,21 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
     });
   }
 
-  private onTeamChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
-    this.setState({ selectedGroupId: item.key.toString() });
+  private onGroupChange = async (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): Promise<void> => {
+    debugger;    
+    const groupMembers: Microsoft365GroupUser[] = await this.graphServiceProvider.getMicrosoft365GroupMembers(item.key.toString());
+
+    const groupMembersPersonInformation = PersonInformationMapper.mapToPersonInformations(groupMembers);
+    // this.userProfileInfo = [{
+    //   imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=miguel.isidoro@createdevpt.onmicrosoft.com',
+    //   text: 'Miguel Isidoro'
+    // },
+    // {
+    //   imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=david.oliveira@createdevpt.onmicrosoft.com',
+    //   text: 'David Oliveira'
+    // }];
+
+    this.setState({selectedGroupMembers : groupMembersPersonInformation });
   };
 
   public render(): React.ReactElement<IMyTeamsGraphProps> {
@@ -98,10 +103,10 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
       return (
         <div>
           <Label>Select Team</Label>
-          <Dropdown styles={dropdownStyles} options={this.state.microsoftGroupOptions} placeholder="Team" onChange={this.onTeamChange} />
+          <Dropdown styles={dropdownStyles} options={this.state.microsoftGroupOptions} placeholder="Team" onChange={this.onGroupChange} />
           <Label>Team Members</Label>
           {
-            this.userProfileInfo.map(profile =>
+            this.state.selectedGroupMembers !== null && this.state.selectedGroupMembers.map(profile =>
               <Persona {...profile}>
               </Persona>
             )}
