@@ -34,7 +34,7 @@ import { IMyTeamsGraphState } from './IMyTeamsGraphPropsState';
 import { DropDownItemMapper } from '../../../mapper';
 
 const dropdownStyles: Partial<IDropdownStyles> = {
-  dropdown: { width: '300px' },
+  dropdown: { width: '300px', marginBottom: 10 },
   dropdownOptionText: { overflow: 'visible', whiteSpace: 'normal' },
   dropdownItem: { height: 'auto' },
 };
@@ -99,7 +99,6 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
         <div>
           <Label>Select Team</Label>
           <Dropdown styles={dropdownStyles} options={this.state.microsoftGroupOptions} placeholder="Team" onChange={this.onTeamChange} />
-          <Separator></Separator>
           <Label>Team Members</Label>
           {
             this.userProfileInfo.map(profile =>
