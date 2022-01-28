@@ -9,7 +9,8 @@ export class PersonInformationMapper
         const mappedUsers = users.map(user => 
             new PersonInformation({
                 imageUrl: UserProfileInformation.profilePictureUrlPrefix + user.userPrincipalName,
-                text: user.name
+                text: user.name,
+                secondaryText: user.jobTitle
             }));
 
         return mappedUsers;

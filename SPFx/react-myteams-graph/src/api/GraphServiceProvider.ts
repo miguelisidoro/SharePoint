@@ -7,7 +7,7 @@ import { Microsoft365GroupMapper } from "../mapper/Microsoft365GroupMapper";
 import { SharePointProvider } from '@microsoft/mgt-sharepoint-provider';
 import { Providers } from '@microsoft/mgt-element';
 
-import { graph } from "@pnp/graph";
+import { graph, graphGet, GraphQueryable } from "@pnp/graph";
 import "@pnp/graph/groups";
 import "@pnp/graph/members";
 import { Microsoft365GroupUserMapper } from "../mapper";
@@ -23,6 +23,7 @@ export class GraphServiceProvider {
     }
 
     public async getMicrosoft365Groups(): Promise<Microsoft365Group[]> {
+       
         const allGroups: MicrosoftGraph.Group[] = await graph.groups
         .filter("groupTypes/any(a:a%20eq%20'unified')")
         .select("displayName, id")

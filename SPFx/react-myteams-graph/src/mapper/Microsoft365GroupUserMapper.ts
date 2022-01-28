@@ -9,7 +9,8 @@ export class Microsoft365GroupUserMapper
             new Microsoft365GroupUser({
                 email: userGraph.mail,
                 name: userGraph.displayName,
-                userPrincipalName: userGraph.userPrincipalName
+                userPrincipalName: userGraph.userPrincipalName,
+                jobTitle: userGraph.jobTitle
             }));
 
         return mappedUsers;

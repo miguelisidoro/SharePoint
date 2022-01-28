@@ -25,7 +25,8 @@ import {
   getTheme,
   Dropdown,
   IDropdownStyles,
-  IDropdownOption
+  IDropdownOption,
+  themeRulesStandardCreator
 } from '@fluentui/react';
 import { PersonInformation } from '../../../data/PersonInformation';
 import { GraphServiceProvider, SharePointServiceProvider } from '../../../api';
@@ -33,6 +34,8 @@ import { Microsoft365Group } from '../../../data';
 import { IMyTeamsGraphState } from './IMyTeamsGraphPropsState';
 import { DropDownItemMapper, PersonInformationMapper } from '../../../mapper';
 import { Microsoft365GroupUser } from '../../../data/Microsoft365GroupUser';
+import { LivePersona } from "@pnp/spfx-controls-react/lib/controls/LivePersona";
+import { ServiceScope } from '@microsoft/sp-core-library';
 
 const dropdownStyles: Partial<IDropdownStyles> = {
   dropdown: { width: '300px', marginBottom: 10 },
@@ -41,12 +44,13 @@ const dropdownStyles: Partial<IDropdownStyles> = {
 };
 export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IMyTeamsGraphState> {
 
-  private userProfileInfo: PersonInformation[];
-  private sharePointServiceProvider: SharePointServiceProvider;
-  private graphServiceProvider: GraphServiceProvider;
+  private _graphServiceProvider: GraphServiceProvider;
+  private _serviceScope: ServiceScope;
 
   constructor(props) {
     super(props);
+
+    this._serviceScope = null;
 
     this.state = ({
       microsoft365Groups: null,
@@ -54,7 +58,7 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
       selectedGroupMembers: null,
     });
 
-    this.graphServiceProvider = new GraphServiceProvider(this.props.context);
+    this._graphServiceProvider = new GraphServiceProvider(this.props.context);
 
     this.loadMicrosoft365Groups = this.loadMicrosoft365Groups.bind(this);
     this.onGroupChange = this.onGroupChange.bind(this);
@@ -73,7 +77,7 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
   private async loadMicrosoft365Groups() {
     console.log("componentDidMount...");
 
-    let microsoft365Groups: Microsoft365Group[] = await this.graphServiceProvider.getMicrosoft365Groups();
+    let microsoft365Groups: Microsoft365Group[] = await this._graphServiceProvider.getMicrosoft365Groups();
 
     this.setState({
       microsoft365Groups: microsoft365Groups,
@@ -82,7 +86,7 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
 
   private onGroupChange = async (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): Promise<void> => {
     debugger;    
-    const groupMembers: Microsoft365GroupUser[] = await this.graphServiceProvider.getMicrosoft365GroupMembers(item.key.toString());
+    const groupMembers: Microsoft365GroupUser[] = await this._graphServiceProvider.getMicrosoft365GroupMembers(item.key.toString());
 
     const groupMembersPersonInformation = PersonInformationMapper.mapToPersonInformations(groupMembers);
 
@@ -102,6 +106,14 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
               <Persona {...profile}>
               </Persona>
             )}
+            <LivePersona serviceScope={this._serviceScope} upn="miguel.isidoro@createdevpt.onmicrosoft.com"
+              template={
+                <>
+                  <Persona imageUrl='/_layouts/15/userphoto.aspx?size=M&accountname=miguel.isidoro@createdevpt.onmicrosoft.com' text='Miguel Isidoro' secondaryText='Senior Dev' coinSize={48} />
+                </>
+              }
+              context={this.props.context}
+            />
         </div>
       );
     }

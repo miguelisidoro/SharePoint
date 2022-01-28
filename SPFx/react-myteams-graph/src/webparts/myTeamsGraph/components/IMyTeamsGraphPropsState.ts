@@ -1,3 +1,4 @@
+import { ServiceScope } from "@microsoft/sp-core-library";
 import { Microsoft365Group, PersonInformation } from "../../../data";
 
 export interface IMyTeamsGraphState
