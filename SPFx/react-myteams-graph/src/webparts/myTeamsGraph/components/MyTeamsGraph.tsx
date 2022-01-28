@@ -85,14 +85,6 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
     const groupMembers: Microsoft365GroupUser[] = await this.graphServiceProvider.getMicrosoft365GroupMembers(item.key.toString());
 
     const groupMembersPersonInformation = PersonInformationMapper.mapToPersonInformations(groupMembers);
-    // this.userProfileInfo = [{
-    //   imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=miguel.isidoro@createdevpt.onmicrosoft.com',
-    //   text: 'Miguel Isidoro'
-    // },
-    // {
-    //   imageUrl: '/_layouts/15/userphoto.aspx?size=M&accountname=david.oliveira@createdevpt.onmicrosoft.com',
-    //   text: 'David Oliveira'
-    // }];
 
     this.setState({selectedGroupMembers : groupMembersPersonInformation });
   };
