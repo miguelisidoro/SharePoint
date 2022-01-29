@@ -1,0 +1,19 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "react-birth-days-and-new-hires-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/reactBirthDaysAndNewHires/ReactBirthDaysAndNewHiresWebPart.js",
+          "manifest": "./src/webparts/reactBirthDaysAndNewHires/ReactBirthDaysAndNewHiresWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "ReactBirthDaysAndNewHiresWebPartStrings": "lib/webparts/reactBirthDaysAndNewHires/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+  }
+}

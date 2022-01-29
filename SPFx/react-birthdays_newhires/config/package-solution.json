@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "react-birthdays-newhires-client-side-solution",
+    "id": "4139e145-7c7a-450f-a92c-328735c04915",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.13.1"
+    }
+  },
+  "paths": {
+    "zippedPackage": "solution/react-birthdays-newhires.sppkg"
+  }
+}
