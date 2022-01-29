@@ -118,16 +118,14 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
             <div className={styles.myTeamsContainer}>
               {
                 this.state.selectedGroupMembers !== null && this.state.selectedGroupMembers.map(groupMember =>
-                    <Stack horizontal wrap>
-                      <LivePersona serviceScope={this._serviceScope} upn={groupMember.userPrincipalName}
-                        template={
-                          <>
-                            <Persona {...groupMember} {...personaProps} coinSize={48} />
-                          </>
-                        }
-                        context={this.props.context}
-                      />
-                    </Stack>
+                  <LivePersona serviceScope={this._serviceScope} upn={groupMember.userPrincipalName}
+                    template={
+                      <>
+                        <Persona {...groupMember} {...personaProps} coinSize={48} />
+                      </>
+                    }
+                    context={this.props.context}
+                  />
                 )
               }
             </div>
