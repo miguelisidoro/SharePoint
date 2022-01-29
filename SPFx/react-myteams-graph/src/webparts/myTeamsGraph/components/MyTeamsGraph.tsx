@@ -26,7 +26,8 @@ import {
   Dropdown,
   IDropdownStyles,
   IDropdownOption,
-  themeRulesStandardCreator
+  themeRulesStandardCreator,
+  IPersonaProps
 } from '@fluentui/react';
 import { PersonInformation } from '../../../data/PersonInformation';
 import { GraphServiceProvider, SharePointServiceProvider } from '../../../api';
@@ -36,12 +37,24 @@ import { DropDownItemMapper, PersonInformationMapper } from '../../../mapper';
 import { Microsoft365GroupUser } from '../../../data/Microsoft365GroupUser';
 import { LivePersona } from "@pnp/spfx-controls-react/lib/controls/LivePersona";
 import { ServiceScope } from '@microsoft/sp-core-library';
+import styles from './MyTeamsGraph.module.scss';
 
 const dropdownStyles: Partial<IDropdownStyles> = {
   dropdown: { width: '300px', marginBottom: 10 },
   dropdownOptionText: { overflow: 'visible', whiteSpace: 'normal' },
   dropdownItem: { height: 'auto' },
 };
+
+const personaProps: IPersonaProps = {
+  size: PersonaSize.size48,
+  styles: {
+    root: {
+      width: 350,
+      margin: 5,
+    },
+  },
+};
+
 export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IMyTeamsGraphState> {
 
   private _graphServiceProvider: GraphServiceProvider;
@@ -85,12 +98,12 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
   }
 
   private onGroupChange = async (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): Promise<void> => {
-    debugger;    
+    debugger;
     const groupMembers: Microsoft365GroupUser[] = await this._graphServiceProvider.getMicrosoft365GroupMembers(item.key.toString());
 
     const groupMembersPersonInformation = PersonInformationMapper.mapToPersonInformations(groupMembers);
 
-    this.setState({selectedGroupMembers : groupMembersPersonInformation });
+    this.setState({ selectedGroupMembers: groupMembersPersonInformation });
   };
 
   public render(): React.ReactElement<IMyTeamsGraphProps> {
@@ -102,18 +115,23 @@ export default class MyTeamsGraph extends React.Component<IMyTeamsGraphProps, IM
           <Dropdown styles={dropdownStyles} options={this.state.microsoftGroupOptions} placeholder="Team" onChange={this.onGroupChange} />
           <Label>Team Members</Label>
           {
-            this.state.selectedGroupMembers !== null && this.state.selectedGroupMembers.map(groupMember =>
-              <LivePersona serviceScope={this._serviceScope} upn={groupMember.userPrincipalName}
-                template={
-                  <>
-                    <Persona {...groupMember} coinSize={48} />
-                  </>
-                }
-                context={this.props.context}
-              />
-              // <Persona {...groupMember}>
-              // </Persona>
-            )}
+            <div className={styles.myTeamsContainer}>
+              {
+                this.state.selectedGroupMembers !== null && this.state.selectedGroupMembers.map(groupMember =>
+                    <Stack horizontal wrap>
+                      <LivePersona serviceScope={this._serviceScope} upn={groupMember.userPrincipalName}
+                        template={
+                          <>
+                            <Persona {...groupMember} {...personaProps} coinSize={48} />
+                          </>
+                        }
+                        context={this.props.context}
+                      />
+                    </Stack>
+                )
+              }
+            </div>
+          }
         </div>
       );
     }

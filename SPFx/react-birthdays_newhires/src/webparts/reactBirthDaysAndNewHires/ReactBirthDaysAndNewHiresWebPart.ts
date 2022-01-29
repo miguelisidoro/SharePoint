@@ -10,9 +10,14 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'ReactBirthDaysAndNewHiresWebPartStrings';
 import ReactBirthDaysAndNewHires from './components/ReactBirthDaysAndNewHires';
 import { IReactBirthDaysAndNewHiresProps } from './components/IReactBirthDaysAndNewHiresProps';
+import { PropertyFieldNumber } from '@pnp/spfx-property-controls/lib/PropertyFieldNumber';
 
 export interface IReactBirthDaysAndNewHiresWebPartProps {
-  description: string;
+  personalInformationListUrl: string;
+  numberOfItemsToShow: number;
+  typeOfInformation: string;
+  birthDayNumberOfUpcomingDays: number;
+  hireDateUpcomingDays: number;
 }
 
 export default class ReactBirthDaysAndNewHiresWebPart extends BaseClientSideWebPart<IReactBirthDaysAndNewHiresWebPartProps> {
@@ -21,7 +26,10 @@ export default class ReactBirthDaysAndNewHiresWebPart extends BaseClientSideWebP
     const element: React.ReactElement<IReactBirthDaysAndNewHiresProps> = React.createElement(
       ReactBirthDaysAndNewHires,
       {
-        description: this.properties.description
+        personalInformationListUrl: this.properties.personalInformationListUrl,
+        numberOfItemsToShow: this.properties.numberOfItemsToShow,
+        birthDayNumberOfUpcomingDays: this.properties.birthDayNumberOfUpcomingDays,
+        context: this.context
       }
     );
 
@@ -49,7 +57,16 @@ export default class ReactBirthDaysAndNewHiresWebPart extends BaseClientSideWebP
               groupFields: [
                 PropertyPaneTextField('description', {
                   label: strings.DescriptionFieldLabel
-                })
+                }),
+                PropertyFieldNumber("birthDayNumberOfUpcomingDays", {
+                  key: "birthDayNumberOfUpcomingDays",
+                  label: strings.NumberUpComingDaysLabel,
+                  description: strings.NumberUpComingDaysLabel,
+                  value: this.properties.numberUpcomingDays,
+                  maxValue: 10,
+                  minValue: 5,
+                  disabled: false
+                }),
               ]
             }
           ]

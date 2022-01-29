@@ -1,3 +1,8 @@
+import { WebPartContext } from "@microsoft/sp-webpart-base";
+
 export interface IReactBirthDaysAndNewHiresProps {
-  description: string;
+  personalInformationListUrl: string;
+  numberOfItemsToShow: number;
+  birthDayNumberOfUpcomingDays: number;
+  context: WebPartContext;
 }
