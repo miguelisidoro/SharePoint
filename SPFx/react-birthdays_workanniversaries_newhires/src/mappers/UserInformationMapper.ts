@@ -3,16 +3,19 @@ import { UserInformation } from '../models';
 
 export class UserInformationMapper
 {
-    // public static mapToUserInformations(users: Microsoft365GroupUser[]): UserInformation[]
-    // {
-    //     const mappedUsers = users.map(user => 
-    //         new UserInformation({
-    //             imageUrl: UserProfileInformation.profilePictureUrlPrefix + user.userPrincipalName,
-    //             text: user.name,
-    //             secondaryText: user.jobTitle,
-    //             userPrincipalName: user.userPrincipalName
-    //         }));
+    public static mapToUserInformations(usersSharePoint: any[]): UserInformation[]
+    {
+        debugger;
+        const mappedUsers = usersSharePoint.map(userSharePoint => 
+            new UserInformation({
+                title: userSharePoint.Title,
+                jobTitle: userSharePoint.JobTitle,
+                userTitle: userSharePoint.User.Title,
+                userEmail: userSharePoint.User.EMail,
+                birthDate: new Date(),
+                hireDate: new Date(),
+            }));
 
-    //     return mappedUsers;
-    // }
+        return mappedUsers;
+    }
 }

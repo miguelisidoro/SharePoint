@@ -9,6 +9,8 @@ export const SharePointFieldNames =
     Title: "Title",
     JobTitle: "JobTitle",
     User: 'User',
+    UserTitle: 'User/Title',
+    UserEmail: 'User/EMail',
     BirthDate: 'BirthDate',
     HireDate: 'HireDate'
 }

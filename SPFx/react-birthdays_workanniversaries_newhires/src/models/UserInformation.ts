@@ -1,14 +1,18 @@
 export class UserInformation
 {
-    imageUrl: string;
-    text: string;
-    secondaryText: string;
-    userPrincipalName: string;
+    title: string;
+    userTitle: string;
+    userEmail: string;
+    jobTitle: string;
+    birthDate: Date;
+    hireDate: Date;
 
     constructor(obj: Partial<UserInformation> = {}) {
-        this.imageUrl = obj.imageUrl;
-        this.text = obj.text;
-        this.secondaryText = obj.secondaryText;
-        this.userPrincipalName = obj.userPrincipalName;
+        this.title = obj.title;
+        this.userTitle = obj.userTitle;
+        this.userEmail = obj.userEmail;
+        this.jobTitle = obj.jobTitle;
+        this.birthDate = obj.birthDate;
+        this.hireDate = obj.hireDate;
     }
 }
