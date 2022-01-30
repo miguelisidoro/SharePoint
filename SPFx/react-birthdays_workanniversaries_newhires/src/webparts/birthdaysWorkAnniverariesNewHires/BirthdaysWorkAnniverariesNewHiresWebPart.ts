@@ -4,6 +4,7 @@ import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
   PropertyPaneChoiceGroup,
+  PropertyPaneDropdown,
   PropertyPaneSlider,
   PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
@@ -60,7 +61,7 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
                 PropertyPaneSlider('numberOfItemsToShow',{
                   label: strings.NumberOfItemsToShowLabel, min:1, max:10, value: 5
                 }),
-                PropertyPaneChoiceGroup('informationType', {
+                PropertyPaneDropdown('informationType', {
                   label: strings.InformationTypeLabel,
                   options: [ 
                     { key: 'Birthdays', text: strings.BirthdaysInformationTypeLabel }, 
