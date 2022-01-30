@@ -49,7 +49,7 @@ const personaProps: IPersonaProps = {
   size: PersonaSize.size48,
   styles: {
     root: {
-      width: 350,
+      width: 325,
       margin: 5,
     },
   },

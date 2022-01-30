@@ -1,7 +1,12 @@
 declare interface IBirthdaysWorkAnniverariesNewHiresWebPartStrings {
   PropertyPaneDescription: string;
-  BasicGroupName: string;
-  DescriptionFieldLabel: string;
+  PropertiesGroupName: string;
+  SharePointRelativeListUrlFieldLabel: string;
+  NumberOfItemsToShowLabel: string;
+  InformationTypeLabel: string;
+  BirthdaysInformationTypeLabel: string;
+  WorkAnniversariesInformationTypeLabel: string;
+  NewHiresInformationTypeLabel: string;
 }
 
 declare module 'BirthdaysWorkAnniverariesNewHiresWebPartStrings' {

@@ -3,6 +3,8 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
+  PropertyPaneChoiceGroup,
+  PropertyPaneSlider,
   PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
@@ -12,7 +14,9 @@ import BirthdaysWorkAnniverariesNewHires from './components/BirthdaysWorkAnniver
 import { IBirthdaysWorkAnniverariesNewHiresProps } from './components/IBirthdaysWorkAnniverariesNewHiresProps';
 
 export interface IBirthdaysWorkAnniverariesNewHiresWebPartProps {
-  description: string;
+  sharePointRelativeListUrl: string;
+  informationType: string;
+  numberOfItemsToShow: number;
 }
 
 export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClientSideWebPart<IBirthdaysWorkAnniverariesNewHiresWebPartProps> {
@@ -21,7 +25,10 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
     const element: React.ReactElement<IBirthdaysWorkAnniverariesNewHiresProps> = React.createElement(
       BirthdaysWorkAnniverariesNewHires,
       {
-        description: this.properties.description
+        informationType: this.properties.informationType,
+        numberOfItemsToShow: this.properties.numberOfItemsToShow,
+        sharePointRelativeListUrl: this.properties.sharePointRelativeListUrl,
+        context: this.context
       }
     );
 
@@ -45,11 +52,21 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
           },
           groups: [
             {
-              groupName: strings.BasicGroupName,
+              groupName: strings.PropertiesGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
-                })
+                PropertyPaneTextField('sharePointRelativeListUrl', {
+                  label: strings.SharePointRelativeListUrlFieldLabel
+                }),
+                PropertyPaneSlider('numberOfItemsToShow',{
+                  label: strings.NumberOfItemsToShowLabel, min:1, max:10, value: 5
+                }),
+                PropertyPaneChoiceGroup('informationType', {
+                  label: strings.InformationTypeLabel,
+                  options: [ 
+                    { key: 'Birthdays', text: strings.BirthdaysInformationTypeLabel }, 
+                    { key: 'WorkAnniversaries', text: strings.WorkAnniversariesInformationTypeLabel }, 
+                    { key: 'NewHires', text: strings.NewHiresInformationTypeLabel }, 
+                  ]})
               ]
             }
           ]

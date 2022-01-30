@@ -1,3 +1,8 @@
+import { WebPartContext } from "@microsoft/sp-webpart-base";
+
 export interface IBirthdaysWorkAnniverariesNewHiresProps {
-  description: string;
+  sharePointRelativeListUrl: string;
+  informationType: string;
+  numberOfItemsToShow: number;
+  context: WebPartContext;
 }
