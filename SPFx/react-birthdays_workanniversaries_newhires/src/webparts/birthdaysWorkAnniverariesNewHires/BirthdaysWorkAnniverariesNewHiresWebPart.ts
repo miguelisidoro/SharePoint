@@ -29,7 +29,7 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
         informationType: this.properties.informationType,
         numberOfItemsToShow: this.properties.numberOfItemsToShow,
         sharePointRelativeListUrl: this.properties.sharePointRelativeListUrl,
-        context: this.context
+        context: this.context,
       }
     );
 
