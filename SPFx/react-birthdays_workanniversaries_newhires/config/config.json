@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "birthdays-work-anniveraries-new-hires-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/birthdaysWorkAnniverariesNewHires/BirthdaysWorkAnniverariesNewHiresWebPart.js",
+          "manifest": "./src/webparts/birthdaysWorkAnniverariesNewHires/BirthdaysWorkAnniverariesNewHiresWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "BirthdaysWorkAnniverariesNewHiresWebPartStrings": "lib/webparts/birthdaysWorkAnniverariesNewHires/loc/{locale}.js"
+  }
+}
