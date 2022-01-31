@@ -28,8 +28,8 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
       BirthdaysWorkAnniverariesNewHires,
       {
         informationType: this.properties.informationType,
-        numberOfItemsToShow: this.properties.numberOfItemsToShow,
-        numberOfDaysToRetrieve: this.properties.numberOfDaysToRetrieve, 
+        numberOfItemsToShow: 20,//this.properties.numberOfItemsToShow,
+        numberOfDaysToRetrieve: 30,//this.properties.numberOfDaysToRetrieve, 
         sharePointRelativeListUrl: this.properties.sharePointRelativeListUrl,
         context: this.context,
       }
@@ -64,7 +64,7 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
                   label: strings.NumberOfItemsToShowLabel, min:1, max:10, value: 5
                 }),
                 PropertyPaneSlider('numberOfDaysToRetrieve',{
-                  label: strings.NumberOfDaysToRetrieveLabel, min:1, max:10, value: 5
+                  label: strings.NumberOfDaysToRetrieveLabel, min:1, max:100, value: 30
                 }),
                 PropertyPaneDropdown('informationType', {
                   label: strings.InformationTypeLabel,
