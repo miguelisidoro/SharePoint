@@ -42,6 +42,19 @@ export class SharePointServiceProvider {
 
     private async onInit() { }
 
+    // Sort birthdays by birthdate
+    private SortBirthdaysByBirthDate(users: UserInformation[]) {
+        return users.sort( (a, b) => {
+          if (a.birthDate > b.birthDate) {
+            return 1;
+          }
+          if (a.birthDate < b.birthDate) {
+            return -1;
+          }
+          return 0;
+        });
+      }
+
     // Get users from User Information SharePoint List
     public async getUserBirthDays(): Promise<UserInformation[]> {
         let today: string, currentMonth: string, currentDay: number;
@@ -51,7 +64,9 @@ export class SharePointServiceProvider {
 
         try {
             today = '2000-' + moment().format('MM-DD');
+            //today = '2000-12-18';
             currentMonth = moment().format('MM');
+            //currentMonth = '12';
             currentDay = parseInt(moment().format('DD'));
             filter = "BirthDate ge '" + today + "'";
 
@@ -61,6 +76,8 @@ export class SharePointServiceProvider {
             console.log("currentMonth: " + currentMonth);
             if (currentMonth === '12') {
                 currentDayWithNumberOfDaysToRetrieve = currentDay + this._numberOfDaysToRetrieve;
+                nextYearStartDate = '2000-01-01';
+                //filter = "BirthDate ge '" + today + "' or (BirthDate ge '" + nextYearStartDate + "')";
                 if ((currentDayWithNumberOfDaysToRetrieve) > 31) {
                     nextYearStartDate = '2000-01-01';
                     nextYearEndDay = currentDayWithNumberOfDaysToRetrieve - 31;
@@ -82,43 +99,30 @@ export class SharePointServiceProvider {
                 .expand(SharePointFieldNames.User)
                 .filter(filter)
                 .top(this._numberOfItemsToShow)
-                .usingCaching()
+                //.usingCaching()
                 .get();
 
-            // if (usersSharePoint && usersSharePoint.length > 0) {
-            //     monthsExceptoDecemberBirthdays = [];
-            //     decemberBirthdays = [];
-            //     for (const item of listItems) {
-            //         allBirthDays.push({ key: item.fields.email, userName: item.fields.Title, userEmail: item.fields.email, jobDescription: item.fields.JobTitle, birthday: moment.utc(item.fields.Birthday).local().format() });
-            //     }
-            //     // Sort Items by Birthday MSGraph List Items API don't support ODATA orderBy
-            //     // for end of year teste and sorting
-            //     //  first select all bithdays of Dezember to sort this must be the first to show
-            //     if (moment().format('MM') === '12') {
-            //         decemberBirthdays = allBirthDays.filter((v) => {
-            //             var _currentMonth = moment(v.birthday, ["MM-DD-YYYY", "YYYY-MM-DD", "DD/MM/YYYY", "MM/DD/YYYY"]).format('MM');
-            //             return (_currentMonth === '12');
-            //         });
-            //         // Sort by birthday date in Dezember month
-            //         decemberBirthdays = this.SortBirthdays(decemberBirthdays);
-            //         // select birthdays != of month 12
-            //         monthsExceptoDecemberBirthdays = allBirthDays.filter((v) => {
-            //             var _currentMonth = moment(v.birthday, ["MM-DD-YYYY", "YYYY-MM-DD", "DD/MM/YYYY", "MM/DD/YYYY"]).format('MM');
-            //             return (_currentMonth !== '12');
-            //         });
-            //         // sort by birthday date
-            //         monthsExceptoDecemberBirthdays = this.SortBirthdays(monthsExceptoDecemberBirthdays);
-            //         // Join the 2 arrays
-            //         allBirthDays = decemberBirthdays.concat(monthsExceptoDecemberBirthdays);
-            //     }
-            //     else {
-            //         allBirthDays = this.SortBirthdays(allBirthDays);
-            //     }
-            // }
+            if (usersSharePoint && usersSharePoint.length > 0) {
 
-            let mappedUsers = UserInformationMapper.mapToUserInformations(usersSharePoint);
+                allBirthDays = UserInformationMapper.mapToUserInformations(usersSharePoint);
 
-            return mappedUsers;
+                // First, select all bithdays of December to sort
+                // Then, select all birthdays of the remaining months
+                // Finally, contact both arrays and return
+                if (currentMonth === '12') {
+                    decemberBirthdays = allBirthDays.filter(b => moment(b.birthDate).format('MM') === '12');
+                    decemberBirthdays = this.SortBirthdaysByBirthDate(decemberBirthdays);
+                    monthsExceptoDecemberBirthdays = allBirthDays.filter(b =>moment(b.birthDate).format('MM') !== '12');
+                    monthsExceptoDecemberBirthdays = this.SortBirthdaysByBirthDate(monthsExceptoDecemberBirthdays);
+                    // Join the 2 arrays
+                    allBirthDays = decemberBirthdays.concat(monthsExceptoDecemberBirthdays);
+                }
+                else {
+                    allBirthDays = this.SortBirthdaysByBirthDate(allBirthDays);
+                }
+            }
+
+            return allBirthDays;
         } catch (error) {
             Log.error(LOG_SOURCE, error, this._context.serviceScope);
             throw new Error(error.message);
