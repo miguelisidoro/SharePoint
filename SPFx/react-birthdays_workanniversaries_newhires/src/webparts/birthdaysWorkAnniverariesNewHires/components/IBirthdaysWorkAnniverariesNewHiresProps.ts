@@ -4,5 +4,6 @@ export interface IBirthdaysWorkAnniverariesNewHiresProps {
   sharePointRelativeListUrl: string;
   informationType: string;
   numberOfItemsToShow: number;
+  numberOfDaysToRetrieve: number;
   context: WebPartContext;
 }

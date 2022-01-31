@@ -18,6 +18,7 @@ export interface IBirthdaysWorkAnniverariesNewHiresWebPartProps {
   sharePointRelativeListUrl: string;
   informationType: string;
   numberOfItemsToShow: number;
+  numberOfDaysToRetrieve: number;
 }
 
 export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClientSideWebPart<IBirthdaysWorkAnniverariesNewHiresWebPartProps> {
@@ -28,6 +29,7 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
       {
         informationType: this.properties.informationType,
         numberOfItemsToShow: this.properties.numberOfItemsToShow,
+        numberOfDaysToRetrieve: this.properties.numberOfDaysToRetrieve, 
         sharePointRelativeListUrl: this.properties.sharePointRelativeListUrl,
         context: this.context,
       }
@@ -60,6 +62,9 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
                 }),
                 PropertyPaneSlider('numberOfItemsToShow',{
                   label: strings.NumberOfItemsToShowLabel, min:1, max:10, value: 5
+                }),
+                PropertyPaneSlider('numberOfDaysToRetrieve',{
+                  label: strings.NumberOfDaysToRetrieveLabel, min:1, max:10, value: 5
                 }),
                 PropertyPaneDropdown('informationType', {
                   label: strings.InformationTypeLabel,
