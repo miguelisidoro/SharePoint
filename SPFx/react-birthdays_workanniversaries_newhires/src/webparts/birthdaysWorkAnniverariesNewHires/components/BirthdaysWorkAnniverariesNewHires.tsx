@@ -5,12 +5,60 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import { SharePointServiceProvider } from '../../../api';
 import { UserInformation } from '../../../models';
 
-export default class BirthdaysWorkAnniverariesNewHires extends React.Component<IBirthdaysWorkAnniverariesNewHiresProps, {}> {
+import {
+  CommandBar,
+  DefaultButton,
+  Dialog,
+  DialogFooter,
+  DialogType,
+  IContextualMenuProps,
+  IconButton,
+  ImageFit,
+  Label,
+  Link,
+  MessageBar,
+  MessageBarType,
+  Persona,
+  PersonaSize,
+  PrimaryButton,
+  SearchBox,
+  Separator,
+  ShimmeredDetailsList,
+  Spinner,
+  SpinnerSize,
+  Stack,
+  getTheme,
+  Dropdown,
+  IDropdownStyles,
+  IDropdownOption,
+  themeRulesStandardCreator,
+  IPersonaProps
+} from '@fluentui/react';
+import { LivePersona } from "@pnp/spfx-controls-react/lib/controls/LivePersona";
+
+import { IBirthdaysWorkAnniverariesNewHiresState } from './IBirthdaysWorkAnniverariesNewHiresState';
+import { ServiceScope } from '@microsoft/sp-core-library';
+import { PersonaInformationMapper } from '../../../mappers/PersonaInformationMapper';
+
+const personaProps: IPersonaProps = {
+  size: PersonaSize.size48,
+  styles: {
+    root: {
+      width: 325,
+      margin: 5,
+    },
+  },
+};
+
+export default class BirthdaysWorkAnniverariesNewHires extends React.Component<IBirthdaysWorkAnniverariesNewHiresProps, IBirthdaysWorkAnniverariesNewHiresState> {
 
   private sharePointServiceProvider: SharePointServiceProvider;
+  private _serviceScope: ServiceScope;
 
   constructor(props: IBirthdaysWorkAnniverariesNewHiresProps) {
     super(props);
+
+    this._serviceScope = null;
 
     this.sharePointServiceProvider = new SharePointServiceProvider(this.props.context,
       this.props.sharePointRelativeListUrl,
@@ -31,30 +79,37 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
   private async loadUsers() {
     debugger;
     if (this.props.sharePointRelativeListUrl != null && this.props.sharePointRelativeListUrl != undefined) {
-      let users: UserInformation[] = await this.sharePointServiceProvider.getUsers();
+      let users: UserInformation[] = await this.sharePointServiceProvider.getUserBirthDays();
+
+      const usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users);
 
       this.setState({
-        users: users,
+        users: usersPersonInformation,
       });
     }
   }
 
   public render(): React.ReactElement<IBirthdaysWorkAnniverariesNewHiresProps> {
-    return (
-      <div className={styles.birthdaysWorkAnniverariesNewHires}>
-        <div className={styles.container}>
-          <div className={styles.row}>
-            <div className={styles.column}>
-              <span className={styles.title}>Welcome to SharePoint!</span>
-              <p className={styles.subTitle}>Customize SharePoint experiences using Web Parts.</p>
-              <p className={styles.description}>{escape(this.props.informationType)}</p>
-              <a href="https://aka.ms/spfx" className={styles.button}>
-                <span className={styles.label}>Learn more</span>
-              </a>
-            </div>
-          </div>
+    if (this.state.users !== null) {
+      return (
+        <div>
+            {
+              this.state.users !== null && this.state.users.map(user =>
+                <LivePersona serviceScope={this._serviceScope} upn={user.userPrincipalName}
+                  template={
+                    <>
+                      <Persona {...user} {...personaProps} coinSize={48} />
+                    </>
+                  }
+                  context={this.props.context}
+                />
+              )
+            }
         </div>
-      </div>
-    );
+      );
+    }
+    else {
+      return (<div></div>);
+    }
   }
 }
