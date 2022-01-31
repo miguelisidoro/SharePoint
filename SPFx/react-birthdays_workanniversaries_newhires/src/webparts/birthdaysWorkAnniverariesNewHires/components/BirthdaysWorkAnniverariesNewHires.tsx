@@ -12,7 +12,10 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
   constructor(props: IBirthdaysWorkAnniverariesNewHiresProps) {
     super(props);
 
-    this.sharePointServiceProvider = new SharePointServiceProvider(this.props.context, this.props.sharePointRelativeListUrl);
+    this.sharePointServiceProvider = new SharePointServiceProvider(this.props.context, 
+      this.props.sharePointRelativeListUrl,
+      this.props.numberOfItemsToShow,
+      this.props.numberOfDaysToRetrieve);
 
     this.state = {
       users: null,

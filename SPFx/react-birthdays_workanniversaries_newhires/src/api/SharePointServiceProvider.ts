@@ -20,14 +20,22 @@ const MD5_MODULE_ID: string = "8494e7d7-6b99-47b2-a741-59873e42f16f";
 
 export class SharePointServiceProvider {
     private _sharePointRelativeListUrl: string;
+    private _numberOfItemsToShow: number;
+    private _numberOfDaysToRetrieve: number;
 
-    constructor(private _context: WebPartContext, sharePointRelativeListUrl: string) {
-        // Setup Context to PnPjs and MSGraph
+    constructor(private _context: WebPartContext,
+        sharePointRelativeListUrl: string,
+        numberOfItemsToShow: number,
+        numberOfDaysToRetrieve: number) {
+
+        // Setup Context to PnP JS
         sp.setup({
             spfxContext: this._context
         });
 
         this._sharePointRelativeListUrl = sharePointRelativeListUrl;
+        this._numberOfItemsToShow = numberOfItemsToShow;
+        this._numberOfDaysToRetrieve = numberOfDaysToRetrieve;
 
         this.onInit();
     }
@@ -36,7 +44,30 @@ export class SharePointServiceProvider {
 
     // Get users from User Information SharePoint List
     public async getUsers(): Promise<UserInformation[]> {
+        let today: string, currentMonth: string, currentDay: number;
+        let filter: string, currentDayWithNumberOfDaysToRetrieve: number, nextYearEndDay: number, nextYearStartDate: string;
+        let nextYearEndDate: string;
+
         try {
+            today = '2000-' + moment().format('MM-DD');
+            currentMonth = moment().format('MM');
+            currentDay = parseInt(moment().format('DD'));
+            filter = "fields/Birthday ge '" + today + "'";
+    
+            // If we are in December, we have to look if there are birthdays in January
+            // We have to build a condition to select birthdays from January based on number of days to retrieve
+            // We cannot use the year, the year is always 2000
+            console.log("currentMonth: " + currentMonth);
+            if (currentMonth === '12') {
+                currentDayWithNumberOfDaysToRetrieve = currentDay + this._numberOfDaysToRetrieve;
+                if ((currentDayWithNumberOfDaysToRetrieve) > 31) {
+                    nextYearStartDate = '2000-01-01';
+                    nextYearEndDay = currentDayWithNumberOfDaysToRetrieve - 31;
+                    nextYearEndDate = '2000-01-' + nextYearEndDay;
+                    filter = "fields/Birthday ge '" + today + "' or (fields/Birthday ge '" + nextYearStartDate + "' and fields/Birthday le '" + nextYearEndDate + "')";
+                }
+            }
+
             const usersSharePoint: any[] = await sp.web
                 .getList(this._sharePointRelativeListUrl)
                 .items.select(
@@ -60,7 +91,7 @@ export class SharePointServiceProvider {
             throw new Error(error.message);
         }
 
-        
+
         // let _results, _today: string, _month: string, _day: number;
         // let _filter: string, _countdays: number, _f:number, _nextYearStart: string;
         // let  _FinalDate: string;
@@ -94,10 +125,5 @@ export class SharePointServiceProvider {
         //     .get();
 
         //     return _results.value;
-
-        // } catch (error) {
-        // console.dir(error);
-        // return Promise.reject(error);
-        // }
     }
 }
