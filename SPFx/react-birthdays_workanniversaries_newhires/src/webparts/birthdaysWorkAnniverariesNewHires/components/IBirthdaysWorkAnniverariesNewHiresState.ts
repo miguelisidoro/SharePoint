@@ -1,6 +1,5 @@
-import { UserInformation } from "../../../models";
+import { PersonaInformation, UserInformation } from "../../../models";
 
 export interface IBirthdaysWorkAnniverariesNewHiresState {
-    //items: IReactDetailsListItem[];
-    users: UserInformation[];
+    users: PersonaInformation[];
   }

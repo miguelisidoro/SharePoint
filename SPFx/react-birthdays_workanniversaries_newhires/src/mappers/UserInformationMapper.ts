@@ -12,8 +12,8 @@ export class UserInformationMapper
                 jobTitle: userSharePoint.JobTitle,
                 userTitle: userSharePoint.User.Title,
                 userEmail: userSharePoint.User.EMail,
-                birthDate: new Date(),
-                hireDate: new Date(),
+                birthDate: userSharePoint.BirthDate,
+                hireDate: userSharePoint.HireDate,
             }));
 
         return mappedUsers;
