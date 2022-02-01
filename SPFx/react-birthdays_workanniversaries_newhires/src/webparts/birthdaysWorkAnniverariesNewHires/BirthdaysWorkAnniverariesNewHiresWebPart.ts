@@ -13,6 +13,7 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'BirthdaysWorkAnniverariesNewHiresWebPartStrings';
 import BirthdaysWorkAnniverariesNewHires from './components/BirthdaysWorkAnniverariesNewHires';
 import { IBirthdaysWorkAnniverariesNewHiresProps } from './components/IBirthdaysWorkAnniverariesNewHiresProps';
+import { PropertyFieldNumber } from '@pnp/spfx-property-controls/lib/PropertyFieldNumber';
 
 export interface IBirthdaysWorkAnniverariesNewHiresWebPartProps {
   sharePointRelativeListUrl: string;
@@ -28,8 +29,8 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
       BirthdaysWorkAnniverariesNewHires,
       {
         informationType: this.properties.informationType,
-        numberOfItemsToShow: 20,//this.properties.numberOfItemsToShow,
-        numberOfDaysToRetrieve: 90,//this.properties.numberOfDaysToRetrieve, 
+        numberOfItemsToShow: this.properties.numberOfItemsToShow,
+        numberOfDaysToRetrieve: this.properties.numberOfDaysToRetrieve,//90,
         sharePointRelativeListUrl: this.properties.sharePointRelativeListUrl,
         context: this.context,
       }
@@ -60,11 +61,23 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
                 PropertyPaneTextField('sharePointRelativeListUrl', {
                   label: strings.SharePointRelativeListUrlFieldLabel
                 }),
-                PropertyPaneSlider('numberOfItemsToShow',{
-                  label: strings.NumberOfItemsToShowLabel, min:1, max:10, value: 5
+                PropertyFieldNumber("numberOfItemsToShow", {
+                  key: "numberOfItemsToShow",
+                  label: strings.NumberOfItemsToShowLabel,
+                  description: strings.NumberOfItemsToShowLabel,
+                  value: this.properties.numberOfItemsToShow,
+                  maxValue: 10,
+                  minValue: 1,
+                  disabled: false
                 }),
-                PropertyPaneSlider('numberOfDaysToRetrieve',{
-                  label: strings.NumberOfDaysToRetrieveLabel, min:1, max:90, value: 90
+                PropertyFieldNumber("numberOfDaysToRetrieve", {
+                  key: "numberOfDaysToRetrieve",
+                  label: strings.NumberOfDaysToRetrieveLabel,
+                  description: strings.NumberOfDaysToRetrieveLabel,
+                  value: this.properties.numberOfDaysToRetrieve,
+                  maxValue: 90,
+                  minValue: 1,
+                  disabled: false
                 }),
                 PropertyPaneDropdown('informationType', {
                   label: strings.InformationTypeLabel,

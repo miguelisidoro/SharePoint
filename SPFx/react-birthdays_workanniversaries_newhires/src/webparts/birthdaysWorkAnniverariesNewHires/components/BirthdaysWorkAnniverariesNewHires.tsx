@@ -78,10 +78,25 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
 
   private async loadUsers() {
     debugger;
-    if (this.props.sharePointRelativeListUrl != null && this.props.sharePointRelativeListUrl != undefined) {
-      let users: UserInformation[] = await this.sharePointServiceProvider.getUserBirthDays();
+    if (this.props.sharePointRelativeListUrl != null && this.props.sharePointRelativeListUrl != undefined
+      && this.props.numberOfItemsToShow !== null && this.props.numberOfItemsToShow !== undefined
+      && this.props.numberOfDaysToRetrieve !== null && this.props.numberOfDaysToRetrieve !== undefined
+      && this.props.informationType !== null && this.props.informationType !== undefined) {
 
-      const usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users);
+      let users: UserInformation[] = [];
+
+      //TODO: usar enum
+      if (this.props.informationType === 'Birthdays') {
+        users = await this.sharePointServiceProvider.getUserBirthDays();
+      }
+      else if (this.props.informationType === 'Birthdays') {
+        //TODO
+      }
+      else {
+        //TODO
+      }
+
+      let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users);
 
       this.setState({
         users: usersPersonInformation,
@@ -93,18 +108,18 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
     if (this.state.users !== null) {
       return (
         <div>
-            {
-              this.state.users !== null && this.state.users.map(user =>
-                <LivePersona serviceScope={this._serviceScope} upn={user.userPrincipalName}
-                  template={
-                    <>
-                      <Persona {...user} {...personaProps} />
-                    </>
-                  }
-                  context={this.props.context}
-                />
-              )
-            }
+          {
+            this.state.users !== null && this.state.users.map(user =>
+              <LivePersona serviceScope={this._serviceScope} upn={user.userPrincipalName}
+                template={
+                  <>
+                    <Persona {...user} {...personaProps} />
+                  </>
+                }
+                context={this.props.context}
+              />
+            )
+          }
         </div>
       );
     }
