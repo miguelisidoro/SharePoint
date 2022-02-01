@@ -44,46 +44,43 @@ export class SharePointServiceProvider {
 
     // Sort birthdays by birthdate
     private SortBirthdaysByBirthDate(users: UserInformation[]) {
-        return users.sort( (a, b) => {
-          if (a.birthDate > b.birthDate) {
-            return 1;
-          }
-          if (a.birthDate < b.birthDate) {
-            return -1;
-          }
-          return 0;
+        return users.sort((a, b) => {
+            if (a.birthDate > b.birthDate) {
+                return 1;
+            }
+            if (a.birthDate < b.birthDate) {
+                return -1;
+            }
+            return 0;
         });
-      }
+    }
 
     // Get users from User Information SharePoint List
     public async getUserBirthDays(): Promise<UserInformation[]> {
-        let today: string, currentMonth: string, currentDay: number;
+        let currentDate: Date, today: string, currentMonth: string, currentDay: number;
         let filter: string, currentDayWithNumberOfDaysToRetrieve: number, nextYearEndDay: number, nextYearStartDate: string;
         let nextYearEndDate: string;
-        let monthsExceptoDecemberBirthdays: UserInformation[], decemberBirthdays: UserInformation[], allBirthDays: UserInformation[];
+        let otherMonthsBirthdays: UserInformation[], currentMonthWithDaysToRetriveBirthdays: UserInformation[], allBirthDays: UserInformation[];
 
         try {
             today = '2000-' + moment().format('MM-DD');
-            //today = '2000-12-18';
+            //today = '2000-12-01';
             currentMonth = moment().format('MM');
             //currentMonth = '12';
-            currentDay = parseInt(moment().format('DD'));
-            filter = "BirthDate ge '" + today + "'";
-
-            // If we are in December, we have to look if there are birthdays in January
-            // We have to build a condition to select birthdays from January based on number of days to retrieve
-            // We cannot use the year, the year is always 2000
-            console.log("currentMonth: " + currentMonth);
-            if (currentMonth === '12') {
-                currentDayWithNumberOfDaysToRetrieve = currentDay + this._numberOfDaysToRetrieve;
-                nextYearStartDate = '2000-01-01';
-                //filter = "BirthDate ge '" + today + "' or (BirthDate ge '" + nextYearStartDate + "')";
-                if ((currentDayWithNumberOfDaysToRetrieve) > 31) {
-                    nextYearStartDate = '2000-01-01';
-                    nextYearEndDay = currentDayWithNumberOfDaysToRetrieve - 31;
-                    nextYearEndDate = '2000-01-' + nextYearEndDay;
-                    filter = "BirthDate ge '" + today + "' or (BirthDate ge '" + nextYearStartDate + "' and BirthDate le '" + nextYearEndDate + "')";
-                }
+            currentDate = moment(today).toDate();
+            currentDay = parseInt(moment(today).format('DD'));
+            let currentDatewithDaysToRetrieve = currentDate;
+            currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
+            let filterEndDate;
+            let endDateYear = moment(currentDatewithDaysToRetrieve).format('YYYY');
+            // If end date is from next year, get birthdays from both years
+            if (endDateYear === '2001') {
+                filterEndDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
+                filter = "(BirthDate ge '" + today + "' and BirthDate le '2000-12-31') or (BirthDate ge '2000-01-01' and BirthDate le '" + filterEndDate + "')";
+            }
+            else {
+                filterEndDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
+                filter = "BirthDate ge '" + today + "' and BirthDate le '" + filterEndDate + "'";
             }
 
             const usersSharePoint: any[] = await sp.web
@@ -106,19 +103,19 @@ export class SharePointServiceProvider {
 
                 allBirthDays = UserInformationMapper.mapToUserInformations(usersSharePoint);
 
-                // First, select all bithdays of December to sort
-                // Then, select all birthdays of the remaining months
+                // If end date is from next year, first, select all birthdays from current year to sort
+                // Then, select all birthdays of the remaining months from next year
                 // Finally, contact both arrays and return
-                if (currentMonth === '12') {
-                    decemberBirthdays = allBirthDays.filter(b => moment(b.birthDate).format('MM') === '12');
-                    decemberBirthdays = this.SortBirthdaysByBirthDate(decemberBirthdays);
-                    monthsExceptoDecemberBirthdays = allBirthDays.filter(b =>moment(b.birthDate).format('MM') !== '12');
-                    monthsExceptoDecemberBirthdays = this.SortBirthdaysByBirthDate(monthsExceptoDecemberBirthdays);
+                if (endDateYear === '2001') {
+                    currentMonthWithDaysToRetriveBirthdays = allBirthDays.filter(b => moment(b.birthDate).month() + 1 >= parseInt(currentMonth));
+                    currentMonthWithDaysToRetriveBirthdays = this.SortBirthdaysByBirthDate(currentMonthWithDaysToRetriveBirthdays);
+                    otherMonthsBirthdays = allBirthDays.filter(b => moment(b.birthDate).month() + 1 < parseInt(currentMonth));
+                    otherMonthsBirthdays = this.SortBirthdaysByBirthDate(otherMonthsBirthdays);
                     // Join the 2 arrays
-                    allBirthDays = decemberBirthdays.concat(monthsExceptoDecemberBirthdays);
+                    allBirthDays = currentMonthWithDaysToRetriveBirthdays.concat(otherMonthsBirthdays);
                 }
                 else {
-                    allBirthDays = this.SortBirthdaysByBirthDate(allBirthDays);
+                     allBirthDays = this.SortBirthdaysByBirthDate(allBirthDays);
                 }
             }
 
