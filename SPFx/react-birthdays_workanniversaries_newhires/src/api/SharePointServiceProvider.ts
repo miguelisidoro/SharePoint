@@ -96,7 +96,7 @@ export class SharePointServiceProvider {
                 .expand(SharePointFieldNames.User)
                 .filter(filter)
                 .top(this._numberOfItemsToShow)
-                //.usingCaching()
+                .usingCaching()
                 .get();
 
             if (usersSharePoint && usersSharePoint.length > 0) {
