@@ -39,6 +39,7 @@ import { LivePersona } from "@pnp/spfx-controls-react/lib/controls/LivePersona";
 import { IBirthdaysWorkAnniverariesNewHiresState } from './IBirthdaysWorkAnniverariesNewHiresState';
 import { ServiceScope } from '@microsoft/sp-core-library';
 import { PersonaInformationMapper } from '../../../mappers/PersonaInformationMapper';
+import { InformationType } from '../../../enums';
 
 const personaProps: IPersonaProps = {
   size: PersonaSize.size48,
@@ -77,7 +78,6 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
   }
 
   private async loadUsers() {
-    debugger;
     if (this.props.sharePointRelativeListUrl != null && this.props.sharePointRelativeListUrl != undefined
       && this.props.numberOfItemsToShow !== null && this.props.numberOfItemsToShow !== undefined
       && this.props.numberOfDaysToRetrieve !== null && this.props.numberOfDaysToRetrieve !== undefined
@@ -85,11 +85,13 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
 
       let users: UserInformation[] = [];
 
+      const informationType: InformationType = InformationType[this.props.informationType];
+
       //TODO: usar enum
-      if (this.props.informationType === 'Birthdays') {
+      if (informationType === InformationType.Birthdays) {
         users = await this.sharePointServiceProvider.getUserBirthDays();
       }
-      else if (this.props.informationType === 'Birthdays') {
+      else if (informationType === InformationType.WorkAnniversaries) {
         //TODO
       }
       else {

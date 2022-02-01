@@ -5,7 +5,6 @@ export class UserInformationMapper
 {
     public static mapToUserInformations(usersSharePoint: any[]): UserInformation[]
     {
-        debugger;
         const mappedUsers = usersSharePoint.map(userSharePoint => 
             new UserInformation({
                 title: userSharePoint.Title,
