@@ -9,5 +9,6 @@ define([], function () {
     "BirthdaysInformationTypeLabel": "Birthdays",
     "WorkAnniversariesInformationTypeLabel": "Work Anniversaries",
     "NewHiresInformationTypeLabel": "New Hires",
+    "TodayLabel": "Today"
   }
 });

@@ -98,7 +98,7 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
                 <LivePersona serviceScope={this._serviceScope} upn={user.userPrincipalName}
                   template={
                     <>
-                      <Persona {...user} {...personaProps} coinSize={48} />
+                      <Persona {...user} {...personaProps} />
                     </>
                   }
                   context={this.props.context}
