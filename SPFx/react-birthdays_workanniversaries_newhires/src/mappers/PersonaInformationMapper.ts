@@ -11,6 +11,7 @@ export class PersonaInformationMapper
                 imageUrl: UserProfileInformation.profilePictureUrlPrefix + user.userEmail,
                 text: user.userTitle,
                 secondaryText: moment(user.birthDate, ["MM-DD-YYYY", "YYYY-MM-DD", "DD/MM/YYYY", "MM/DD/YYYY"]).format('Do MMMM'),
+                userPrincipalName: user.userEmail
             }));
 
         return mappedPersonas;
