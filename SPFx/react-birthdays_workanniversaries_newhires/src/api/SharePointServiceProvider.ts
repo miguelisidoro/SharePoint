@@ -68,8 +68,7 @@ export class SharePointServiceProvider {
         });
     }
 
-    private SortUsers(anniversaries: UserInformation[], informationType: InformationType) : UserInformation[]
-    {
+    private SortUsers(anniversaries: UserInformation[], informationType: InformationType): UserInformation[] {
         if (informationType === InformationType.Birthdays) {
             anniversaries = this.SortUsersByBirthDate(anniversaries);
         }
@@ -80,39 +79,64 @@ export class SharePointServiceProvider {
         return anniversaries;
     }
 
-    // Get users anniversaries
-    public async getAnniversaries(informationType: InformationType): Promise<UserInformation[]> {
+    // Get users anniversaries or new hires
+    // Important NOTE: All dates are stored with year 2000
+    public async getAnniversariesOrHireDates(informationType: InformationType): Promise<UserInformation[]> {
         let currentDate: Date, today: string, currentMonth: string, currentDay: number;
         let filter: string;
-        let otherMonthsAnniversaries: UserInformation[], currentMonthWithDaysToRetriveAnniversaries: UserInformation[], allAnniversaries: UserInformation[];
+        let otherYearUsers: UserInformation[], currentYearUsers: UserInformation[], allUsers: UserInformation[];
 
         try {
+            const filterField: string = informationType === InformationType.Birthdays ?
+                SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
 
-            const filterField: string = informationType === InformationType.Birthdays ? 
-            SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
-            
             today = '2000-' + moment().format('MM-DD');
-            //today = '2000-12-01';
             currentMonth = moment().format('MM');
-            //currentMonth = '12';
             currentDate = moment(today).toDate();
             currentDay = parseInt(moment(today).format('DD'));
             let currentDatewithDaysToRetrieve = currentDate;
-            currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
-            let filterEndDate;
-            let endDateYear = moment(currentDatewithDaysToRetrieve).format('YYYY');
-            // If end date is from next year, get birthdays from both years
-            if (endDateYear === '2001') {
-                filterEndDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
-                // filter = "(" + filterField + " ge '" + today + "' and " + filterField + " le '2000-12-31') or (" + filterField + " ge '2000-01-01' and " + filterField + " le '" + filterEndDate + "')";
-
-                filter = `(${filterField} ge '${today}' and ${filterField} le '2000-12-31') or (${filterField} ge ` + 
-                `'2000-01-01' and ${filterField} le '${filterEndDate}')`;
+            if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
+                // For anniversaries, add the number of days to the current date (we want to show future dates)
+                currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
             }
             else {
-                filterEndDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
-                //filter = "BirthDate ge '" + today + "' and BirthDate le '" + filterEndDate + "'";
-                filter = `${filterField} ge '${today}' and ${filterField} le '${filterEndDate}'`;
+                // For new hires, decrease the number of days from the current date (we want to show past dates)
+                currentDatewithDaysToRetrieve.setDate(currentDate.getDate() - this._numberOfDaysToRetrieve);
+            }
+            let currentDatewithDaysToRetrieveYear = moment(currentDatewithDaysToRetrieve).format('YYYY');
+
+            if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
+                let filterEndDate;
+                // If end date is from next year, get anniversaries from both years
+                if (currentDatewithDaysToRetrieveYear === '2001') {
+                    // filter end date is calculated, taking one year from the currentDatewithDaysToRetrieve since all dates are stores in year 2000
+                    filterEndDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
+
+                    filter = `(${filterField} ge '${today}' and ${filterField} le '2000-12-31') or (${filterField} ge ` +
+                        `'2000-01-01' and ${filterField} le '${filterEndDate}')`;
+                }
+                else {
+                    // simpler filter => just filter dates greater than today and less or equal to the end date (today + number of days to retrieve)
+                    filterEndDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
+                    filter = `${filterField} ge '${today}' and ${filterField} le '${filterEndDate}'`;
+                }
+            }
+            else // New Hires
+            {
+                let filterStartDate;
+                // If end date is from next year, get new hires from both years
+                if (currentDatewithDaysToRetrieveYear === '1999') {
+                    // filter end date is calculated, adding one year to the currentDatewithDaysToRetrieve since all dates are stores in year 2000
+                    filterStartDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
+
+                    filter = `(${filterField} le '${today}' and ${filterField} ge '2000-01-01') or (${filterField} le ` +
+                        `'2000-12-31' and ${filterField} ge '${filterStartDate}')`;
+                }
+                else {
+                    // simpler filter => just filter dates less or equal to today and greater than start date (today - number of days to retrieve)
+                    filterStartDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
+                    filter = `${filterField} le '${today}' and ${filterField} ge '${filterStartDate}'`;
+                }
             }
 
             const usersSharePoint = await sp.web
@@ -133,25 +157,47 @@ export class SharePointServiceProvider {
 
             if (usersSharePoint && usersSharePoint.length > 0) {
 
-                allAnniversaries = UserInformationMapper.mapToUserInformations(usersSharePoint);
+                allUsers = UserInformationMapper.mapToUserInformations(usersSharePoint);
 
-                // If end date is from next year, first, select all birthdays from current year to sort
-                // Then, select all birthdays of the remaining months from next year
-                // Finally, contact both arrays and return
-                if (endDateYear === '2001') {
-                    currentMonthWithDaysToRetriveAnniversaries = allAnniversaries.filter(b => moment(b.birthDate).month() + 1 >= parseInt(currentMonth));
-                    currentMonthWithDaysToRetriveAnniversaries = 
-                    this.SortUsers(currentMonthWithDaysToRetriveAnniversaries, informationType);
-                    otherMonthsAnniversaries = this.SortUsers(otherMonthsAnniversaries, informationType);
-                    // Join the 2 arrays
-                    allAnniversaries = currentMonthWithDaysToRetriveAnniversaries.concat(otherMonthsAnniversaries);
+                if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
+                    // If end date is from next year, first, select all anniversaries from current year to sort
+                    // Then, select all anniversaries of the remaining months from next year
+                    // Finally, contact both arrays and return
+                    if (currentDatewithDaysToRetrieveYear === '2001') {
+                        // get the anniversaries from the current year (months are >= currentMonth)
+                        currentYearUsers = allUsers.filter(b => moment(b.birthDate).month() + 1 >= parseInt(currentMonth));
+                        currentYearUsers = this.SortUsers(currentYearUsers, informationType);
+                        otherYearUsers = allUsers.filter(b => moment(b.birthDate).month() + 1 < parseInt(currentMonth));
+                        otherYearUsers = this.SortUsers(otherYearUsers, informationType);
+                        // Join the 2 arrays
+                        allUsers = currentYearUsers.concat(otherYearUsers);
+                    }
+                    else {
+                        allUsers = this.SortUsers(allUsers, informationType);
+                    }
                 }
-                else {
-                     allAnniversaries = this.SortUsers(allAnniversaries, informationType);
+                else
+                {
+                    // New Hires
+                    // If end date is from previous year, first, select all new hires from current year to sort
+                    // Then, select all of the remaining months from previous year
+                    // Finally, contact both arrays, starting by previous year users and return
+                    if (currentDatewithDaysToRetrieveYear === '1999') {
+                        // get the new hires from the previous year (months are >= currentMonth)
+                        currentYearUsers = allUsers.filter(b => moment(b.birthDate).month() + 1 <= parseInt(currentMonth));
+                        currentYearUsers = this.SortUsers(currentYearUsers, informationType);
+                        otherYearUsers = allUsers.filter(b => moment(b.birthDate).month() + 1 > parseInt(currentMonth));
+                        otherYearUsers = this.SortUsers(otherYearUsers, informationType);
+                        // Join the 2 arrays
+                        allUsers = currentYearUsers.concat(otherYearUsers);
+                    }
+                    else {
+                        allUsers = this.SortUsers(allUsers, informationType);
+                    }
                 }
             }
 
-            return allAnniversaries;
+            return allUsers;
         } catch (error) {
             Log.error(LOG_SOURCE, error, this._context.serviceScope);
             throw new Error(error.message);

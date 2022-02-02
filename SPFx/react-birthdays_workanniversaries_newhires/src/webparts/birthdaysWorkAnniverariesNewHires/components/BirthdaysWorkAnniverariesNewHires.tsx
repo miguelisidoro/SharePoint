@@ -69,6 +69,8 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
     this.state = {
       users: null,
     };
+
+    this.loadUsers = this.loadUsers.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
@@ -87,12 +89,7 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
 
       const informationType: InformationType = InformationType[this.props.informationType];
 
-      if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
-        users = await this.sharePointServiceProvider.getAnniversaries(informationType);
-      }
-      else { //New Hires
-        //TODO
-      }
+      users = await this.sharePointServiceProvider.getAnniversariesOrHireDates(informationType);
 
       let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
 
