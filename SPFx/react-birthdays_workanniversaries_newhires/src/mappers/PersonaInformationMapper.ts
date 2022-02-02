@@ -2,6 +2,7 @@ import * as moment from 'moment';
 import { UserProfileInformation } from '../constants';
 import { PersonaInformation, UserInformation } from '../models';
 import * as strings from 'BirthdaysWorkAnniverariesNewHiresWebPartStrings';
+import { InformationType } from '../enums';
 
 export class PersonaInformationMapper {
     // Returns if a date is today
@@ -20,14 +21,26 @@ export class PersonaInformationMapper {
         return moment(inputDate, ["MM-DD-YYYY", "YYYY-MM-DD", "DD/MM/YYYY", "MM/DD/YYYY"]).format('Do MMMM');
     }
 
-    public static mapToPersonaInformations(users: UserInformation[]): PersonaInformation[] {
-        const mappedPersonas = users.map(user =>
-            new PersonaInformation({
+    public static mapToPersonaInformations(users: UserInformation[], informationType: InformationType): PersonaInformation[] {
+        const mappedPersonas = users.map(user => {
+            let secondaryText: string;
+
+            if (informationType === InformationType.Birthdays)
+            {
+                secondaryText = this.isDateToday(user.birthDate) ? strings.TodayLabel : this.formatDateToString(user.birthDate);
+            }
+            else
+            {
+                secondaryText = this.isDateToday(user.hireDate) ? strings.TodayLabel : this.formatDateToString(user.hireDate);
+            }
+
+            return new PersonaInformation({
                 imageUrl: UserProfileInformation.profilePictureUrlPrefix + user.userEmail,
                 text: user.userTitle,
-                secondaryText: this.isDateToday(user.birthDate) ? strings.TodayLabel : this.formatDateToString(user.birthDate),
+                secondaryText: secondaryText,
                 userPrincipalName: user.userEmail,
-            }));
+            })
+        });
 
         return mappedPersonas;
     }

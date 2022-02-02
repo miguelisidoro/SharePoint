@@ -44,7 +44,7 @@ export class SharePointServiceProvider {
     private async onInit() { }
 
     // Sort birthdays by birthdate
-    private SortBirthdaysByBirthDate(users: UserInformation[]) {
+    private SortUsersByBirthDate(users: UserInformation[]) {
         return users.sort((a, b) => {
             if (a.birthDate > b.birthDate) {
                 return 1;
@@ -54,6 +54,30 @@ export class SharePointServiceProvider {
             }
             return 0;
         });
+    }
+
+    private SortUsersByHireDate(users: UserInformation[]) {
+        return users.sort((a, b) => {
+            if (a.hireDate > b.hireDate) {
+                return 1;
+            }
+            if (a.hireDate < b.hireDate) {
+                return -1;
+            }
+            return 0;
+        });
+    }
+
+    private SortUsers(anniversaries: UserInformation[], informationType: InformationType) : UserInformation[]
+    {
+        if (informationType === InformationType.Birthdays) {
+            anniversaries = this.SortUsersByBirthDate(anniversaries);
+        }
+        else {
+            anniversaries = this.SortUsersByHireDate(anniversaries);
+        }
+
+        return anniversaries;
     }
 
     // Get users anniversaries
@@ -116,14 +140,14 @@ export class SharePointServiceProvider {
                 // Finally, contact both arrays and return
                 if (endDateYear === '2001') {
                     currentMonthWithDaysToRetriveAnniversaries = allAnniversaries.filter(b => moment(b.birthDate).month() + 1 >= parseInt(currentMonth));
-                    currentMonthWithDaysToRetriveAnniversaries = this.SortBirthdaysByBirthDate(currentMonthWithDaysToRetriveAnniversaries);
-                    otherMonthsAnniversaries = allAnniversaries.filter(b => moment(b.birthDate).month() + 1 < parseInt(currentMonth));
-                    otherMonthsAnniversaries = this.SortBirthdaysByBirthDate(otherMonthsAnniversaries);
+                    currentMonthWithDaysToRetriveAnniversaries = 
+                    this.SortUsers(currentMonthWithDaysToRetriveAnniversaries, informationType);
+                    otherMonthsAnniversaries = this.SortUsers(otherMonthsAnniversaries, informationType);
                     // Join the 2 arrays
                     allAnniversaries = currentMonthWithDaysToRetriveAnniversaries.concat(otherMonthsAnniversaries);
                 }
                 else {
-                     allAnniversaries = this.SortBirthdaysByBirthDate(allAnniversaries);
+                     allAnniversaries = this.SortUsers(allAnniversaries, informationType);
                 }
             }
 
@@ -133,6 +157,4 @@ export class SharePointServiceProvider {
             throw new Error(error.message);
         }
     }
-
-    getUserWorkAnniversaries
 }

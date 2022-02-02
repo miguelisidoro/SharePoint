@@ -87,7 +87,6 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
 
       const informationType: InformationType = InformationType[this.props.informationType];
 
-      //TODO: usar enum
       if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
         users = await this.sharePointServiceProvider.getAnniversaries(informationType);
       }
@@ -95,7 +94,7 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
         //TODO
       }
 
-      let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users);
+      let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
 
       this.setState({
         users: usersPersonInformation,
