@@ -107,7 +107,9 @@ export class SharePointServiceProvider {
 
             // Build filter to use in query to SharePoint
             today = '2000-' + moment().format('MM-DD');
+            //today = '2000-04-12';
             currentMonth = moment().format('MM');
+            //currentMonth = '04';
             currentDate = moment(today).toDate();
             currentDay = parseInt(moment(today).format('DD'));
             let currentDatewithDaysToRetrieve = currentDate;
