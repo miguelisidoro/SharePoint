@@ -56,7 +56,7 @@ export class SharePointServiceProvider {
         });
     }
 
-    private SortUsersByHireDate(users: UserInformation[]) {
+    private SortUsersByHireDateAscending(users: UserInformation[]) {
         return users.sort((a, b) => {
             if (a.hireDate > b.hireDate) {
                 return 1;
@@ -68,15 +68,30 @@ export class SharePointServiceProvider {
         });
     }
 
-    private SortUsers(anniversaries: UserInformation[], informationType: InformationType): UserInformation[] {
+    private SortUsersByHireDateDescending(users: UserInformation[]) {
+        return users.sort((a, b) => {
+            if (a.hireDate < b.hireDate) {
+                return 1;
+            }
+            if (a.hireDate > b.hireDate) {
+                return -1;
+            }
+            return 0;
+        });
+    }
+
+    private SortUsers(users: UserInformation[], informationType: InformationType): UserInformation[] {
         if (informationType === InformationType.Birthdays) {
-            anniversaries = this.SortUsersByBirthDate(anniversaries);
+            users = this.SortUsersByBirthDate(users);
+        }
+        else if (informationType === InformationType.WorkAnniversaries) {
+            users = this.SortUsersByHireDateAscending(users);
         }
         else {
-            anniversaries = this.SortUsersByHireDate(anniversaries);
-        }
+            users = this.SortUsersByHireDateDescending(users);
+         }
 
-        return anniversaries;
+        return users;
     }
 
     // Get users anniversaries or new hires
@@ -90,6 +105,7 @@ export class SharePointServiceProvider {
             const filterField: string = informationType === InformationType.Birthdays ?
                 SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
 
+            // Build filter to use in query to SharePoint
             today = '2000-' + moment().format('MM-DD');
             currentMonth = moment().format('MM');
             currentDate = moment(today).toDate();
@@ -139,6 +155,7 @@ export class SharePointServiceProvider {
                 }
             }
 
+            // Retrieve users from SharePoint
             const usersSharePoint = await sp.web
                 .getList(this._sharePointRelativeListUrl)
                 .items.select(
@@ -155,6 +172,7 @@ export class SharePointServiceProvider {
                 .usingCaching()
                 .get();
 
+            // Sort users
             if (usersSharePoint && usersSharePoint.length > 0) {
 
                 allUsers = UserInformationMapper.mapToUserInformations(usersSharePoint);
@@ -165,9 +183,23 @@ export class SharePointServiceProvider {
                     // Finally, contact both arrays and return
                     if (currentDatewithDaysToRetrieveYear === '2001') {
                         // get the anniversaries from the current year (months are >= currentMonth)
-                        currentYearUsers = allUsers.filter(b => moment(b.birthDate).month() + 1 >= parseInt(currentMonth));
+                        if (informationType === InformationType.Birthdays)
+                        {
+                            currentYearUsers = allUsers.filter(b => moment(b.birthDate).month() + 1 >= parseInt(currentMonth));
+                        }
+                        else
+                        {
+                            currentYearUsers = allUsers.filter(b => moment(b.hireDate).month() + 1 >= parseInt(currentMonth));
+                        }
                         currentYearUsers = this.SortUsers(currentYearUsers, informationType);
-                        otherYearUsers = allUsers.filter(b => moment(b.birthDate).month() + 1 < parseInt(currentMonth));
+                        if (informationType === InformationType.Birthdays)
+                        {
+                            otherYearUsers = allUsers.filter(b => moment(b.birthDate).month() + 1 < parseInt(currentMonth));
+                        }
+                        else
+                        {
+                            otherYearUsers = allUsers.filter(b => moment(b.hireDate).month() + 1 < parseInt(currentMonth));
+                        }
                         otherYearUsers = this.SortUsers(otherYearUsers, informationType);
                         // Join the 2 arrays
                         allUsers = currentYearUsers.concat(otherYearUsers);
@@ -176,17 +208,16 @@ export class SharePointServiceProvider {
                         allUsers = this.SortUsers(allUsers, informationType);
                     }
                 }
-                else
-                {
+                else {
                     // New Hires
                     // If end date is from previous year, first, select all new hires from current year to sort
                     // Then, select all of the remaining months from previous year
                     // Finally, contact both arrays, starting by previous year users and return
                     if (currentDatewithDaysToRetrieveYear === '1999') {
                         // get the new hires from the previous year (months are >= currentMonth)
-                        currentYearUsers = allUsers.filter(b => moment(b.birthDate).month() + 1 <= parseInt(currentMonth));
+                        currentYearUsers = allUsers.filter(b => moment(b.hireDate).month() + 1 <= parseInt(currentMonth));
                         currentYearUsers = this.SortUsers(currentYearUsers, informationType);
-                        otherYearUsers = allUsers.filter(b => moment(b.birthDate).month() + 1 > parseInt(currentMonth));
+                        otherYearUsers = allUsers.filter(b => moment(b.hireDate).month() + 1 > parseInt(currentMonth));
                         otherYearUsers = this.SortUsers(otherYearUsers, informationType);
                         // Join the 2 arrays
                         allUsers = currentYearUsers.concat(otherYearUsers);
