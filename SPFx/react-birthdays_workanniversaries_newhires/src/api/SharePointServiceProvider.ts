@@ -9,6 +9,7 @@ import { SharePointFieldNames } from "../constants";
 import { UserInformationMapper } from "../mappers";
 import { UserInformation } from "../models";
 import * as moment from 'moment';
+import { InformationType } from "../enums";
 
 const LOG_SOURCE: string = "BirthdaysWorkAnniverariesNewHires";
 const PROFILE_IMAGE_URL: string =
@@ -55,14 +56,17 @@ export class SharePointServiceProvider {
         });
     }
 
-    // Get users from User Information SharePoint List
-    public async getUserBirthDays(): Promise<UserInformation[]> {
+    // Get users anniversaries
+    public async getAnniversaries(informationType: InformationType): Promise<UserInformation[]> {
         let currentDate: Date, today: string, currentMonth: string, currentDay: number;
-        let filter: string, currentDayWithNumberOfDaysToRetrieve: number, nextYearEndDay: number, nextYearStartDate: string;
-        let nextYearEndDate: string;
-        let otherMonthsBirthdays: UserInformation[], currentMonthWithDaysToRetriveBirthdays: UserInformation[], allBirthDays: UserInformation[];
+        let filter: string;
+        let otherMonthsAnniversaries: UserInformation[], currentMonthWithDaysToRetriveAnniversaries: UserInformation[], allAnniversaries: UserInformation[];
 
         try {
+
+            const filterField: string = informationType === InformationType.Birthdays ? 
+            SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
+            
             today = '2000-' + moment().format('MM-DD');
             //today = '2000-12-01';
             currentMonth = moment().format('MM');
@@ -76,14 +80,18 @@ export class SharePointServiceProvider {
             // If end date is from next year, get birthdays from both years
             if (endDateYear === '2001') {
                 filterEndDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
-                filter = "(BirthDate ge '" + today + "' and BirthDate le '2000-12-31') or (BirthDate ge '2000-01-01' and BirthDate le '" + filterEndDate + "')";
+                // filter = "(" + filterField + " ge '" + today + "' and " + filterField + " le '2000-12-31') or (" + filterField + " ge '2000-01-01' and " + filterField + " le '" + filterEndDate + "')";
+
+                filter = `(${filterField} ge '${today}' and ${filterField} le '2000-12-31') or (${filterField} ge ` + 
+                `'2000-01-01' and ${filterField} le '${filterEndDate}')`;
             }
             else {
                 filterEndDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
-                filter = "BirthDate ge '" + today + "' and BirthDate le '" + filterEndDate + "'";
+                //filter = "BirthDate ge '" + today + "' and BirthDate le '" + filterEndDate + "'";
+                filter = `${filterField} ge '${today}' and ${filterField} le '${filterEndDate}'`;
             }
 
-            const usersSharePoint: any[] = await sp.web
+            const usersSharePoint = await sp.web
                 .getList(this._sharePointRelativeListUrl)
                 .items.select(
                     SharePointFieldNames.Id,
@@ -101,28 +109,30 @@ export class SharePointServiceProvider {
 
             if (usersSharePoint && usersSharePoint.length > 0) {
 
-                allBirthDays = UserInformationMapper.mapToUserInformations(usersSharePoint);
+                allAnniversaries = UserInformationMapper.mapToUserInformations(usersSharePoint);
 
                 // If end date is from next year, first, select all birthdays from current year to sort
                 // Then, select all birthdays of the remaining months from next year
                 // Finally, contact both arrays and return
                 if (endDateYear === '2001') {
-                    currentMonthWithDaysToRetriveBirthdays = allBirthDays.filter(b => moment(b.birthDate).month() + 1 >= parseInt(currentMonth));
-                    currentMonthWithDaysToRetriveBirthdays = this.SortBirthdaysByBirthDate(currentMonthWithDaysToRetriveBirthdays);
-                    otherMonthsBirthdays = allBirthDays.filter(b => moment(b.birthDate).month() + 1 < parseInt(currentMonth));
-                    otherMonthsBirthdays = this.SortBirthdaysByBirthDate(otherMonthsBirthdays);
+                    currentMonthWithDaysToRetriveAnniversaries = allAnniversaries.filter(b => moment(b.birthDate).month() + 1 >= parseInt(currentMonth));
+                    currentMonthWithDaysToRetriveAnniversaries = this.SortBirthdaysByBirthDate(currentMonthWithDaysToRetriveAnniversaries);
+                    otherMonthsAnniversaries = allAnniversaries.filter(b => moment(b.birthDate).month() + 1 < parseInt(currentMonth));
+                    otherMonthsAnniversaries = this.SortBirthdaysByBirthDate(otherMonthsAnniversaries);
                     // Join the 2 arrays
-                    allBirthDays = currentMonthWithDaysToRetriveBirthdays.concat(otherMonthsBirthdays);
+                    allAnniversaries = currentMonthWithDaysToRetriveAnniversaries.concat(otherMonthsAnniversaries);
                 }
                 else {
-                     allBirthDays = this.SortBirthdaysByBirthDate(allBirthDays);
+                     allAnniversaries = this.SortBirthdaysByBirthDate(allAnniversaries);
                 }
             }
 
-            return allBirthDays;
+            return allAnniversaries;
         } catch (error) {
             Log.error(LOG_SOURCE, error, this._context.serviceScope);
             throw new Error(error.message);
         }
     }
+
+    getUserWorkAnniversaries
 }

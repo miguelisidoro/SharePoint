@@ -88,13 +88,10 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
       const informationType: InformationType = InformationType[this.props.informationType];
 
       //TODO: usar enum
-      if (informationType === InformationType.Birthdays) {
-        users = await this.sharePointServiceProvider.getUserBirthDays();
+      if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
+        users = await this.sharePointServiceProvider.getAnniversaries(informationType);
       }
-      else if (informationType === InformationType.WorkAnniversaries) {
-        //TODO
-      }
-      else {
+      else { //New Hires
         //TODO
       }
 
