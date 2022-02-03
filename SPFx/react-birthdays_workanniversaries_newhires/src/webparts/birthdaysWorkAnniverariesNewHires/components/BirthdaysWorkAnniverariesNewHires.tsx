@@ -41,6 +41,7 @@ import { IBirthdaysWorkAnniverariesNewHiresState } from './IBirthdaysWorkAnniver
 import { ServiceScope } from '@microsoft/sp-core-library';
 import { PersonaInformationMapper } from '../../../mappers/PersonaInformationMapper';
 import { InformationType } from '../../../enums';
+import * as strings from 'BirthdaysWorkAnniverariesNewHiresWebPartStrings';
 
 const personaProps: IPersonaProps = {
   size: PersonaSize.size48,
@@ -92,21 +93,24 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
 
       users = await this.sharePointServiceProvider.getAnniversariesOrHireDates(informationType);
 
-      let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
+      if (users != null && users.length > 0)
+      {
+        let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
 
-      this.setState({
-        users: usersPersonInformation,
-      });
+        this.setState({
+          users: usersPersonInformation,
+        });
+      }
     }
   }
 
   public render(): React.ReactElement<IBirthdaysWorkAnniverariesNewHiresProps> {
-    if (this.state.users !== null) {
+    if (this.state.users !== null && this.state.users.length > 0) {
       return (
         <div>
           <WebPartTitle displayMode={this.props.displayMode}
-              title={this.props.title}
-              updateProperty={this.props.updateTitleProperty} />
+            title={this.props.title}
+            updateProperty={this.props.updateTitleProperty} />
           {
             this.state.users !== null && this.state.users.map(user =>
               <LivePersona serviceScope={this._serviceScope} upn={user.userPrincipalName}
@@ -123,7 +127,23 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
       );
     }
     else {
-      return (<div></div>);
+      let noUsersMessage;
+      const informationType: InformationType = InformationType[this.props.informationType];
+      if (informationType === InformationType.Birthdays) {
+        noUsersMessage = strings.NoBirthdaysLabel;
+      }
+      else if (informationType === InformationType.WorkAnniversaries) {
+        noUsersMessage = strings.NoWorkAnniversariesLabel;
+      }
+      else {
+        noUsersMessage = strings.NoNewHiresLabel;
+      }
+      return (<div>
+        <WebPartTitle displayMode={this.props.displayMode}
+          title={this.props.title}
+          updateProperty={this.props.updateTitleProperty} />
+        {noUsersMessage}
+      </div>);
     }
   }
 }

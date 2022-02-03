@@ -11,5 +11,8 @@ define([], function () {
     "NewHiresInformationTypeLabel": "New Hires",
     "TodayLabel": "Today",
     "WebPartTitleLabel": "Title",
+    "NoBirthdaysLabel": "There are no birthdays",
+    "NoWorkAnniversariesLabel": "There are no work anniversaries",
+    "NoNewHiresLabel": "There are no new colleagues",
   }
 });

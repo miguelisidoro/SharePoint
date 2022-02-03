@@ -10,6 +10,9 @@ declare interface IBirthdaysWorkAnniverariesNewHiresWebPartStrings {
   NewHiresInformationTypeLabel: string;
   TodayLabel: string;
   WebPartTitleLabel: string;
+  NoBirthdaysLabel: string;
+  NoWorkAnniversariesLabel: string;
+  NoNewHiresLabel: string;
 }
 
 declare module 'BirthdaysWorkAnniverariesNewHiresWebPartStrings' {
