@@ -20,6 +20,7 @@ export interface IBirthdaysWorkAnniverariesNewHiresWebPartProps {
   informationType: string;
   numberOfItemsToShow: number;
   numberOfDaysToRetrieve: number;
+  title: string;
 }
 
 export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClientSideWebPart<IBirthdaysWorkAnniverariesNewHiresWebPartProps> {
@@ -33,6 +34,11 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
         numberOfDaysToRetrieve: this.properties.numberOfDaysToRetrieve,//90,
         sharePointRelativeListUrl: this.properties.sharePointRelativeListUrl,
         context: this.context,
+        displayMode: this.displayMode,
+        title: this.properties.title,
+        updateTitleProperty: (value: string) => {
+          this.properties.title = value;
+        }
       }
     );
 
@@ -58,6 +64,9 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
             {
               groupName: strings.PropertiesGroupName,
               groupFields: [
+                PropertyPaneTextField('title', {
+                  label: strings.WebPartTitleLabel
+                }),
                 PropertyPaneTextField('sharePointRelativeListUrl', {
                   label: strings.SharePointRelativeListUrlFieldLabel
                 }),

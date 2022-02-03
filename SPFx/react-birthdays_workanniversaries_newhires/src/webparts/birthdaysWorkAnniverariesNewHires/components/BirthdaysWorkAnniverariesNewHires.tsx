@@ -4,6 +4,7 @@ import { IBirthdaysWorkAnniverariesNewHiresProps } from './IBirthdaysWorkAnniver
 import { escape } from '@microsoft/sp-lodash-subset';
 import { SharePointServiceProvider } from '../../../api';
 import { UserInformation } from '../../../models';
+import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
 
 import {
   CommandBar,
@@ -103,6 +104,9 @@ export default class BirthdaysWorkAnniverariesNewHires extends React.Component<I
     if (this.state.users !== null) {
       return (
         <div>
+          <WebPartTitle displayMode={this.props.displayMode}
+              title={this.props.title}
+              updateProperty={this.props.updateTitleProperty} />
           {
             this.state.users !== null && this.state.users.map(user =>
               <LivePersona serviceScope={this._serviceScope} upn={user.userPrincipalName}
