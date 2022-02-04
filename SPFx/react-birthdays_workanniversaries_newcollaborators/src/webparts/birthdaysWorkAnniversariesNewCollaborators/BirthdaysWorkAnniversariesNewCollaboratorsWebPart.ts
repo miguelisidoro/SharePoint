@@ -7,12 +7,22 @@ import {
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 
+import {
+  PropertyPaneDropdown,
+} from '@microsoft/sp-property-pane';
+
+import { PropertyFieldNumber } from '@pnp/spfx-property-controls/lib/PropertyFieldNumber';
+
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsWebPartStrings';
 import BirthdaysWorkAnniversariesNewCollaborators from './components/BirthdaysWorkAnniversariesNewCollaborators';
 import { IBirthdaysWorkAnniversariesNewCollaboratorsProps } from './components/IBirthdaysWorkAnniversariesNewCollaboratorsProps';
 
 export interface IBirthdaysWorkAnniversariesNewCollaboratorsWebPartProps {
-  description: string;
+  sharePointRelativeListUrl: string;
+  informationType: string;
+  numberOfItemsToShow: number;
+  numberOfDaysToRetrieve: number;
+  title: string;
 }
 
 export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends BaseClientSideWebPart<IBirthdaysWorkAnniversariesNewCollaboratorsWebPartProps> {
@@ -21,7 +31,16 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends B
     const element: React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsProps> = React.createElement(
       BirthdaysWorkAnniversariesNewCollaborators,
       {
-        description: this.properties.description
+        informationType: this.properties.informationType,
+        numberOfItemsToShow: this.properties.numberOfItemsToShow,
+        numberOfDaysToRetrieve: this.properties.numberOfDaysToRetrieve,//90,
+        sharePointRelativeListUrl: this.properties.sharePointRelativeListUrl,
+        context: this.context,
+        displayMode: this.displayMode,
+        title: this.properties.title,
+        updateTitleProperty: (value: string) => {
+          this.properties.title = value;
+        }
       }
     );
 
@@ -45,11 +64,39 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends B
           },
           groups: [
             {
-              groupName: strings.BasicGroupName,
+              groupName: strings.PropertiesGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
-                })
+                PropertyPaneTextField('title', {
+                  label: strings.WebPartTitleLabel
+                }),
+                PropertyPaneTextField('sharePointRelativeListUrl', {
+                  label: strings.SharePointRelativeListUrlFieldLabel
+                }),
+                PropertyFieldNumber("numberOfItemsToShow", {
+                  key: "numberOfItemsToShow",
+                  label: strings.NumberOfItemsToShowLabel,
+                  description: strings.NumberOfItemsToShowLabel,
+                  value: this.properties.numberOfItemsToShow,
+                  maxValue: 10,
+                  minValue: 1,
+                  disabled: false
+                }),
+                PropertyFieldNumber("numberOfDaysToRetrieve", {
+                  key: "numberOfDaysToRetrieve",
+                  label: strings.NumberOfDaysToRetrieveLabel,
+                  description: strings.NumberOfDaysToRetrieveLabel,
+                  value: this.properties.numberOfDaysToRetrieve,
+                  maxValue: 90,
+                  minValue: 1,
+                  disabled: false
+                }),
+                PropertyPaneDropdown('informationType', {
+                  label: strings.InformationTypeLabel,
+                  options: [ 
+                    { key: 'Birthdays', text: strings.BirthdaysInformationTypeLabel }, 
+                    { key: 'WorkAnniversaries', text: strings.WorkAnniversariesInformationTypeLabel }, 
+                    { key: 'NewCollaborators', text: strings.NewCollaboratorsInformationTypeLabel }, 
+                  ]})
               ]
             }
           ]
