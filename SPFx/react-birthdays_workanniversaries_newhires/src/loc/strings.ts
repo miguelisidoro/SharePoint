@@ -1,4 +1,9 @@
-declare interface IBirthdaysWorkAnniverariesNewHiresWebPartStrings {
+import LocalizedStrings, { LocalizedStringsMethods } from "react-localization";
+
+import { enStrings } from "./en-us";
+import { ptStrings } from "./pt-pt";
+
+export interface IStrings extends LocalizedStringsMethods {
   PropertyPaneDescription: string;
   PropertiesGroupName: string;
   SharePointRelativeListUrlFieldLabel: string;
@@ -13,9 +18,10 @@ declare interface IBirthdaysWorkAnniverariesNewHiresWebPartStrings {
   NoBirthdaysLabel: string;
   NoWorkAnniversariesLabel: string;
   NoNewHiresLabel: string;
+  WebPartConfigurationMissing: string;
 }
 
-declare module 'BirthdaysWorkAnniverariesNewHiresWebPartStrings' {
-  const strings: IBirthdaysWorkAnniverariesNewHiresWebPartStrings;
-  export = strings;
-}
+export const localizedStrings: IStrings = new LocalizedStrings({
+  en: enStrings,
+  pt: ptStrings
+});

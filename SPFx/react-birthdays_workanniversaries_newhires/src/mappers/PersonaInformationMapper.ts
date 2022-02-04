@@ -1,8 +1,9 @@
 import * as moment from 'moment';
 import { UserProfileInformation } from '../constants';
 import { PersonaInformation, UserInformation } from '../models';
-import * as strings from 'BirthdaysWorkAnniverariesNewHiresWebPartStrings';
 import { InformationType } from '../enums';
+
+import { localizedStrings } from '../loc/strings'
 
 export class PersonaInformationMapper {
     // Returns if a date is today
@@ -27,11 +28,11 @@ export class PersonaInformationMapper {
 
             if (informationType === InformationType.Birthdays)
             {
-                secondaryText = this.isDateToday(user.birthDate) ? strings.TodayLabel : this.formatDateToString(user.birthDate);
+                secondaryText = this.isDateToday(user.birthDate) ? localizedStrings.TodayLabel : this.formatDateToString(user.birthDate);
             }
             else
             {
-                secondaryText = this.isDateToday(user.hireDate) ? strings.TodayLabel : this.formatDateToString(user.hireDate);
+                secondaryText = this.isDateToday(user.hireDate) ? localizedStrings.TodayLabel : this.formatDateToString(user.hireDate);
             }
 
             return new PersonaInformation({
