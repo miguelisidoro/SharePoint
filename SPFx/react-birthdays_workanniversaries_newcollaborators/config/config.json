@@ -1,0 +1,20 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "birthdays-work-anniversaries-new-collaborators-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/birthdaysWorkAnniversariesNewCollaborators/BirthdaysWorkAnniversariesNewCollaboratorsWebPart.js",
+          "manifest": "./src/webparts/birthdaysWorkAnniversariesNewCollaborators/BirthdaysWorkAnniversariesNewCollaboratorsWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "BirthdaysWorkAnniversariesNewCollaboratorsWebPartStrings": "lib/webparts/birthdaysWorkAnniversariesNewCollaborators/loc/{locale}.js",
+    "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+  }
+}
