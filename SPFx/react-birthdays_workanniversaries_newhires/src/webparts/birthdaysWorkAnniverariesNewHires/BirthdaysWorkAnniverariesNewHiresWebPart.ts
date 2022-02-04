@@ -10,10 +10,11 @@ import {
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 
-import * as strings from 'BirthdaysWorkAnniverariesNewHiresWebPartStrings';
 import BirthdaysWorkAnniverariesNewHires from './components/BirthdaysWorkAnniverariesNewHires';
 import { IBirthdaysWorkAnniverariesNewHiresProps } from './components/IBirthdaysWorkAnniverariesNewHiresProps';
 import { PropertyFieldNumber } from '@pnp/spfx-property-controls/lib/PropertyFieldNumber';
+
+import { localizedStrings } from '../../loc/strings'
 
 export interface IBirthdaysWorkAnniverariesNewHiresWebPartProps {
   sharePointRelativeListUrl: string;
@@ -58,22 +59,22 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
       pages: [
         {
           header: {
-            description: strings.PropertyPaneDescription
+            description: localizedStrings.PropertyPaneDescription
           },
           groups: [
             {
-              groupName: strings.PropertiesGroupName,
+              groupName: localizedStrings.PropertiesGroupName,
               groupFields: [
                 PropertyPaneTextField('title', {
-                  label: strings.WebPartTitleLabel
+                  label: localizedStrings.WebPartTitleLabel
                 }),
                 PropertyPaneTextField('sharePointRelativeListUrl', {
-                  label: strings.SharePointRelativeListUrlFieldLabel
+                  label: localizedStrings.SharePointRelativeListUrlFieldLabel
                 }),
                 PropertyFieldNumber("numberOfItemsToShow", {
                   key: "numberOfItemsToShow",
-                  label: strings.NumberOfItemsToShowLabel,
-                  description: strings.NumberOfItemsToShowLabel,
+                  label: localizedStrings.NumberOfItemsToShowLabel,
+                  description: localizedStrings.NumberOfItemsToShowLabel,
                   value: this.properties.numberOfItemsToShow,
                   maxValue: 10,
                   minValue: 1,
@@ -81,19 +82,19 @@ export default class BirthdaysWorkAnniverariesNewHiresWebPart extends BaseClient
                 }),
                 PropertyFieldNumber("numberOfDaysToRetrieve", {
                   key: "numberOfDaysToRetrieve",
-                  label: strings.NumberOfDaysToRetrieveLabel,
-                  description: strings.NumberOfDaysToRetrieveLabel,
+                  label: localizedStrings.NumberOfDaysToRetrieveLabel,
+                  description: localizedStrings.NumberOfDaysToRetrieveLabel,
                   value: this.properties.numberOfDaysToRetrieve,
                   maxValue: 90,
                   minValue: 1,
                   disabled: false
                 }),
                 PropertyPaneDropdown('informationType', {
-                  label: strings.InformationTypeLabel,
+                  label: localizedStrings.InformationTypeLabel,
                   options: [ 
-                    { key: 'Birthdays', text: strings.BirthdaysInformationTypeLabel }, 
-                    { key: 'WorkAnniversaries', text: strings.WorkAnniversariesInformationTypeLabel }, 
-                    { key: 'NewHires', text: strings.NewHiresInformationTypeLabel }, 
+                    { key: 'Birthdays', text: localizedStrings.BirthdaysInformationTypeLabel }, 
+                    { key: 'WorkAnniversaries', text: localizedStrings.WorkAnniversariesInformationTypeLabel }, 
+                    { key: 'NewHires', text: localizedStrings.NewHiresInformationTypeLabel }, 
                   ]})
               ]
             }
