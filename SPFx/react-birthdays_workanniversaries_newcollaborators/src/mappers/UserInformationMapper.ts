@@ -7,12 +7,11 @@ export class UserInformationMapper
     {
         const mappedUsers = usersSharePoint.map(userSharePoint => 
             new UserInformation({
-                title: userSharePoint.Title,
-                jobTitle: userSharePoint.JobTitle,
-                userTitle: userSharePoint.User.Title,
-                userEmail: userSharePoint.User.EMail,
-                birthDate: userSharePoint.BirthDate,
-                hireDate: userSharePoint.HireDate,
+                Title: userSharePoint.Title,
+                JobTitle: userSharePoint.JobTitle,
+                Email: userSharePoint.EMail,
+                BirthDate: userSharePoint.BirthDate,
+                HireDate: userSharePoint.HireDate,
             }));
 
         return mappedUsers;

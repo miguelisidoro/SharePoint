@@ -28,18 +28,18 @@ export class PersonaInformationMapper {
 
             if (informationType === InformationType.Birthdays)
             {
-                secondaryText = this.isDateToday(user.birthDate) ? strings.TodayLabel : this.formatDateToString(user.birthDate);
+                secondaryText = this.isDateToday(user.BirthDate) ? strings.TodayLabel : this.formatDateToString(user.BirthDate);
             }
             else
             {
-                secondaryText = this.isDateToday(user.hireDate) ? strings.TodayLabel : this.formatDateToString(user.hireDate);
+                secondaryText = this.isDateToday(user.HireDate) ? strings.TodayLabel : this.formatDateToString(user.HireDate);
             }
 
             return new PersonaInformation({
-                imageUrl: UserProfileInformation.profilePictureUrlPrefix + user.userEmail,
-                text: user.userTitle,
+                imageUrl: UserProfileInformation.profilePictureUrlPrefix + user.Email,
+                text: user.Title,
                 secondaryText: secondaryText,
-                userPrincipalName: user.userEmail,
+                userPrincipalName: user.Email,
             })
         });
 
