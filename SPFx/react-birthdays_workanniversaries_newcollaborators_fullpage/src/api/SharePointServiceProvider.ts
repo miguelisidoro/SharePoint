@@ -167,7 +167,7 @@ export class SharePointServiceProvider {
                     SharePointFieldNames.BirthDate,
                     SharePointFieldNames.HireDate)
                 .filter(filter)
-                .top(5000) //avoid SharePoint List View Threshold, we will return the desired number of users in the end
+                .top(5000) //avoid SharePoint List View Threshold
                 .usingCaching()
                 .get();
 
@@ -227,10 +227,7 @@ export class SharePointServiceProvider {
                 }
             }
 
-            // Filter is done in the end so that we can get all the users for the number of days to retrieve and then from those users, return the number of items to show
-            const usersToShow = allUsers.slice(0, this._numberOfItemsToShow - 1);
-
-            return usersToShow;
+            return allUsers;
         } catch (error) {
             Log.error(LOG_SOURCE, error, this.context.serviceScope);
             throw new Error(error.message);
