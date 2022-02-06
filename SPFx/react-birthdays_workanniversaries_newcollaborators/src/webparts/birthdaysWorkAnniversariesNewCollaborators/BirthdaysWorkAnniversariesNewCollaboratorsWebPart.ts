@@ -19,6 +19,7 @@ import { IBirthdaysWorkAnniversariesNewCollaboratorsProps } from './components/I
 
 export interface IBirthdaysWorkAnniversariesNewCollaboratorsWebPartProps {
   sharePointRelativeListUrl: string;
+  showMoreUrl: string;
   informationType: string;
   numberOfItemsToShow: number;
   numberOfDaysToRetrieve: number;
@@ -35,6 +36,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends B
         numberOfItemsToShow: this.properties.numberOfItemsToShow,
         numberOfDaysToRetrieve: this.properties.numberOfDaysToRetrieve,//90,
         sharePointRelativeListUrl: this.properties.sharePointRelativeListUrl,
+        showMoreUrl: this.properties.showMoreUrl,
         context: this.context,
         displayMode: this.displayMode,
         title: this.properties.title,
@@ -72,8 +74,9 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends B
                 PropertyPaneTextField('sharePointRelativeListUrl', {
                   label: strings.SharePointRelativeListUrlFieldLabel
                 }),
-                PropertyPaneTextField('sharePointRelativeListUrl', {
-                  label: strings.SharePointRelativeListUrlFieldLabel
+                ,
+                PropertyPaneTextField('showMoreUrl', {
+                  label: strings.ShowMoreUrlFieldLabel
                 }),
                 PropertyFieldNumber("numberOfItemsToShow", {
                   key: "numberOfItemsToShow",

@@ -2,6 +2,8 @@ import { Log } from "@microsoft/sp-core-library";
 import { SPComponentLoader } from "@microsoft/sp-loader";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { sp } from "@pnp/sp";
+import { graph } from "@pnp/graph";
+import "@pnp/graph/search";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
@@ -17,14 +19,18 @@ export class SharePointServiceProvider {
     private _numberOfItemsToShow: number;
     private _numberOfDaysToRetrieve: number;
 
-    constructor(private _context: WebPartContext,
+    constructor(private context: WebPartContext,
         sharePointRelativeListUrl: string,
         numberOfItemsToShow: number,
         numberOfDaysToRetrieve: number) {
 
         // Setup Context to PnP JS
         sp.setup({
-            spfxContext: this._context
+            spfxContext: this.context
+        });
+
+        graph.setup({
+            spfxContext: this.context
         });
 
         this._sharePointRelativeListUrl = sharePointRelativeListUrl;
@@ -82,7 +88,7 @@ export class SharePointServiceProvider {
         }
         else {
             users = this.sortUsersByHireDateDescending(users);
-         }
+        }
 
         return users;
     }
@@ -226,7 +232,7 @@ export class SharePointServiceProvider {
 
             return usersToShow;
         } catch (error) {
-            Log.error(LOG_SOURCE, error, this._context.serviceScope);
+            Log.error(LOG_SOURCE, error, this.context.serviceScope);
             throw new Error(error.message);
         }
     }

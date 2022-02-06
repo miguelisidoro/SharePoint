@@ -74,19 +74,28 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
     };
 
     this.loadUsers = this.loadUsers.bind(this);
+    this.isWebPartConfigured = this.isWebPartConfigured.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
-    // Populate with items for demos.
-
     await this.loadUsers();
   }
 
-  private async loadUsers() {
-    if (this.props.sharePointRelativeListUrl != null && this.props.sharePointRelativeListUrl != undefined
+  /// Checkes if web part is properly configured
+  private isWebPartConfigured(): boolean
+  {
+    const isWebPartConfigured = (this.props.sharePointRelativeListUrl != null && this.props.sharePointRelativeListUrl != undefined
+      && this.props.showMoreUrl != null && this.props.showMoreUrl != undefined
       && this.props.numberOfItemsToShow !== null && this.props.numberOfItemsToShow !== undefined
       && this.props.numberOfDaysToRetrieve !== null && this.props.numberOfDaysToRetrieve !== undefined
-      && this.props.informationType !== null && this.props.informationType !== undefined) {
+      && this.props.informationType !== null && this.props.informationType !== undefined);
+
+      return isWebPartConfigured;
+  }
+
+  // Loads users from SharePoint
+  private async loadUsers() {
+    if (this.isWebPartConfigured()) {
 
       let users: UserInformation[] = [];
 
@@ -105,10 +114,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
   }
   
   public render(): React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsProps> {
-    if (this.props.sharePointRelativeListUrl != null && this.props.sharePointRelativeListUrl != undefined
-      && this.props.numberOfItemsToShow !== null && this.props.numberOfItemsToShow !== undefined
-      && this.props.numberOfDaysToRetrieve !== null && this.props.numberOfDaysToRetrieve !== undefined
-      && this.props.informationType !== null && this.props.informationType !== undefined) {
+    if (this.isWebPartConfigured()) {
       if (this.state.users !== null && this.state.users.length > 0) {
         return (
           <div>
@@ -127,6 +133,9 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
                 />
               )
             }
+            <Link href={this.props.showMoreUrl}>
+              {strings.ShowMoreLabel}
+            </Link>
           </div>
         );
       }

@@ -2,6 +2,8 @@ declare interface IBirthdaysWorkAnniversariesNewCollaboratorsWebPartStrings {
   PropertyPaneDescription: string;
   PropertiesGroupName: string;
   SharePointRelativeListUrlFieldLabel: string;
+  ShowMoreUrlFieldLabel: string;
+  ShowMoreLabel: string;
   NumberOfItemsToShowLabel: string;
   NumberOfDaysToRetrieveLabel: string;
   InformationTypeLabel: string;

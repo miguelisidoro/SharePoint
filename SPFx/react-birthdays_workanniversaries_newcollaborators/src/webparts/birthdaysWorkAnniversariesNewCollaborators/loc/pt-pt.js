@@ -3,6 +3,8 @@ define([], function() {
     "PropertyPaneDescription": "Web part que mostra aniversários, aniversários de empresa e novos colaboradores",
     "PropertiesGroupName": "Configuração Web Part",
     "SharePointRelativeListUrlFieldLabel": "Endereço Relativo Lista SharePoint",
+    "ShowMoreUrlFieldLabel": "Endereço de página com mais resultados",
+    "ShowMoreLabel": "Ver mais",
     "NumberOfItemsToShowLabel": "Número de itens a apresentar",
     "NumberOfDaysToRetrieveLabel": "Número de dias a obter",
     "InformationTypeLabel": "Tipo de Informação",
