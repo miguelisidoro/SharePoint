@@ -72,6 +72,9 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends B
                 PropertyPaneTextField('sharePointRelativeListUrl', {
                   label: strings.SharePointRelativeListUrlFieldLabel
                 }),
+                PropertyPaneTextField('sharePointRelativeListUrl', {
+                  label: strings.SharePointRelativeListUrlFieldLabel
+                }),
                 PropertyFieldNumber("numberOfItemsToShow", {
                   key: "numberOfItemsToShow",
                   label: strings.NumberOfItemsToShowLabel,

@@ -2,8 +2,6 @@ import { Log } from "@microsoft/sp-core-library";
 import { SPComponentLoader } from "@microsoft/sp-loader";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { sp } from "@pnp/sp";
-import "@pnp/sp/search";
-import { ISearchQuery, SearchResults, SearchQueryBuilder } from "@pnp/sp/search";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
