@@ -41,7 +41,7 @@ The user will be asked to change his password at first log on.
 Param(
     [Parameter(Position = 0, Mandatory = $false, HelpMessage = 'Specify the path of the CSV file')]
     [Alias('CSVFile')]
-    [string]$FilePath="MOCK_DATA_Final.csv",
+    [string]$FilePath="Mocked Data Azure AD4.csv",
     [Parameter(Position = 1, Mandatory = $false, HelpMessage = 'Specify Credentials')]
     [Alias('Cred')]
     [PSCredential]$Credential,
