@@ -9,12 +9,21 @@
           "manifest": "./src/webparts/birthdaysWorkAnniversariesNewCollaborators/BirthdaysWorkAnniversariesNewCollaboratorsWebPart.manifest.json"
         }
       ]
+    },
+    "birthdays-work-anniversaries-new-collaborators-more-results-web": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/birthdaysWorkAnniversariesNewCollaboratorsMoreResults/BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPart.js",
+          "manifest": "./src/webparts/birthdaysWorkAnniversariesNewCollaboratorsMoreResults/BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
     "BirthdaysWorkAnniversariesNewCollaboratorsWebPartStrings": "lib/webparts/birthdaysWorkAnniversariesNewCollaborators/loc/{locale}.js",
     "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js",
-    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartStrings": "lib/webparts/birthdaysWorkAnniversariesNewCollaboratorsMoreResults/loc/{locale}.js"
   }
 }
