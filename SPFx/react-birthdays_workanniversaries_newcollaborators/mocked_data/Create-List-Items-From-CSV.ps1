@@ -4,7 +4,7 @@
 $TenantRootURL = "https://createdevpt.sharepoint.com/sites/DevSite/"
 $sharePointList = "User Information"
 $location = Get-Location
-$CSVPath = "$location\Mocked Data Azure AD3.csv"
+$CSVPath = "$location\Mocked Data Azure AD4_2.csv"
  
 function CreateSharePointListItems() {
     try {
