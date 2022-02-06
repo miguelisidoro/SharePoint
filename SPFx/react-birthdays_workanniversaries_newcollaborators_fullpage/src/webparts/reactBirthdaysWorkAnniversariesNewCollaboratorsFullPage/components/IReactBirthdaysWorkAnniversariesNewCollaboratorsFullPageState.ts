@@ -1,5 +1,5 @@
-// import { PersonaInformation } from "../../../models";
+import { PersonaInformation } from "../../../models";
 
-// export interface IReactBirthdaysWorkAnniversariesNewCollaboratorsFullPageState {
-//     users: PersonaInformation[];
-//   }
+export interface IReactBirthdaysWorkAnniversariesNewCollaboratorsFullPageState {
+    users: PersonaInformation[];
+  }
