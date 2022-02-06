@@ -1,4 +1,4 @@
-import { PersonaInformation, UserInformation } from "../../../models";
+import { PersonaInformation } from "../../../models";
 
 export interface IBirthdaysWorkAnniverariesNewCollaboratorsState {
     users: PersonaInformation[];

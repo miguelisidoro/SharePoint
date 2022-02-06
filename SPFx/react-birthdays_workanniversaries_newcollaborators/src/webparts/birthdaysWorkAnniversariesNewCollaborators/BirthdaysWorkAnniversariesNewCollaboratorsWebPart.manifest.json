@@ -19,7 +19,7 @@
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
     "title": { "default": "BirthdaysWorkAnniversariesNewCollaborators" },
-    "description": { "default": "Web part that shows birthdays, workanniversaries and new collaborators" },
+    "description": { "default": "Web part that shows birthdays, work anniversaries and new collaborators" },
     "officeFabricIconFontName": "Page",
     "properties": {
       "description": "BirthdaysWorkAnniversariesNewCollaborators"
