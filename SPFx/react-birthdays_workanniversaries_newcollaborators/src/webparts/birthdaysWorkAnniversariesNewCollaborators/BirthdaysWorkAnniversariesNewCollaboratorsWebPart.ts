@@ -77,7 +77,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends B
                   label: strings.NumberOfItemsToShowLabel,
                   description: strings.NumberOfItemsToShowLabel,
                   value: this.properties.numberOfItemsToShow,
-                  maxValue: 1000,
+                  maxValue: 20,
                   minValue: 1,
                   disabled: false
                 }),
