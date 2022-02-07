@@ -18,12 +18,12 @@ import BirthdaysWorkAnniversariesNewCollaborators from './components/BirthdaysWo
 import { IBirthdaysWorkAnniversariesNewCollaboratorsProps } from './components/IBirthdaysWorkAnniversariesNewCollaboratorsProps';
 
 export interface IBirthdaysWorkAnniversariesNewCollaboratorsWebPartProps {
+  title: string;
   sharePointRelativeListUrl: string;
   showMoreUrl: string;
-  informationType: string;
   numberOfItemsToShow: number;
   numberOfDaysToRetrieve: number;
-  title: string;
+  informationType: string;
 }
 
 export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends BaseClientSideWebPart<IBirthdaysWorkAnniversariesNewCollaboratorsWebPartProps> {
@@ -74,14 +74,12 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends B
                 PropertyPaneTextField('sharePointRelativeListUrl', {
                   label: strings.SharePointRelativeListUrlFieldLabel
                 }),
-                ,
                 PropertyPaneTextField('showMoreUrl', {
                   label: strings.ShowMoreUrlFieldLabel
                 }),
                 PropertyFieldNumber("numberOfItemsToShow", {
                   key: "numberOfItemsToShow",
                   label: strings.NumberOfItemsToShowLabel,
-                  description: strings.NumberOfItemsToShowLabel,
                   value: this.properties.numberOfItemsToShow,
                   maxValue: 20,
                   minValue: 1,
@@ -90,7 +88,6 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends B
                 PropertyFieldNumber("numberOfDaysToRetrieve", {
                   key: "numberOfDaysToRetrieve",
                   label: strings.NumberOfDaysToRetrieveLabel,
-                  description: strings.NumberOfDaysToRetrieveLabel,
                   value: this.properties.numberOfDaysToRetrieve,
                   maxValue: 90,
                   minValue: 1,

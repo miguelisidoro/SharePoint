@@ -10,9 +10,14 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartStrings';
 import BirthdaysWorkAnniversariesNewCollaboratorsMoreResults from './components/BirthdaysWorkAnniversariesNewCollaboratorsMoreResults';
 import { IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps } from './components/IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps';
+import { PropertyFieldNumber } from '@pnp/spfx-property-controls/lib/PropertyFieldNumber';
 
 export interface IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartProps {
-  description: string;ggulp 
+  title: string;
+  sharePointRelativeListUrl: string;
+  numberOfDaysToRetrieveForBirthdays: number;
+  numberOfDaysToRetrieveForWorkAnniveraries: number;
+  numberOfDaysToRetrieveForNewCollaborators: number;
 }
 
 export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPart extends BaseClientSideWebPart<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartProps> {
@@ -21,7 +26,18 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPar
     const element: React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps> = React.createElement(
       BirthdaysWorkAnniversariesNewCollaboratorsMoreResults,
       {
-        description: this.properties.description
+        numberOfDaysToRetrieveForBirthdays: this.properties.numberOfDaysToRetrieveForBirthdays,
+        numberOfDaysToRetrieveForWorkAnniveraries: 
+        this.properties.numberOfDaysToRetrieveForWorkAnniveraries,
+        numberOfDaysToRetrieveForNewCollaborators: 
+        this.properties.numberOfDaysToRetrieveForNewCollaborators,
+        sharePointRelativeListUrl: this.properties.sharePointRelativeListUrl,
+        context: this.context,
+        displayMode: this.displayMode,
+        title: this.properties.title,
+        updateTitleProperty: (value: string) => {
+          this.properties.title = value;
+        }
       }
     );
 
@@ -45,10 +61,37 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPar
           },
           groups: [
             {
-              groupName: strings.BasicGroupName,
+              groupName: strings.PropertiesGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
+                PropertyPaneTextField('title', {
+                  label: strings.WebPartTitleLabel
+                }),
+                PropertyPaneTextField('sharePointRelativeListUrl', {
+                  label: strings.SharePointRelativeListUrlFieldLabel
+                }),
+                PropertyFieldNumber("numberOfDaysToRetrieveForBirthdays", {
+                  key: "numberOfDaysToRetrieveForBirthdays",
+                  label: strings.NumberOfDaysToRetrieveLabelForBirthdays,
+                  value: this.properties.numberOfDaysToRetrieveForBirthdays,
+                  maxValue: 90,
+                  minValue: 1,
+                  disabled: false
+                }),
+                PropertyFieldNumber("numberOfDaysToRetrieveForWorkAnniveraries", {
+                  key: "numberOfDaysToRetrieveForWorkAnniveraries",
+                  label: strings.NumberOfDaysToRetrieveLabelForWorkAnniversaries,
+                  value: this.properties.numberOfDaysToRetrieveForWorkAnniveraries,
+                  maxValue: 90,
+                  minValue: 1,
+                  disabled: false
+                }),
+                PropertyFieldNumber("numberOfDaysToRetrieveForNewCollaborators", {
+                  key: "numberOfDaysToRetrieveForNewCollaborators",
+                  label: strings.NumberOfDaysToRetrieveLabelForNewCollaborators,
+                  value: this.properties.numberOfDaysToRetrieveForNewCollaborators,
+                  maxValue: 90,
+                  minValue: 1,
+                  disabled: false
                 })
               ]
             }
