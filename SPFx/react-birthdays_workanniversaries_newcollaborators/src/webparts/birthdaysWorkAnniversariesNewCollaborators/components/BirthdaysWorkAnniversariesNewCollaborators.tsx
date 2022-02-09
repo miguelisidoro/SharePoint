@@ -43,7 +43,7 @@ import { LivePersona } from "@pnp/spfx-controls-react/lib/controls/LivePersona";
 import { IBirthdaysWorkAnniverariesNewCollaboratorsState } from './IBirthdaysWorkAnniverariesNewCollaboratorsState';
 import { ServiceScope } from '@microsoft/sp-core-library';
 import { PersonaInformationMapper } from '../../../mappers/PersonaInformationMapper';
-import { InformationType } from '../../../enums';
+import { InformationDisplayType, InformationType } from '../../../enums';
 
 const personaProps: IPersonaProps = {
   size: PersonaSize.size48,
@@ -101,7 +101,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
 
       const informationType: InformationType = InformationType[this.props.informationType];
 
-      users = await this.sharePointServiceProvider.getAnniversariesOrHireDates(informationType);
+      users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.TopResults);
 
       if (users != null && users.length > 0) {
         let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);

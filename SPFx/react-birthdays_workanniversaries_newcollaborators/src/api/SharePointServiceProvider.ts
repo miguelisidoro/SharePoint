@@ -11,7 +11,7 @@ import { SharePointFieldNames } from "../constants";
 import { UserInformationMapper } from "../mappers";
 import { UserInformation } from "../models";
 import * as moment from 'moment';
-import { InformationType } from "../enums";
+import { InformationDisplayType, InformationType } from "../enums";
 
 const LOG_SOURCE: string = "BirthdaysWorkAnniverariesNewHires";
 export class SharePointServiceProvider {
@@ -93,9 +93,13 @@ export class SharePointServiceProvider {
         return users;
     }
 
-    // Get users anniversaries or new hires
+    // Get users anniversaries or new collaborators
     // Important NOTE: All dates are stored with year 2000
-    public async getAnniversariesOrHireDates(informationType: InformationType): Promise<UserInformation[]> {
+    public async getAnniversariesOrNewCollaborators(
+        informationType: InformationType,
+        informationDisplayType: InformationDisplayType,
+        skip?: number,
+        take?: number): Promise<UserInformation[]> {
         let currentDate: Date, today: string, currentMonth: string, currentDay: number;
         let filter: string;
         let otherYearUsers: UserInformation[], currentYearUsers: UserInformation[], allUsers: UserInformation[];
@@ -182,21 +186,17 @@ export class SharePointServiceProvider {
                     // Finally, contact both arrays and return
                     if (currentDatewithDaysToRetrieveYear === '2001') {
                         // get the anniversaries from the current year (months are >= currentMonth)
-                        if (informationType === InformationType.Birthdays)
-                        {
+                        if (informationType === InformationType.Birthdays) {
                             currentYearUsers = allUsers.filter(b => moment(b.BirthDate).month() + 1 >= parseInt(currentMonth));
                         }
-                        else
-                        {
+                        else {
                             currentYearUsers = allUsers.filter(b => moment(b.HireDate).month() + 1 >= parseInt(currentMonth));
                         }
                         currentYearUsers = this.sortUsers(currentYearUsers, informationType);
-                        if (informationType === InformationType.Birthdays)
-                        {
+                        if (informationType === InformationType.Birthdays) {
                             otherYearUsers = allUsers.filter(b => moment(b.BirthDate).month() + 1 < parseInt(currentMonth));
                         }
-                        else
-                        {
+                        else {
                             otherYearUsers = allUsers.filter(b => moment(b.HireDate).month() + 1 < parseInt(currentMonth));
                         }
                         otherYearUsers = this.sortUsers(otherYearUsers, informationType);
@@ -227,10 +227,20 @@ export class SharePointServiceProvider {
                 }
             }
 
-            // Filter is done in the end so that we can get all the users for the number of days to retrieve and then from those users, return the number of items to show
-            const usersToShow = allUsers.slice(0, this._numberOfItemsToShow - 1);
+            let users: UserInformation[];
 
-            return usersToShow;
+            if (informationDisplayType === InformationDisplayType.TopResults) {
+                // If we are in Top Results mode, we want to get only the top results from the cached data
+                // Filter is done in the end so that we can get all the users for the number of days to retrieve and then from those users, return the number of items to show
+                users = allUsers.slice(0, this._numberOfItemsToShow - 1);
+            }
+            else //More results
+            {
+                //if we are in more results, get the current page
+                users = allUsers.slice(skip, take);
+            }
+
+            return users;
         } catch (error) {
             Log.error(LOG_SOURCE, error, this.context.serviceScope);
             throw new Error(error.message);
