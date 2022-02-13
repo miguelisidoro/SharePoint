@@ -36,11 +36,7 @@ export class SharePointServiceProvider {
         this._sharePointRelativeListUrl = sharePointRelativeListUrl;
         this._numberOfItemsToShow = numberOfItemsToShow;
         this._numberOfDaysToRetrieve = numberOfDaysToRetrieve;
-
-        this.onInit();
     }
-
-    private async onInit() { }
 
     // Sort birthdays by birthdate
     private sortUsersByBirthDate(users: UserInformation[]) {
@@ -91,6 +87,31 @@ export class SharePointServiceProvider {
         }
 
         return users;
+    }
+
+    public getBirthdaysWorkAnniversariesViewXml(filterField: string, beginDate: string, endDate: string, rowLimit: number): string {
+        const viewXml = `<View Scope='RecursiveAll'>
+        <Query>
+            <Where>
+            <And>
+                <Geq>
+                    <FieldRef Name='${filterField}' />
+                    <Value IncludeTimeValue='TRUE' Type='DateTime'>${beginDate}</Value>
+                </Geq>
+                <Lt>
+                    <FieldRef Name='${filterField}' />
+                    <Value IncludeTimeValue='TRUE' Type='DateTime'>${endDate}</Value>
+                </Lt>
+            </And>
+            </Where>
+            <OrderBy>
+            <FieldRef Name='${filterField}' Ascending='True' />
+            </OrderBy>
+        </Query>
+        <ViewFields><FieldRef Name='${SharePointFieldNames.Id}'/><FieldRef Name='${SharePointFieldNames.Title}'/><FieldRef Name='${SharePointFieldNames.Email}'/><FieldRef Name='${SharePointFieldNames.JobTitle}'/><FieldRef Name='${SharePointFieldNames.BirthDate}'/><FieldRef Name='${SharePointFieldNames.HireDate}'/></ViewFields>
+        <RowLimit Paged='TRUE'>${rowLimit}</RowLimit></View>`;
+
+        return viewXml;
     }
 
     // Get users anniversaries or new collaborators
@@ -258,65 +279,45 @@ export class SharePointServiceProvider {
             const currentDateMidNight = '2000-' + moment().format('MM-DD') + 'T00:00:00Z';
             const currentDatewithDaysToRetrieveMidNight = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD') + 'T00:00:00Z';
 
-            let viewXml = `<View Scope='RecursiveAll'>
-            <Query>
-                <Where>
-                <And>
-                    <Geq>
-                        <FieldRef Name='${SharePointFieldNames.BirthDate}' />
-                        <Value IncludeTimeValue='TRUE' Type='DateTime'>${currentDateMidNight}</Value>
-                    </Geq>
-                    <Leq>
-                        <FieldRef Name='${SharePointFieldNames.BirthDate}' />
-                        <Value IncludeTimeValue='TRUE' Type='DateTime'>${currentDatewithDaysToRetrieveMidNight}</Value>
-                    </Leq>
-                </And>
-                </Where>
-                <OrderBy>
-                <FieldRef Name='${SharePointFieldNames.BirthDate}' Ascending='True' />
-                </OrderBy>
-            </Query>
-            <ViewFields><FieldRef Name='${SharePointFieldNames.Id}'/><FieldRef Name='${SharePointFieldNames.Title}'/><FieldRef Name='${SharePointFieldNames.Email}'/><FieldRef Name='${SharePointFieldNames.JobTitle}'/><FieldRef Name='${SharePointFieldNames.BirthDate}'/><FieldRef Name='${SharePointFieldNames.HireDate}'/></ViewFields>
-            <RowLimit Paged='TRUE'>7</RowLimit></View>`;
+            const filterField = informationType === InformationType.Birthdays ? SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
 
-            let usersSharePoint = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
+            let viewXml = this.getBirthdaysWorkAnniversariesViewXml(
+                filterField, 
+                currentDateMidNight,
+                currentDatewithDaysToRetrieveMidNight,
+                this._numberOfItemsToShow);
+
+            const usersSharePointCurrentYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
                 ViewXml: viewXml
             });
             
             // check if we have enough data to display with dates from current year
-            if (usersSharePoint !== null && usersSharePoint !== undefined && usersSharePoint.Row !== null && usersSharePoint.Row !== undefined && usersSharePoint.Row.length > this._numberOfItemsToShow)
+            if (usersSharePointCurrentYear !== null && usersSharePointCurrentYear !== undefined && usersSharePointCurrentYear.Row !== null && usersSharePointCurrentYear.Row !== undefined && usersSharePointCurrentYear.Row.length === this._numberOfItemsToShow)
             {
-                return UserInformationMapper.mapToUserInformations(usersSharePoint.Row);   
+                const mappedUsersSharePoint = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);   
+
+                return mappedUsersSharePoint;
             }
             else
             {
                 // if not, get dates from the next year
+                viewXml = this.getBirthdaysWorkAnniversariesViewXml(
+                    filterField, 
+                    '2000-01-01T00:00:00Z',
+                    currentDateMidNight,
+                    this._numberOfItemsToShow - usersSharePointCurrentYear.Row.length);
 
-                viewXml = `<View Scope='RecursiveAll'>
-                <Query>
-                    <Where>
-                    <And>
-                        <Geq>
-                            <FieldRef Name='${SharePointFieldNames.BirthDate}' />
-                            <Value IncludeTimeValue='TRUE' Type='DateTime'>2000-01-01T00:00:00Z</Value>
-                        </Geq>
-                        <Lt>
-                            <FieldRef Name='${SharePointFieldNames.BirthDate}' />
-                            <Value IncludeTimeValue='TRUE' Type='DateTime'>${currentDateMidNight}</Value>
-                        </Lt>
-                    </And>
-                    </Where>
-                    <OrderBy>
-                    <FieldRef Name='${SharePointFieldNames.BirthDate}' Ascending='True' />
-                    </OrderBy>
-                </Query>
-                <ViewFields><FieldRef Name='${SharePointFieldNames.Id}'/><FieldRef Name='${SharePointFieldNames.Title}'/><FieldRef Name='${SharePointFieldNames.Email}'/><FieldRef Name='${SharePointFieldNames.JobTitle}'/><FieldRef Name='${SharePointFieldNames.BirthDate}'/><FieldRef Name='${SharePointFieldNames.HireDate}'/></ViewFields>
-                <RowLimit Paged='TRUE'>${this._numberOfItemsToShow - usersSharePoint.Row.length}</RowLimit></View>`;
-
-                usersSharePoint = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
+                const usersSharePointNextYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
                     ViewXml: viewXml
                 });
-                return UserInformationMapper.mapToUserInformations(usersSharePoint.Row);   
+
+                const mappedUsersSharePointCurrentYear = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
+
+                const mappedUsersSharePointNextYear = UserInformationMapper.mapToUserInformations(usersSharePointNextYear.Row);
+
+                const mappedUsersSharePoint = mappedUsersSharePointCurrentYear.concat(mappedUsersSharePointNextYear);
+
+                return mappedUsersSharePoint;
             }
             
         }
