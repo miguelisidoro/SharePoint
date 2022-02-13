@@ -2,7 +2,6 @@ import { Log } from "@microsoft/sp-core-library";
 import { SPComponentLoader } from "@microsoft/sp-loader";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { sp } from "@pnp/sp";
-import { graph } from "@pnp/graph";
 import "@pnp/graph/search";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
@@ -12,6 +11,7 @@ import { UserInformationMapper } from "../mappers";
 import { UserInformation } from "../models";
 import * as moment from 'moment';
 import { InformationDisplayType, InformationType } from "../enums";
+import * as localforage from "localforage";
 
 const LOG_SOURCE: string = "BirthdaysWorkAnniverariesNewHires";
 export class SharePointServiceProvider {
@@ -29,8 +29,12 @@ export class SharePointServiceProvider {
             spfxContext: this.context
         });
 
-        graph.setup({
-            spfxContext: this.context
+        localforage.config({
+            driver: localforage.INDEXEDDB,
+            name: 'BirthdaysWorkAnniverariesNewCollaborators',
+            version: 1.0,
+            storeName: 'BirthdaysWorkAnniverariesNewCollaborators_Store',
+            description: 'BirthdaysWorkAnniverariesNewCollaborators storage'
         });
 
         this._sharePointRelativeListUrl = sharePointRelativeListUrl;
@@ -269,63 +273,70 @@ export class SharePointServiceProvider {
     public async getAnniversariesOrNewCollaboratorsRenderListDataAsStream(
         informationType: InformationType,
         informationDisplayType: InformationDisplayType): Promise<UserInformation[]> {
-     {
-        try {
-            const today = '2000-' + moment().format('MM-DD');
-            const currentDate = moment(today).toDate();
-            let currentDatewithDaysToRetrieve = currentDate;
-            currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
+        {
+            const cacheKey = 'AnniversariesOrNewCollaborators';
 
-            const currentDateMidNight = '2000-' + moment().format('MM-DD') + 'T00:00:00Z';
-            const currentDatewithDaysToRetrieveMidNight = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD') + 'T00:00:00Z';
+            let cachedAnniversariesOrNewCollaborators: UserInformation[] = await localforage.getItem(cacheKey);
 
-            const filterField = informationType === InformationType.Birthdays ? SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
-
-            let viewXml = this.getBirthdaysWorkAnniversariesViewXml(
-                filterField, 
-                currentDateMidNight,
-                currentDatewithDaysToRetrieveMidNight,
-                this._numberOfItemsToShow);
-
-            const usersSharePointCurrentYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
-                ViewXml: viewXml
-            });
-            
-            // check if we have enough data to display with dates from current year
-            if (usersSharePointCurrentYear !== null && usersSharePointCurrentYear !== undefined && usersSharePointCurrentYear.Row !== null && usersSharePointCurrentYear.Row !== undefined && usersSharePointCurrentYear.Row.length === this._numberOfItemsToShow)
-            {
-                const mappedUsersSharePoint = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);   
-
-                return mappedUsersSharePoint;
+            if (cachedAnniversariesOrNewCollaborators !== null && cachedAnniversariesOrNewCollaborators !== undefined && cachedAnniversariesOrNewCollaborators.length > 0) {
+                return cachedAnniversariesOrNewCollaborators;
             }
-            else
-            {
-                // if not, get dates from the next year
-                viewXml = this.getBirthdaysWorkAnniversariesViewXml(
-                    filterField, 
-                    '2000-01-01T00:00:00Z',
-                    currentDateMidNight,
-                    this._numberOfItemsToShow - usersSharePointCurrentYear.Row.length);
+            try {
+                const today = '2000-' + moment().format('MM-DD');
+                const currentDate = moment(today).toDate();
+                const currentDatewithDaysToRetrieve = currentDate;
+                currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
 
-                const usersSharePointNextYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
+                const currentDateMidNight = '2000-' + moment().format('MM-DD') + 'T00:00:00Z';
+                const currentDatewithDaysToRetrieveMidNight = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD') + 'T00:00:00Z';
+
+                const filterField = informationType === InformationType.Birthdays ? SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
+
+                let viewXml = this.getBirthdaysWorkAnniversariesViewXml(
+                    filterField,
+                    currentDateMidNight,
+                    currentDatewithDaysToRetrieveMidNight,
+                    this._numberOfItemsToShow);
+
+                const usersSharePointCurrentYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
                     ViewXml: viewXml
                 });
 
-                const mappedUsersSharePointCurrentYear = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
+                // check if we have enough data to display with dates from current year
+                if (usersSharePointCurrentYear !== null && usersSharePointCurrentYear !== undefined && usersSharePointCurrentYear.Row !== null && usersSharePointCurrentYear.Row !== undefined && usersSharePointCurrentYear.Row.length === this._numberOfItemsToShow) {
+                    const mappedUsersSharePoint = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
 
-                const mappedUsersSharePointNextYear = UserInformationMapper.mapToUserInformations(usersSharePointNextYear.Row);
+                    localforage.setItem(cacheKey, mappedUsersSharePoint);
 
-                const mappedUsersSharePoint = mappedUsersSharePointCurrentYear.concat(mappedUsersSharePointNextYear);
+                    return mappedUsersSharePoint;
+                }
+                else {
+                    // if not, get dates from the next year
+                    viewXml = this.getBirthdaysWorkAnniversariesViewXml(
+                        filterField,
+                        '2000-01-01T00:00:00Z',
+                        currentDateMidNight,
+                        this._numberOfItemsToShow - usersSharePointCurrentYear.Row.length);
 
-                return mappedUsersSharePoint;
+                    const usersSharePointNextYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
+                        ViewXml: viewXml
+                    });
+
+                    const mappedUsersSharePointCurrentYear = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
+
+                    const mappedUsersSharePointNextYear = UserInformationMapper.mapToUserInformations(usersSharePointNextYear.Row);
+
+                    const mappedUsersSharePoint = mappedUsersSharePointCurrentYear.concat(mappedUsersSharePointNextYear);
+
+                    localforage.setItem(cacheKey, mappedUsersSharePoint);
+
+                    return mappedUsersSharePoint;
+                }
             }
-            
+            catch (error) {
+                Log.error(LOG_SOURCE, error, this.context.serviceScope);
+                throw new Error(error.message);
+            }
         }
-        catch (error) {
-            Log.error(LOG_SOURCE, error, this.context.serviceScope);
-            throw new Error(error.message);
-        }
-
-     }
     }
 }
