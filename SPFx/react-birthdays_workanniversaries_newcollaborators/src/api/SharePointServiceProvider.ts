@@ -97,9 +97,7 @@ export class SharePointServiceProvider {
     // Important NOTE: All dates are stored with year 2000
     public async getAnniversariesOrNewCollaborators(
         informationType: InformationType,
-        informationDisplayType: InformationDisplayType,
-        skip?: number,
-        take?: number): Promise<UserInformation[]> {
+        informationDisplayType: InformationDisplayType): Promise<UserInformation[]> {
         let currentDate: Date, today: string, currentMonth: string, currentDay: number;
         let filter: string;
         let otherYearUsers: UserInformation[], currentYearUsers: UserInformation[], allUsers: UserInformation[];
@@ -234,16 +232,54 @@ export class SharePointServiceProvider {
                 // Filter is done in the end so that we can get all the users for the number of days to retrieve and then from those users, return the number of items to show
                 users = allUsers.slice(0, this._numberOfItemsToShow - 1);
             }
-            else //More results
-            {
-                //if we are in more results, get the current page
-                users = allUsers.slice(skip, take);
-            }
+            // else //More results
+            // {
+            //     //if we are in more results, get the current page
+            //     users = allUsers.slice(skip, take);
+            // }
 
             return users;
         } catch (error) {
             Log.error(LOG_SOURCE, error, this.context.serviceScope);
             throw new Error(error.message);
         }
+    }
+
+    public async getAnniversariesOrNewCollaboratorsRenderListDataAsStream(
+        informationType: InformationType,
+        informationDisplayType: InformationDisplayType): Promise<UserInformation[]> {
+     {
+        try {
+            let usersSharePoint = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
+                ViewXml: `<View Scope='RecursiveAll'>
+                <Query>
+                    <Where>
+                    <And>
+                        <Gt>
+                            <FieldRef Name='BirthDate' />
+                            <Value IncludeTimeValue='TRUE' Type='DateTime'>2000-02-13T15:04:18Z</Value>
+                        </Gt>
+                        <Leq>
+                            <FieldRef Name='BirthDate' />
+                            <Value IncludeTimeValue='TRUE' Type='DateTime'>2000-05-13T16:05:18Z</Value>
+                        </Leq>
+                    </And>
+                    </Where>
+                    <OrderBy>
+                    <FieldRef Name='BirthDate' Ascending='True' />
+                    </OrderBy>
+                </Query>
+                <ViewFields><FieldRef Name='${SharePointFieldNames.Id}'/><FieldRef Name='${SharePointFieldNames.Title}'/><FieldRef Name='${SharePointFieldNames.Email}'/><FieldRef Name='${SharePointFieldNames.JobTitle}'/><FieldRef Name='${SharePointFieldNames.BirthDate}'/><FieldRef Name='${SharePointFieldNames.HireDate}'/></ViewFields>
+                <RowLimit Paged='TRUE'>100</RowLimit></View>`
+            });
+
+            return UserInformationMapper.mapToUserInformations(usersSharePoint.Row);
+        }
+        catch (error) {
+            Log.error(LOG_SOURCE, error, this.context.serviceScope);
+            throw new Error(error.message);
+        }
+
+     }
     }
 }

@@ -1,0 +1,6 @@
+c|https://createdevpt.sharepoint.com/sites/DevSite
+miguel.isidoro@createdevpt.onmicrosoft.com|e0H4Z8heN2taL/UxOCpoOQ==|
+User Information|c7e7e462-48dd-4ce7-9f38-a21e335dbdc2|Query
+False
+
+<Query><Where><And><Gt><FieldRef Name="BirthDate" /><Value IncludeTimeValue="TRUE" Type="DateTime">2000-02-13T15:04:18Z</Value></Gt><Leq><FieldRef Name="BirthDate" /><Value IncludeTimeValue="TRUE" Type="DateTime">2000-05-13T16:05:18Z</Value></Leq></And></Where><OrderBy><FieldRef Name="BirthDate" Ascending="True" /></OrderBy></Query>
