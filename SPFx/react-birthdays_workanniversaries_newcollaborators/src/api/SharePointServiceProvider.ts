@@ -100,8 +100,8 @@ export class SharePointServiceProvider {
         const sortAscending = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
         true : false;
 
-        const queryCamlFirstOperator = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
-        'Geq' : 'Gt';
+        // const queryCamlFirstOperator = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
+        // 'Geq' : 'Gt';
 
         const queryCamlSecondOperator = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
         'Lt' : 'Leq';
@@ -110,10 +110,10 @@ export class SharePointServiceProvider {
         <Query>
             <Where>
             <And>
-                <${queryCamlFirstOperator}>
+                <Geq>
                     <FieldRef Name='${filterField}' />
                     <Value IncludeTimeValue='TRUE' Type='DateTime'>${beginDate}</Value>
-                </${queryCamlFirstOperator}>
+                </Geq>
                 <${queryCamlSecondOperator}>
                     <FieldRef Name='${filterField}' />
                     <Value IncludeTimeValue='TRUE' Type='DateTime'>${endDate}</Value>
@@ -132,7 +132,8 @@ export class SharePointServiceProvider {
 
     // Get users anniversaries or new collaborators
     // Important NOTE: All dates are stored with year 2000
-    public async getAnniversariesOrNewCollaborators(
+    //TODO: remove
+    public async getAnniversariesOrNewCollaboratorsOld(
         informationType: InformationType,
         informationDisplayType: InformationDisplayType): Promise<UserInformation[]> {
         let currentDate: Date, today: string, currentMonth: string, currentDay: number;
@@ -282,7 +283,9 @@ export class SharePointServiceProvider {
         }
     }
 
-    public async getAnniversariesOrNewCollaboratorsRenderListDataAsStream(
+    // Get users anniversaries or new collaborators
+    // Important NOTE: All dates are stored with year 2000
+    public async getAnniversariesOrNewCollaborators(
         informationType: InformationType,
         informationDisplayType: InformationDisplayType): Promise<UserInformation[]> {
         {
@@ -296,12 +299,14 @@ export class SharePointServiceProvider {
                     return cachedAnniversariesOrNewCollaborators;
                 }
 
-                let beginDate, endDate, sortAscending;
-                //const today = '2000-' + moment().format('MM-DD');
-                const today = '2000-12-30';
+                let beginDate, endDate;
+                const today = '2000-' + moment().format('MM-DD');
+                //const today = '2000-01-07';
                 const currentDate = moment(today).toDate();
                 const currentDatewithDaysToRetrieve = currentDate;
 
+                //get date considering number of days to retrieve
+                //we cannot retrieve the whole year due to performance if we have a lot of users
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                     currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
                 }
@@ -313,30 +318,41 @@ export class SharePointServiceProvider {
                 const currentDateMidNight = '2000-' + moment(today).format('MM-DD') + 'T00:00:00Z';
                 const currentDatewithDaysToRetrieveMidNight = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD') + 'T00:00:00Z';
 
-                const endOfYearDate = moment('2000-12-31').toDate();
-
-                let numberOfMiliSecondsBetweenCurrentDateAndEndOfYear: number = endOfYearDate.getTime() - currentDate.getTime();
-                let numberOfDaysBetweenCurrentDateAndEndOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndEndOfYear / (1000 * 60 * 60 * 24));
-
+                //get begin and end dates to filter data
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                     beginDate = currentDateMidNight;
+                
                     // check if end date should be the end of year or the current date plus days to retrieve depending on the difference between current date and end of year
+                    const endOfYearDate = moment('2000-12-31').toDate();
+
+                    let numberOfMiliSecondsBetweenCurrentDateAndEndOfYear: number = endOfYearDate.getTime() - currentDate.getTime();
+                    let numberOfDaysBetweenCurrentDateAndEndOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndEndOfYear / (1000 * 60 * 60 * 24));
+
                     if (numberOfDaysBetweenCurrentDateAndEndOfYear < this._numberOfDaysToRetrieve) {
                         endDate = '2000-12-31T00:00:00Z';
                     }
                     else {
                         endDate = currentDatewithDaysToRetrieveMidNight;
                     }
-
-                    sortAscending = true;
                 }
                 else //New Collaborators
                 {
-                    beginDate = '2000-01-01T00:00:00Z';
+                    // check if begin date should be the beginning of year or the current date minus days to retrieve depending on the difference between current date and beginning of year
+                    const begginingOfYearDate = moment('2000-01-01').toDate();
+
+                    let numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear: number = currentDate.getTime() - begginingOfYearDate.getTime();
+                    let numberOfDaysBetweenCurrentDateAndBeginningOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear / (1000 * 60 * 60 * 24));
+
+                    if (numberOfDaysBetweenCurrentDateAndBeginningOfYear >= 0 &&numberOfDaysBetweenCurrentDateAndBeginningOfYear < this._numberOfDaysToRetrieve) {
+                        beginDate = currentDatewithDaysToRetrieveMidNight;
+                    }
+                    else {
+                        beginDate = '2000-01-01T00:00:00Z';
+                    }
                     endDate = currentDateMidNight;
-                    sortAscending = false;
                 }
 
+                // get CAML Query to call SharePoint
                 const filterField = informationType === InformationType.Birthdays ? SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
 
                 let viewXml = this.getBirthdaysWorkAnniversariesNewCollaboratorsViewXml(
@@ -345,37 +361,32 @@ export class SharePointServiceProvider {
                     endDate,
                     this._numberOfItemsToShow);
 
+                //get data from SharePoint
                 const usersSharePointCurrentYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
                     ViewXml: viewXml
                 });
 
                 // check if we have enough data to display with dates from current year
                 if (usersSharePointCurrentYear !== null && usersSharePointCurrentYear !== undefined && usersSharePointCurrentYear.Row !== null && usersSharePointCurrentYear.Row !== undefined && usersSharePointCurrentYear.Row.length === this._numberOfItemsToShow) {
+                    //if there is enough data, map into the object we want to return
                     const mappedUsersSharePoint = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
 
-                    //store users in cache
+                    //store data in cache
                     localforage.setItem(cacheKey, mappedUsersSharePoint);
 
                     return mappedUsersSharePoint;
                 }
                 else {
+                    //if we don't have enough data, get data from othe year (next year if birthdays or work anniversaries or previous year if new collaborators)
                     if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                         beginDate = '2000-01-01T00:00:00Z';
                         endDate = currentDateMidNight;
-                        sortAscending = true;
                     }
                     else //New Collaborators
                     {
-                        beginDate = currentDateMidNight;
-                        if (numberOfDaysBetweenCurrentDateAndEndOfYear < this._numberOfDaysToRetrieve) {
-                            endDate = '2000-12-31T00:00:00Z';
-                        }
-                        else {
-                            endDate = currentDatewithDaysToRetrieveMidNight;
-                        }
-                        sortAscending = false;
+                        beginDate = '2000-' + moment(currentDatewithDaysToRetrieveMidNight).format('MM-DD') + 'T00:00:00Z';
+                        endDate = '2000-12-31T00:00:00Z';
                     }
-                    // if not, get dates from the next year for birthdays and work anniversaries or previous year for new collaborators
                     viewXml = this.getBirthdaysWorkAnniversariesNewCollaboratorsViewXml(
                         informationType,
                         beginDate,
@@ -390,9 +401,10 @@ export class SharePointServiceProvider {
 
                     const mappedUsersSharePointOtherYear = UserInformationMapper.mapToUserInformations(usersSharePointNextYear.Row);
 
+                    // concat the data from current year and the other year
                     const mappedUsersSharePoint = mappedUsersSharePointCurrentYear.concat(mappedUsersSharePointOtherYear);
 
-                    //store users in cache
+                    //store data in cache
                     localforage.setItem(cacheKey, mappedUsersSharePoint);
 
                     return mappedUsersSharePoint;

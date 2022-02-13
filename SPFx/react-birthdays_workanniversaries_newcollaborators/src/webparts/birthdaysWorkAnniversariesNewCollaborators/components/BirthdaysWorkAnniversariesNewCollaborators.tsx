@@ -103,7 +103,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
 
       // users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.TopResults);
 
-      users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaboratorsRenderListDataAsStream(informationType, InformationDisplayType.TopResults);
+      users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.TopResults);
 
       if (users != null && users.length > 0) {
         let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
