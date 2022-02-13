@@ -250,27 +250,58 @@ export class SharePointServiceProvider {
         informationDisplayType: InformationDisplayType): Promise<UserInformation[]> {
      {
         try {
+            const today = '2000-' + moment().format('MM-DD');
+            const currentDate = moment(today).toDate();
+            let currentDatewithDaysToRetrieve = currentDate;
+            currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
+
+            const currentDateMidNight = '2000-' + moment().format('MM-DD') + 'T00:00:00Z';
+            const currentDatewithDaysToRetrieveMidNight = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD') + 'T00:00:00Z';
+
+            const viewXml = `<View Scope='RecursiveAll'>
+            <Query>
+                <Where>
+                <And>
+                    <Geq>
+                        <FieldRef Name='${SharePointFieldNames.BirthDate}' />
+                        <Value IncludeTimeValue='TRUE' Type='DateTime'>${currentDateMidNight}</Value>
+                    </Geq>
+                    <Leq>
+                        <FieldRef Name='${SharePointFieldNames.BirthDate}' />
+                        <Value IncludeTimeValue='TRUE' Type='DateTime'>${currentDatewithDaysToRetrieveMidNight}</Value>
+                    </Leq>
+                </And>
+                </Where>
+                <OrderBy>
+                <FieldRef Name='${SharePointFieldNames.BirthDate}' Ascending='True' />
+                </OrderBy>
+            </Query>
+            <ViewFields><FieldRef Name='${SharePointFieldNames.Id}'/><FieldRef Name='${SharePointFieldNames.Title}'/><FieldRef Name='${SharePointFieldNames.Email}'/><FieldRef Name='${SharePointFieldNames.JobTitle}'/><FieldRef Name='${SharePointFieldNames.BirthDate}'/><FieldRef Name='${SharePointFieldNames.HireDate}'/></ViewFields>
+            <RowLimit Paged='TRUE'>100</RowLimit></View>`;
+
+            // const viewXml2 = `<View Scope='RecursiveAll'>
+            //     <Query>
+            //     <Where>
+            //     <And>
+            //         <Geq>
+            //             <FieldRef Name='BirthDate' />
+            //             <Value IncludeTimeValue='TRUE' Type='DateTime'>2000-02-13T00:00:00Z</Value>
+            //         </Geq>
+            //         <Leq>
+            //             <FieldRef Name='BirthDate' />
+            //             <Value IncludeTimeValue='TRUE' Type='DateTime'>2000-05-13T00:00:00Z</Value>
+            //         </Leq>
+            //     </And>
+            //     </Where>
+            //     <OrderBy>
+            //     <FieldRef Name='BirthDate' Ascending='True' />
+            //     </OrderBy>
+            // </Query>
+            // <ViewFields><FieldRef Name='${SharePointFieldNames.Id}'/><FieldRef Name='${SharePointFieldNames.Title}'/><FieldRef Name='${SharePointFieldNames.Email}'/><FieldRef Name='${SharePointFieldNames.JobTitle}'/><FieldRef Name='${SharePointFieldNames.BirthDate}'/><FieldRef Name='${SharePointFieldNames.HireDate}'/></ViewFields>
+            // <RowLimit Paged='TRUE'>100</RowLimit></View>`;
+
             let usersSharePoint = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
-                ViewXml: `<View Scope='RecursiveAll'>
-                <Query>
-                    <Where>
-                    <And>
-                        <Gt>
-                            <FieldRef Name='BirthDate' />
-                            <Value IncludeTimeValue='TRUE' Type='DateTime'>2000-02-13T15:04:18Z</Value>
-                        </Gt>
-                        <Leq>
-                            <FieldRef Name='BirthDate' />
-                            <Value IncludeTimeValue='TRUE' Type='DateTime'>2000-05-13T16:05:18Z</Value>
-                        </Leq>
-                    </And>
-                    </Where>
-                    <OrderBy>
-                    <FieldRef Name='BirthDate' Ascending='True' />
-                    </OrderBy>
-                </Query>
-                <ViewFields><FieldRef Name='${SharePointFieldNames.Id}'/><FieldRef Name='${SharePointFieldNames.Title}'/><FieldRef Name='${SharePointFieldNames.Email}'/><FieldRef Name='${SharePointFieldNames.JobTitle}'/><FieldRef Name='${SharePointFieldNames.BirthDate}'/><FieldRef Name='${SharePointFieldNames.HireDate}'/></ViewFields>
-                <RowLimit Paged='TRUE'>100</RowLimit></View>`
+                ViewXml: viewXml
             });
 
             return UserInformationMapper.mapToUserInformations(usersSharePoint.Row);
