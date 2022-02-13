@@ -93,19 +93,31 @@ export class SharePointServiceProvider {
         return users;
     }
 
-    public getBirthdaysWorkAnniversariesNewCollaboratorsViewXml(filterField: string, beginDate: string, endDate: string, rowLimit: number, sortAscending: boolean): string {
+    public getBirthdaysWorkAnniversariesNewCollaboratorsViewXml(informationType: InformationType, beginDate: string, endDate: string, rowLimit: number): string {
+        const filterField: string = informationType === InformationType.Birthdays ?
+        SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
+
+        const sortAscending = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
+        true : false;
+
+        const queryCamlFirstOperator = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
+        'Geq' : 'Gt';
+
+        const queryCamlSecondOperator = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
+        'Lt' : 'Leq';
+
         const viewXml = `<View Scope='RecursiveAll'>
         <Query>
             <Where>
             <And>
-                <Geq>
+                <${queryCamlFirstOperator}>
                     <FieldRef Name='${filterField}' />
                     <Value IncludeTimeValue='TRUE' Type='DateTime'>${beginDate}</Value>
-                </Geq>
-                <Lt>
+                </${queryCamlFirstOperator}>
+                <${queryCamlSecondOperator}>
                     <FieldRef Name='${filterField}' />
                     <Value IncludeTimeValue='TRUE' Type='DateTime'>${endDate}</Value>
-                </Lt>
+                </${queryCamlSecondOperator}>
             </And>
             </Where>
             <OrderBy>
@@ -127,10 +139,10 @@ export class SharePointServiceProvider {
         let filter: string;
         let otherYearUsers: UserInformation[], currentYearUsers: UserInformation[], allUsers: UserInformation[];
 
-        try {
-            const filterField: string = informationType === InformationType.Birthdays ?
-                SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
+        const filterField: string = informationType === InformationType.Birthdays ?
+        SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
 
+        try {
             // Build filter to use in query to SharePoint
             today = '2000-' + moment().format('MM-DD');
             //today = '2000-04-12';
@@ -168,7 +180,7 @@ export class SharePointServiceProvider {
             else // New Hires
             {
                 let filterStartDate;
-                // If end date is from next year, get new hires from both years
+                // If end date is from previous year, get new hires from both years
                 if (currentDatewithDaysToRetrieveYear === '1999') {
                     // filter end date is calculated, adding one year to the currentDatewithDaysToRetrieve since all dates are stores in year 2000
                     filterStartDate = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD');
@@ -275,7 +287,7 @@ export class SharePointServiceProvider {
         informationDisplayType: InformationDisplayType): Promise<UserInformation[]> {
         {
             try {
-                let cacheKey = informationType.toString();
+                let cacheKey = InformationType[informationType];
 
                 //check if users are in cache and return from cache if they are
                 let cachedAnniversariesOrNewCollaborators: UserInformation[] = await localforage.getItem(cacheKey);
@@ -285,17 +297,37 @@ export class SharePointServiceProvider {
                 }
 
                 let beginDate, endDate, sortAscending;
-                const today = '2000-' + moment().format('MM-DD');
+                //const today = '2000-' + moment().format('MM-DD');
+                const today = '2000-12-30';
                 const currentDate = moment(today).toDate();
                 const currentDatewithDaysToRetrieve = currentDate;
-                currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
 
-                const currentDateMidNight = '2000-' + moment().format('MM-DD') + 'T00:00:00Z';
+                if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
+                    currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
+                }
+                else
+                {
+                    currentDatewithDaysToRetrieve.setDate(currentDate.getDate() - this._numberOfDaysToRetrieve);
+                }
+
+                const currentDateMidNight = '2000-' + moment(today).format('MM-DD') + 'T00:00:00Z';
                 const currentDatewithDaysToRetrieveMidNight = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD') + 'T00:00:00Z';
+
+                const endOfYearDate = moment('2000-12-31').toDate();
+
+                let numberOfMiliSecondsBetweenCurrentDateAndEndOfYear: number = endOfYearDate.getTime() - currentDate.getTime();
+                let numberOfDaysBetweenCurrentDateAndEndOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndEndOfYear / (1000 * 60 * 60 * 24));
 
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                     beginDate = currentDateMidNight;
-                    endDate = currentDatewithDaysToRetrieveMidNight;
+                    // check if end date should be the end of year or the current date plus days to retrieve depending on the difference between current date and end of year
+                    if (numberOfDaysBetweenCurrentDateAndEndOfYear < this._numberOfDaysToRetrieve) {
+                        endDate = '2000-12-31T00:00:00Z';
+                    }
+                    else {
+                        endDate = currentDatewithDaysToRetrieveMidNight;
+                    }
+
                     sortAscending = true;
                 }
                 else //New Collaborators
@@ -308,11 +340,10 @@ export class SharePointServiceProvider {
                 const filterField = informationType === InformationType.Birthdays ? SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
 
                 let viewXml = this.getBirthdaysWorkAnniversariesNewCollaboratorsViewXml(
-                    filterField,
+                    informationType,
                     beginDate,
                     endDate,
-                    this._numberOfItemsToShow,
-                    sortAscending);
+                    this._numberOfItemsToShow);
 
                 const usersSharePointCurrentYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
                     ViewXml: viewXml
@@ -336,16 +367,20 @@ export class SharePointServiceProvider {
                     else //New Collaborators
                     {
                         beginDate = currentDateMidNight;
-                        endDate = currentDatewithDaysToRetrieveMidNight;
+                        if (numberOfDaysBetweenCurrentDateAndEndOfYear < this._numberOfDaysToRetrieve) {
+                            endDate = '2000-12-31T00:00:00Z';
+                        }
+                        else {
+                            endDate = currentDatewithDaysToRetrieveMidNight;
+                        }
                         sortAscending = false;
                     }
-                    // if not, get dates from the next year
+                    // if not, get dates from the next year for birthdays and work anniversaries or previous year for new collaborators
                     viewXml = this.getBirthdaysWorkAnniversariesNewCollaboratorsViewXml(
-                        filterField,
+                        informationType,
                         beginDate,
                         endDate,
-                        this._numberOfItemsToShow - usersSharePointCurrentYear.Row.length,
-                        true);
+                        this._numberOfItemsToShow - usersSharePointCurrentYear.Row.length);
 
                     const usersSharePointNextYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
                         ViewXml: viewXml
@@ -353,9 +388,9 @@ export class SharePointServiceProvider {
 
                     const mappedUsersSharePointCurrentYear = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
 
-                    const mappedUsersSharePointNextYear = UserInformationMapper.mapToUserInformations(usersSharePointNextYear.Row);
+                    const mappedUsersSharePointOtherYear = UserInformationMapper.mapToUserInformations(usersSharePointNextYear.Row);
 
-                    const mappedUsersSharePoint = mappedUsersSharePointCurrentYear.concat(mappedUsersSharePointNextYear);
+                    const mappedUsersSharePoint = mappedUsersSharePointCurrentYear.concat(mappedUsersSharePointOtherYear);
 
                     //store users in cache
                     localforage.setItem(cacheKey, mappedUsersSharePoint);

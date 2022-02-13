@@ -81,7 +81,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends B
                   key: "numberOfItemsToShow",
                   label: strings.NumberOfItemsToShowLabel,
                   value: this.properties.numberOfItemsToShow,
-                  maxValue: 20,
+                  maxValue: 500,
                   minValue: 1,
                   disabled: false
                 }),
