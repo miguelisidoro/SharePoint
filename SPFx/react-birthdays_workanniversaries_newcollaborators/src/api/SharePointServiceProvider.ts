@@ -33,8 +33,8 @@ export class SharePointServiceProvider {
             driver: localforage.INDEXEDDB,
             name: 'BirthdaysWorkAnniverariesNewCollaborators',
             version: 1.0,
-            storeName: 'BirthdaysWorkAnniverariesNewCollaborators_Store',
-            description: 'BirthdaysWorkAnniverariesNewCollaborators storage'
+            storeName: 'BirthdaysWorkAnniverariesNewCollaborators',
+            description: 'Birthdays, Work Anniveraries, New Collaborators Indexed DB Storage'
         });
 
         this._sharePointRelativeListUrl = sharePointRelativeListUrl;
