@@ -101,8 +101,6 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
 
       const informationType: InformationType = InformationType[this.props.informationType];
 
-      // users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.TopResults);
-
       users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.TopResults);
 
       if (users != null && users.length > 0) {

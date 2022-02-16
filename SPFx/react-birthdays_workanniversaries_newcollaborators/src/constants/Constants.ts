@@ -12,3 +12,8 @@ export const SharePointFieldNames =
     BirthDate: 'BirthDate',
     HireDate: 'HireDate'
 }
+
+export const CacheExpiration = 
+{
+    BirthdaysWorkAnniversariesNewCollaboratorsCacheExpiration: 3600000 //1 hour expiration cache
+}

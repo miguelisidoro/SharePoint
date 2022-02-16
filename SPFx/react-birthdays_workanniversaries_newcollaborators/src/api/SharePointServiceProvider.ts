@@ -6,14 +6,21 @@ import "@pnp/graph/search";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import { SharePointFieldNames } from "../constants";
+import { CacheExpiration, SharePointFieldNames } from "../constants";
 import { UserInformationMapper } from "../mappers";
 import { UserInformation } from "../models";
 import * as moment from 'moment';
 import { InformationDisplayType, InformationType } from "../enums";
 import * as localforage from "localforage";
+import cache from "@luudjanssen/localforage-cache"
 
 const LOG_SOURCE: string = "BirthdaysWorkAnniverariesNewHires";
+
+const birthdaysWorkAnniversariesNewCollaboratorsCache = cache.createInstance({
+    name: "BirthdaysWorkAnniversariesNewCollaboratorsCache",
+    defaultExpiration: CacheExpiration.BirthdaysWorkAnniversariesNewCollaboratorsCacheExpiration
+});
+
 export class SharePointServiceProvider {
     private _sharePointRelativeListUrl: string;
     private _numberOfItemsToShow: number;
@@ -44,16 +51,16 @@ export class SharePointServiceProvider {
 
     public getBirthdaysWorkAnniversariesNewCollaboratorsViewXml(informationType: InformationType, beginDate: string, endDate: string, rowLimit: number): string {
         const filterField: string = informationType === InformationType.Birthdays ?
-        SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
+            SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
 
         const sortAscending = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
-        true : false;
+            true : false;
 
         // const queryCamlFirstOperator = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
         // 'Geq' : 'Gt';
 
         const queryCamlSecondOperator = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
-        'Lt' : 'Leq';
+            'Lt' : 'Leq';
 
         const viewXml = `<View Scope='RecursiveAll'>
         <Query>
@@ -86,10 +93,12 @@ export class SharePointServiceProvider {
         informationDisplayType: InformationDisplayType): Promise<UserInformation[]> {
         {
             try {
-                let cacheKey = InformationType[informationType];
+                let cacheKey = InformationType[informationType] + "Cache";
 
                 //check if users are in cache and return from cache if they are
-                let cachedAnniversariesOrNewCollaborators: UserInformation[] = await localforage.getItem(cacheKey);
+                // let cachedAnniversariesOrNewCollaborators: UserInformation[] = await localforage.getItem(cacheKey);
+
+                let cachedAnniversariesOrNewCollaborators: UserInformation[] = await birthdaysWorkAnniversariesNewCollaboratorsCache.getItem(cacheKey);
 
                 if (cachedAnniversariesOrNewCollaborators !== null && cachedAnniversariesOrNewCollaborators !== undefined && cachedAnniversariesOrNewCollaborators.length > 0) {
                     return cachedAnniversariesOrNewCollaborators;
@@ -106,8 +115,7 @@ export class SharePointServiceProvider {
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                     currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
                 }
-                else
-                {
+                else {
                     currentDatewithDaysToRetrieve.setDate(currentDate.getDate() - this._numberOfDaysToRetrieve);
                 }
 
@@ -117,7 +125,7 @@ export class SharePointServiceProvider {
                 //get begin and end dates to filter data
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                     beginDate = currentDateMidNight;
-                
+
                     // check if end date should be the end of year or the current date plus days to retrieve depending on the difference between current date and end of year
                     const endOfYearDate = moment('2000-12-31').toDate();
 
@@ -139,7 +147,7 @@ export class SharePointServiceProvider {
                     let numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear: number = currentDate.getTime() - begginingOfYearDate.getTime();
                     let numberOfDaysBetweenCurrentDateAndBeginningOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear / (1000 * 60 * 60 * 24));
 
-                    if (numberOfDaysBetweenCurrentDateAndBeginningOfYear >= 0 &&numberOfDaysBetweenCurrentDateAndBeginningOfYear < this._numberOfDaysToRetrieve) {
+                    if (numberOfDaysBetweenCurrentDateAndBeginningOfYear >= 0 && numberOfDaysBetweenCurrentDateAndBeginningOfYear < this._numberOfDaysToRetrieve) {
                         beginDate = currentDatewithDaysToRetrieveMidNight;
                     }
                     else {
@@ -167,8 +175,11 @@ export class SharePointServiceProvider {
                     //if there is enough data, map into the object we want to return
                     const mappedUsersSharePoint = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
 
+                    // //store data in cache
+                    // localforage.setItem(cacheKey, mappedUsersSharePoint);
+
                     //store data in cache
-                    localforage.setItem(cacheKey, mappedUsersSharePoint);
+                    birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, mappedUsersSharePoint);
 
                     return mappedUsersSharePoint;
                 }
@@ -200,8 +211,11 @@ export class SharePointServiceProvider {
                     // concat the data from current year and the other year
                     const mappedUsersSharePoint = mappedUsersSharePointCurrentYear.concat(mappedUsersSharePointOtherYear);
 
+                     // //store data in cache
+                    // localforage.setItem(cacheKey, mappedUsersSharePoint);
+
                     //store data in cache
-                    localforage.setItem(cacheKey, mappedUsersSharePoint);
+                    birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, mappedUsersSharePoint);
 
                     return mappedUsersSharePoint;
                 }

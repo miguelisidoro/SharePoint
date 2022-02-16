@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fluentui/react": "^8.52.3",
+    "@luudjanssen/localforage-cache": "0.0.4",
     "@microsoft/sp-core-library": "1.13.1",
     "@microsoft/sp-lodash-subset": "1.13.1",
     "@microsoft/sp-office-ui-fabric-core": "1.13.1",
