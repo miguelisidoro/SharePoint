@@ -6,6 +6,7 @@ export const Box = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
+  height: 75px;
   
    
   @media (max-width: 1000px) {
@@ -19,7 +20,7 @@ export const Container = styled.div`
     justify-content: center;
     max-width: 1000px;
     margin: 0 auto;
-    /* background: red; */
+    height: 50px;
 `
    
 export const Column = styled.div`
@@ -31,6 +32,7 @@ export const Column = styled.div`
    
 export const Row = styled.div`
   display: grid;
+  height: 20px;
   grid-template-columns: repeat(auto-fill, 
                          minmax(185px, 1fr));
   grid-gap: 20px;
