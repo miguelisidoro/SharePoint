@@ -1,17 +1,19 @@
 import React from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import { Pagination } from '@mui/material';
+// import List from '@mui/material/List';
+// import ListItem from '@mui/material/ListItem';
+// import Divider from '@mui/material/Divider';
+// import ListItemText from '@mui/material/ListItemText';
+// import ListItemAvatar from '@mui/material/ListItemAvatar';
+// import Avatar from '@mui/material/Avatar';
+// import Typography from '@mui/material/Typography';
+// import { Pagination } from '@mui/material';
+import { NTFCollectionsListPage } from '../containers/NTFCollectionsListPage';
 
 export default function Content() {
   return (
       <>
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        <NTFCollectionsListPage />
+        {/* <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         <ListItem alignItems="flex-start">
             <ListItemAvatar>
             <Avatar alt="Remy Sharp" src="/assets/1.jpg" />
@@ -78,7 +80,7 @@ export default function Content() {
             />
         </ListItem>
         </List>
-        <Pagination count={10} size="small" />
+        <Pagination count={10} size="small" /> */}
       </>
   );
 }
