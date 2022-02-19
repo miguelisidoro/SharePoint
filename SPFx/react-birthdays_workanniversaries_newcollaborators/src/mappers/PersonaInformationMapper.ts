@@ -40,7 +40,7 @@ export class PersonaInformationMapper {
                 text: user.Title,
                 secondaryText: secondaryText,
                 userPrincipalName: user.Email,
-            })
+            });
         });
 
         return mappedPersonas;

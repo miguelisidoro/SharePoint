@@ -13,7 +13,26 @@
       "privacyUrl": "",
       "termsOfUseUrl": "",
       "mpnId": "Undefined-1.13.1"
-    }
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "Birthdays, work anniversaries and new collaborators web part"
+      },
+      "longDescription": {
+        "default": "Birthdays, work anniversaries and new collaborators web part"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "react-birthdays-workanniversaries-newcollaborators",
+        "description": "Birthdays, work anniversaries and new collaborators web part",
+        "id": "ff28fada-9a6c-4f86-b111-ce51f2d131e2",
+        "version": "1.0.0.0"
+      }
+    ]
   },
   "paths": {
     "zippedPackage": "solution/react-birthdays-workanniversaries-newcollaborators.sppkg"

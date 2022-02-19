@@ -1,12 +1,12 @@
 export class PersonaInformation
 {
-    imageUrl: string;
-    text: string;
-    secondaryText: string;
-    userPrincipalName: string;
-    isAnniversaryToday: boolean;
+    public imageUrl: string;
+    public text: string;
+    public secondaryText: string;
+    public userPrincipalName: string;
+    public isAnniversaryToday: boolean;
 
     constructor(obj: Partial<PersonaInformation> = {}) {
-        Object.assign(this, obj)
+        Object.assign(this, obj);
     }
 }

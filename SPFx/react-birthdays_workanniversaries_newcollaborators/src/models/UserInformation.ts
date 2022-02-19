@@ -1,12 +1,12 @@
 export class UserInformation
 {
-    Title: string;
-    Email: string;
-    JobTitle: string;
-    BirthDate: Date;
-    HireDate: Date;
+    public Title: string;
+    public Email: string;
+    public JobTitle: string;
+    public BirthDate: Date;
+    public HireDate: Date;
 
     constructor(obj: Partial<UserInformation> = {}) {
-        Object.assign(this, obj)
+        Object.assign(this, obj);
     }
 }

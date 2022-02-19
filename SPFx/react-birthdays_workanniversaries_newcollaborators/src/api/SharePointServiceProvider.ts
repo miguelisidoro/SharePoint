@@ -12,7 +12,7 @@ import { UserInformation } from "../models";
 import * as moment from 'moment';
 import { InformationDisplayType, InformationType } from "../enums";
 import * as localforage from "localforage";
-import cache from "@luudjanssen/localforage-cache"
+import cache from "@luudjanssen/localforage-cache";
 
 const LOG_SOURCE: string = "BirthdaysWorkAnniverariesNewHires";
 
@@ -56,9 +56,6 @@ export class SharePointServiceProvider {
         const sortAscending = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
             true : false;
 
-        // const queryCamlFirstOperator = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
-        // 'Geq' : 'Gt';
-
         const queryCamlSecondOperator = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
             'Lt' : 'Leq';
 
@@ -96,7 +93,6 @@ export class SharePointServiceProvider {
                 let cacheKey = InformationType[informationType] + "Cache";
 
                 //check if users are in cache and return from cache if they are
-                // let cachedAnniversariesOrNewCollaborators: UserInformation[] = await localforage.getItem(cacheKey);
 
                 let cachedAnniversariesOrNewCollaborators: UserInformation[] = await birthdaysWorkAnniversariesNewCollaboratorsCache.getItem(cacheKey);
 
@@ -175,9 +171,6 @@ export class SharePointServiceProvider {
                     //if there is enough data, map into the object we want to return
                     const mappedUsersSharePoint = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
 
-                    // //store data in cache
-                    // localforage.setItem(cacheKey, mappedUsersSharePoint);
-
                     //store data in cache
                     birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, mappedUsersSharePoint);
 
@@ -210,9 +203,6 @@ export class SharePointServiceProvider {
 
                     // concat the data from current year and the other year
                     const mappedUsersSharePoint = mappedUsersSharePointCurrentYear.concat(mappedUsersSharePointOtherYear);
-
-                     // //store data in cache
-                    // localforage.setItem(cacheKey, mappedUsersSharePoint);
 
                     //store data in cache
                     birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, mappedUsersSharePoint);

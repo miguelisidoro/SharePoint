@@ -55,7 +55,7 @@ const personaProps: IPersonaProps = {
   },
 };
 export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsProps, IBirthdaysWorkAnniverariesNewCollaboratorsState> {
-  
+
   private sharePointServiceProvider: SharePointServiceProvider;
   private _serviceScope: ServiceScope;
 
@@ -82,15 +82,14 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
   }
 
   /// Checkes if web part is properly configured
-  private isWebPartConfigured(): boolean
-  {
+  private isWebPartConfigured(): boolean {
     const isWebPartConfigured = (this.props.sharePointRelativeListUrl != null && this.props.sharePointRelativeListUrl != undefined
       && this.props.showMoreUrl != null && this.props.showMoreUrl != undefined
       && this.props.numberOfItemsToShow !== null && this.props.numberOfItemsToShow !== undefined
       && this.props.numberOfDaysToRetrieve !== null && this.props.numberOfDaysToRetrieve !== undefined
       && this.props.informationType !== null && this.props.informationType !== undefined);
 
-      return isWebPartConfigured;
+    return isWebPartConfigured;
   }
 
   // Loads users from SharePoint
@@ -112,7 +111,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
       }
     }
   }
-  
+
   public render(): React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsProps> {
     if (this.isWebPartConfigured()) {
       if (this.state.users !== null && this.state.users.length > 0) {
@@ -123,13 +122,12 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
               updateProperty={this.props.updateTitleProperty} />
             {
               this.state.users !== null && this.state.users.map(user =>
-                <LivePersona serviceScope={this._serviceScope} upn={user.userPrincipalName}
+                <LivePersona serviceScope={this.context.serviceScope} upn={user.userPrincipalName}
                   template={
                     <>
                       <Persona {...user} {...personaProps} />
                     </>
                   }
-                  context={this.props.context}
                 />
               )
             }
