@@ -10,7 +10,8 @@ export const SharePointFieldNames =
     JobTitle: "JobTitle",
     Email: 'EMail',
     BirthDate: 'BirthDate',
-    HireDate: 'HireDate'
+    HireDate: 'HireDate',
+    WorkAnniversary: 'WorkAnniversary'
 };
 
 export const CacheExpiration = 

@@ -47,9 +47,16 @@ export class SharePointServiceProvider {
     }
 
     public getBirthdaysWorkAnniversariesNewCollaboratorsViewXml(informationType: InformationType, beginDate: string, endDate: string, rowLimit: number): string {
-        const filterField: string = informationType === InformationType.Birthdays ?
-            SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
-
+        let filterField;
+        if (informationType === InformationType.Birthdays) {
+            filterField = SharePointFieldNames.BirthDate;
+        }
+        else if (informationType === InformationType.WorkAnniversaries) {
+            filterField = SharePointFieldNames.WorkAnniversary;
+        }
+        else { // New Collaborators
+            filterField = SharePointFieldNames.HireDate;
+        }
         const sortAscending = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
             true : false;
 
@@ -84,7 +91,7 @@ export class SharePointServiceProvider {
     // Important NOTE: All dates are stored with year 2000
     public async getAnniversariesOrNewCollaborators(
         informationType: InformationType,
-        informationDisplayType: InformationDisplayType, 
+        informationDisplayType: InformationDisplayType,
         rowLimit: number): Promise<UserInformation[]> {
         {
             try {
@@ -151,8 +158,6 @@ export class SharePointServiceProvider {
                 }
 
                 // get CAML Query to call SharePoint
-                const filterField = informationType === InformationType.Birthdays ? SharePointFieldNames.BirthDate : SharePointFieldNames.HireDate;
-
                 let viewXml = this.getBirthdaysWorkAnniversariesNewCollaboratorsViewXml(
                     informationType,
                     beginDate,
