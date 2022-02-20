@@ -49,24 +49,9 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
   private async loadUsers() {
     if (this.isWebPartConfigured()) {
 
-      let users: UserInformation[] = [];
-
       const informationType: InformationType = this.state.informationType;
 
-      let numberOfDaysToRetrieve;
-
-      if (informationType === InformationType.Birthdays) {
-        numberOfDaysToRetrieve = this.props.numberOfDaysToRetrieveForBirthdays;
-      }
-      else if (informationType === InformationType.WorkAnniversaries) {
-        numberOfDaysToRetrieve = this.props.numberOfDaysToRetrieveForWorkAnniveraries;
-      }
-      else //New Collaborators
-      {
-        numberOfDaysToRetrieve = this.props.numberOfDaysToRetrieveForNewCollaborators;
-      }
-
-      users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.MoreResults, numberOfDaysToRetrieve);
+      const users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.MoreResults, this.props.numberOfItemsPerPage);
 
       if (users != null && users.length > 0) {
         let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
