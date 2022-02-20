@@ -23,12 +23,10 @@ const birthdaysWorkAnniversariesNewCollaboratorsCache = cache.createInstance({
 
 export class SharePointServiceProvider {
     private _sharePointRelativeListUrl: string;
-    private _numberOfItemsToShow: number;
     private _numberOfDaysToRetrieve: number;
 
     constructor(private context: WebPartContext,
         sharePointRelativeListUrl: string,
-        numberOfItemsToShow: number,
         numberOfDaysToRetrieve: number) {
 
         // Setup Context to PnP JS
@@ -45,7 +43,6 @@ export class SharePointServiceProvider {
         });
 
         this._sharePointRelativeListUrl = sharePointRelativeListUrl;
-        this._numberOfItemsToShow = numberOfItemsToShow;
         this._numberOfDaysToRetrieve = numberOfDaysToRetrieve;
     }
 
@@ -87,7 +84,8 @@ export class SharePointServiceProvider {
     // Important NOTE: All dates are stored with year 2000
     public async getAnniversariesOrNewCollaborators(
         informationType: InformationType,
-        informationDisplayType: InformationDisplayType): Promise<UserInformation[]> {
+        informationDisplayType: InformationDisplayType, 
+        rowLimit: number): Promise<UserInformation[]> {
         {
             try {
                 let cacheKey = InformationType[informationType] + "Cache";
@@ -159,7 +157,7 @@ export class SharePointServiceProvider {
                     informationType,
                     beginDate,
                     endDate,
-                    this._numberOfItemsToShow);
+                    rowLimit);
 
                 //get data from SharePoint
                 const usersSharePointCurrentYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
@@ -167,7 +165,7 @@ export class SharePointServiceProvider {
                 });
 
                 // check if we have enough data to display with dates from current year
-                if (usersSharePointCurrentYear !== null && usersSharePointCurrentYear !== undefined && usersSharePointCurrentYear.Row !== null && usersSharePointCurrentYear.Row !== undefined && usersSharePointCurrentYear.Row.length === this._numberOfItemsToShow) {
+                if (usersSharePointCurrentYear !== null && usersSharePointCurrentYear !== undefined && usersSharePointCurrentYear.Row !== null && usersSharePointCurrentYear.Row !== undefined && usersSharePointCurrentYear.Row.length === rowLimit) {
                     //if there is enough data, map into the object we want to return
                     const mappedUsersSharePoint = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
 
@@ -191,7 +189,7 @@ export class SharePointServiceProvider {
                         informationType,
                         beginDate,
                         endDate,
-                        this._numberOfItemsToShow - usersSharePointCurrentYear.Row.length);
+                        rowLimit - usersSharePointCurrentYear.Row.length);
 
                     const usersSharePointNextYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
                         ViewXml: viewXml

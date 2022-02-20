@@ -10,39 +10,15 @@ import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsWebPartStrings';
 
 import {
-  CommandBar,
-  DefaultButton,
-  Dialog,
-  DialogFooter,
-  DialogType,
-  IContextualMenuProps,
-  IconButton,
-  ImageFit,
-  Label,
   Link,
-  MessageBar,
-  MessageBarType,
   Persona,
   PersonaSize,
-  PrimaryButton,
-  SearchBox,
-  Separator,
-  ShimmeredDetailsList,
-  Spinner,
-  SpinnerSize,
-  Stack,
-  getTheme,
-  Dropdown,
-  IDropdownStyles,
-  IDropdownOption,
-  themeRulesStandardCreator,
   IPersonaProps
 } from '@fluentui/react';
 import { LivePersona } from "@pnp/spfx-controls-react/lib/controls/LivePersona";
 
 import { IBirthdaysWorkAnniversariesNewCollaboratorsState } from './IBirthdaysWorkAnniversariesNewCollaboratorsState';
-import { ServiceScope } from '@microsoft/sp-core-library';
-import { PersonaInformationMapper } from '../../../mappers/PersonaInformationMapper';
+import { PersonaInformationMapper } from '../../../mappers';
 import { InformationDisplayType, InformationType } from '../../../enums';
 
 const personaProps: IPersonaProps = {
@@ -57,16 +33,12 @@ const personaProps: IPersonaProps = {
 export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsProps, IBirthdaysWorkAnniversariesNewCollaboratorsState> {
 
   private sharePointServiceProvider: SharePointServiceProvider;
-  private _serviceScope: ServiceScope;
 
   constructor(props: IBirthdaysWorkAnniversariesNewCollaboratorsProps) {
     super(props);
 
-    this._serviceScope = null;
-
     this.sharePointServiceProvider = new SharePointServiceProvider(this.props.context,
       this.props.sharePointRelativeListUrl,
-      this.props.numberOfItemsToShow,
       this.props.numberOfDaysToRetrieve);
 
     this.state = {
@@ -100,7 +72,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
 
       const informationType: InformationType = InformationType[this.props.informationType];
 
-      users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.TopResults);
+      users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.TopResults, this.props.numberOfItemsToShow);
 
       if (users != null && users.length > 0) {
         let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
