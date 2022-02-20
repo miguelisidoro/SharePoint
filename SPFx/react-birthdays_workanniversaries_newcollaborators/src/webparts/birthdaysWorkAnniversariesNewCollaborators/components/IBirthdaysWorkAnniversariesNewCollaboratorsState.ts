@@ -1,5 +1,5 @@
 import { PersonaInformation } from "../../../models";
 
-export interface IBirthdaysWorkAnniverariesNewCollaboratorsState {
+export interface IBirthdaysWorkAnniversariesNewCollaboratorsState {
     users: PersonaInformation[];
   }

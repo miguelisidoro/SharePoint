@@ -40,7 +40,7 @@ import {
 } from '@fluentui/react';
 import { LivePersona } from "@pnp/spfx-controls-react/lib/controls/LivePersona";
 
-import { IBirthdaysWorkAnniverariesNewCollaboratorsState } from './IBirthdaysWorkAnniverariesNewCollaboratorsState';
+import { IBirthdaysWorkAnniversariesNewCollaboratorsState } from './IBirthdaysWorkAnniversariesNewCollaboratorsState';
 import { ServiceScope } from '@microsoft/sp-core-library';
 import { PersonaInformationMapper } from '../../../mappers/PersonaInformationMapper';
 import { InformationDisplayType, InformationType } from '../../../enums';
@@ -54,7 +54,7 @@ const personaProps: IPersonaProps = {
     },
   },
 };
-export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsProps, IBirthdaysWorkAnniverariesNewCollaboratorsState> {
+export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsProps, IBirthdaysWorkAnniversariesNewCollaboratorsState> {
 
   private sharePointServiceProvider: SharePointServiceProvider;
   private _serviceScope: ServiceScope;
@@ -116,7 +116,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
     if (this.isWebPartConfigured()) {
       if (this.state.users !== null && this.state.users.length > 0) {
         return (
-          <div>
+          <>
             <WebPartTitle displayMode={this.props.displayMode}
               title={this.props.title}
               updateProperty={this.props.updateTitleProperty} />
@@ -134,7 +134,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
             <Link href={this.props.showMoreUrl}>
               {strings.ShowMoreLabel}
             </Link>
-          </div>
+          </>
         );
       }
       else {
