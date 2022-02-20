@@ -180,6 +180,8 @@ export class SharePointServiceProvider {
                     ViewXml: viewXml
                 });
 
+                //usersSharePointCurrentYear.NextHref --next page, ver se preciso ir buscar dados a outros anos
+
                 // check if we have enough data to display with dates from current year
                 if (usersSharePointCurrentYear !== null && usersSharePointCurrentYear !== undefined && usersSharePointCurrentYear.Row !== null && usersSharePointCurrentYear.Row !== undefined && usersSharePointCurrentYear.Row.length === rowLimit) {
                     //if there is enough data, map into the object we want to return
@@ -210,6 +212,8 @@ export class SharePointServiceProvider {
                     const usersSharePointNextYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
                         ViewXml: viewXml
                     });
+
+                    //usersSharePointNextYear.NextHref --next page, ver se preciso ir buscar dados a outros anos
 
                     const mappedUsersSharePointCurrentYear = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
 
