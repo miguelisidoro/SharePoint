@@ -5,6 +5,7 @@ declare interface BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartSt
   ShowMoreUrlFieldLabel: string;
   ShowMoreLabel: string;
   NumberOfItemsToShowLabel: string;
+  NumberOfItemsPerPageLabel: string;
   NumberOfDaysToRetrieveLabelForBirthdays: string;
   NumberOfDaysToRetrieveLabelForWorkAnniversaries: string;
   NumberOfDaysToRetrieveLabelForNewCollaborators: string;

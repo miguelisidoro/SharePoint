@@ -6,6 +6,7 @@ define([], function() {
     "ShowMoreUrlFieldLabel": "Show More Page URL",
     "ShowMoreLabel": "Show more",
     "NumberOfItemsToShowLabel": "Number of items to show",
+    "NumberOfItemsPerPageLabel": "Number of items per page",
     "NumberOfDaysToRetrieveLabelForBirthdays": "Number of days to retrieve (Birthdays)",
     "NumberOfDaysToRetrieveLabelForWorkAnniversaries": "Number of days to retrieve (Work Anniversaries)",
     "NumberOfDaysToRetrieveLabelForNewCollaborators": "Number of days to retrieve (New Collaborators)",

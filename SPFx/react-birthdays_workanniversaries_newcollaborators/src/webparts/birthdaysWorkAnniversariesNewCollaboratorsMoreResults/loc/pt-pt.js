@@ -5,6 +5,7 @@ define([], function() {
     "SharePointRelativeListUrlFieldLabel": "Endereço Relativo Lista SharePoint",
     "ShowMoreUrlFieldLabel": "Endereço de página com mais resultados",
     "ShowMoreLabel": "Ver mais",
+    "NumberOfItemsPerPageLabel": "Número de itens por página",
     "NumberOfItemsToShowLabel": "Número de itens a apresentar",
     "NumberOfDaysToRetrieveLabelForBirthdays": "Número de dias a obter (Aniversários)",
     "NumberOfDaysToRetrieveLabelForWorkAnniversaries": "Número de dias a obter (Aniversários de Empresa)",

@@ -15,6 +15,7 @@ import { PropertyFieldNumber } from '@pnp/spfx-property-controls/lib/PropertyFie
 export interface IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartProps {
   title: string;
   sharePointRelativeListUrl: string;
+  numberOfItemsPerPage: number;
   numberOfDaysToRetrieveForBirthdays: number;
   numberOfDaysToRetrieveForWorkAnniveraries: number;
   numberOfDaysToRetrieveForNewCollaborators: number;
@@ -26,6 +27,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPar
     const element: React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps> = React.createElement(
       BirthdaysWorkAnniversariesNewCollaboratorsMoreResults,
       {
+        numberOfItemsPerPage: this.properties.numberOfItemsPerPage,
         numberOfDaysToRetrieveForBirthdays: this.properties.numberOfDaysToRetrieveForBirthdays,
         numberOfDaysToRetrieveForWorkAnniveraries: 
         this.properties.numberOfDaysToRetrieveForWorkAnniveraries,
@@ -68,6 +70,14 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPar
                 }),
                 PropertyPaneTextField('sharePointRelativeListUrl', {
                   label: strings.SharePointRelativeListUrlFieldLabel
+                }),
+                PropertyFieldNumber("numberOfItemsPerPage", {
+                  key: "numberOfDaysToRetrieveForBirthdays",
+                  label: strings.NumberOfItemsPerPageLabel,
+                  value: this.properties.numberOfItemsPerPage,
+                  maxValue: 90,
+                  minValue: 1,
+                  disabled: false
                 }),
                 PropertyFieldNumber("numberOfDaysToRetrieveForBirthdays", {
                   key: "numberOfDaysToRetrieveForBirthdays",
