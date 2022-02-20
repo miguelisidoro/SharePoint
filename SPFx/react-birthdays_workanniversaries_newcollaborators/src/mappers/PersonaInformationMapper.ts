@@ -30,7 +30,11 @@ export class PersonaInformationMapper {
             {
                 secondaryText = this.isDateToday(user.BirthDate) ? strings.TodayLabel : this.formatDateToString(user.BirthDate);
             }
-            else
+            else if (informationType === InformationType.WorkAnniversaries)
+            {
+                secondaryText = this.isDateToday(user.WorkAnniversary) ? strings.TodayLabel : this.formatDateToString(user.WorkAnniversary);
+            }
+            else //New Collaborators
             {
                 secondaryText = this.isDateToday(user.HireDate) ? strings.TodayLabel : this.formatDateToString(user.HireDate);
             }

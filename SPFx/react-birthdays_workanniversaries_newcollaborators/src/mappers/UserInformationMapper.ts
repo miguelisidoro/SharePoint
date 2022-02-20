@@ -12,6 +12,7 @@ export class UserInformationMapper
                 Email: userSharePoint.EMail,
                 BirthDate: new Date(userSharePoint.BirthDate),
                 HireDate: new Date(userSharePoint.HireDate),
+                WorkAnniversary: new Date(userSharePoint.WorkAnniversary)
             }));
 
         return mappedUsers;

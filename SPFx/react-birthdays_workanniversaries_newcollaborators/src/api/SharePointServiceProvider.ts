@@ -81,7 +81,7 @@ export class SharePointServiceProvider {
             <FieldRef Name='${filterField}' Ascending='${sortAscending.toString().toUpperCase()}' />
             </OrderBy>
         </Query>
-        <ViewFields><FieldRef Name='${SharePointFieldNames.Id}'/><FieldRef Name='${SharePointFieldNames.Title}'/><FieldRef Name='${SharePointFieldNames.Email}'/><FieldRef Name='${SharePointFieldNames.JobTitle}'/><FieldRef Name='${SharePointFieldNames.BirthDate}'/><FieldRef Name='${SharePointFieldNames.HireDate}'/></ViewFields>
+        <ViewFields><FieldRef Name='${SharePointFieldNames.Id}'/><FieldRef Name='${SharePointFieldNames.Title}'/><FieldRef Name='${SharePointFieldNames.Email}'/><FieldRef Name='${SharePointFieldNames.JobTitle}'/><FieldRef Name='${SharePointFieldNames.BirthDate}'/><FieldRef Name='${SharePointFieldNames.HireDate}'/><FieldRef Name='${SharePointFieldNames.WorkAnniversary}'/></ViewFields>
         <RowLimit Paged='TRUE'>${rowLimit}</RowLimit></View>`;
 
         return viewXml;
@@ -105,8 +105,13 @@ export class SharePointServiceProvider {
                     return cachedAnniversariesOrNewCollaborators;
                 }
 
-                let beginDate, endDate;
-                const today = '2000-' + moment().format('MM-DD');
+                let beginDate, endDate, today;
+                if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
+                    today = '2000-' + moment().format('MM-DD');
+                }
+                else {
+                    today = moment().format('yyyy-MM-DD');
+                }
                 //const today = '2000-01-07';
                 const currentDate = moment(today).toDate();
                 const currentDatewithDaysToRetrieve = currentDate;
@@ -120,11 +125,15 @@ export class SharePointServiceProvider {
                     currentDatewithDaysToRetrieve.setDate(currentDate.getDate() - this._numberOfDaysToRetrieve);
                 }
 
-                const currentDateMidNight = '2000-' + moment(today).format('MM-DD') + 'T00:00:00Z';
-                const currentDatewithDaysToRetrieveMidNight = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD') + 'T00:00:00Z';
+                let currentDateMidNight;
+                let currentDatewithDaysToRetrieveMidNight;
 
                 //get begin and end dates to filter data
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
+
+                    currentDateMidNight = '2000-' + moment(today).format('MM-DD') + 'T00:00:00Z';
+                    currentDatewithDaysToRetrieveMidNight = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD') + 'T00:00:00Z';
+
                     beginDate = currentDateMidNight;
 
                     // check if end date should be the end of year or the current date plus days to retrieve depending on the difference between current date and end of year
@@ -142,8 +151,10 @@ export class SharePointServiceProvider {
                 }
                 else //New Collaborators
                 {
+                    currentDateMidNight = moment(today).format('yyyy-MM-DD') + 'T00:00:00Z';
+                    currentDatewithDaysToRetrieveMidNight = moment(currentDatewithDaysToRetrieve).format('yyyy-MM-DD') + 'T00:00:00Z';
                     // check if begin date should be the beginning of year or the current date minus days to retrieve depending on the difference between current date and beginning of year
-                    const begginingOfYearDate = moment('2000-01-01').toDate();
+                    const begginingOfYearDate = moment('yyyy-01-01').toDate();
 
                     let numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear: number = currentDate.getTime() - begginingOfYearDate.getTime();
                     let numberOfDaysBetweenCurrentDateAndBeginningOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear / (1000 * 60 * 60 * 24));
@@ -152,7 +163,7 @@ export class SharePointServiceProvider {
                         beginDate = currentDatewithDaysToRetrieveMidNight;
                     }
                     else {
-                        beginDate = '2000-01-01T00:00:00Z';
+                        beginDate = moment(today).format('yyyy') + '-01-01T00:00:00Z';
                     }
                     endDate = currentDateMidNight;
                 }
@@ -187,8 +198,8 @@ export class SharePointServiceProvider {
                     }
                     else //New Collaborators
                     {
-                        beginDate = '2000-' + moment(currentDatewithDaysToRetrieveMidNight).format('MM-DD') + 'T00:00:00Z';
-                        endDate = '2000-12-31T00:00:00Z';
+                        beginDate = moment(currentDatewithDaysToRetrieveMidNight).format('yyyy-MM-DD') + 'T00:00:00Z';
+                        endDate = moment(currentDatewithDaysToRetrieveMidNight).format('yyyy') + '-12-31T00:00:00Z';
                     }
                     viewXml = this.getBirthdaysWorkAnniversariesNewCollaboratorsViewXml(
                         informationType,
