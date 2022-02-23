@@ -22,7 +22,7 @@ const useMessage = (props: ComponentProps) => {
 }
 
 // Functional component
-export const Component9 = (props: ComponentProps) => {
+export const Component10 = (props: ComponentProps) => {
     
     console.log("Render funcional component");
 

@@ -14,10 +14,8 @@ const collectionList: Array<Collection> = [
     )
 ];
 
-export class NTFCollectionsListPage extends React.Component {
-    render() {
-        return (
-            <NTFCollectionList listCollections={collectionList} />
-        )
-    }
+export const NTFCollectionsListPage = () => {
+    return (
+        <NTFCollectionList listCollections={collectionList} />
+    )
 }
