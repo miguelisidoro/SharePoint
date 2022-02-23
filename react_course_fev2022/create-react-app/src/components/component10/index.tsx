@@ -4,7 +4,7 @@ type ComponentProps = {
     message: string;
 }
 
-const useMessage = (props) => {
+const useMessage = (props: ComponentProps) => {
     const [message, setMessage] = useState<string>(props.message)
     
     //componentDidMount - useEffect permite manipular lifecycle do componente

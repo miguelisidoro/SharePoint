@@ -1,26 +1,19 @@
 import React from "react";
 import { Collection } from "../../models/Collection";
-import NTFCollectionItem from "../NTFCollectionItem";
+import { NTFCollectionItem } from "../NTFCollectionItem";
 
 type NTFCollectionListProps = {
-    listCollections: Array<Collection>
+  listCollections: Array<Collection>
 }
 
-type NTFCollectionListState = {
-
-}
-
-export default class NTFCollectionList extends React.Component<NTFCollectionListProps, NTFCollectionListState>
-{
-    render() {
-        return (
-            <>
-                {
-                    this.props.listCollections.map(
-                        collection => <NTFCollectionItem collection={collection} />
-                    )
-                }
-            </>
+export const NTFCollectionList = (props: NTFCollectionListProps) => {
+  return (
+    <>
+      {
+        props.listCollections.map(
+          collection => <NTFCollectionItem collection={collection} />
         )
-    }
+      }
+    </>
+  )
 }
