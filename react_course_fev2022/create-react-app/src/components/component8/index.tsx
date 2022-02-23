@@ -1,4 +1,5 @@
 import React from "react";
+import {useParams} from "react-router-dom";
 
 type ComponentProps = {
     message: string;
@@ -16,5 +17,8 @@ type ComponentProps = {
 
 // Functional component
 export const Component8 = (props: ComponentProps) => {
-    return <h1>{props.message}</h1>;
+
+    const {defaultMessage} = useParams()
+
+    return <h1>{defaultMessage}</h1>;
 }

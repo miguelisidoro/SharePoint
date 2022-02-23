@@ -1,5 +1,5 @@
 import React from 'react';
-import NTFCollectionList from '../components/NTFCollectionList';
+import { NTFCollectionList } from '../components/NTFCollectionList';
 import { Collection } from '../models/Collection';
 
 const collectionList: Array<Collection> = [
