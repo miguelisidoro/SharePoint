@@ -24,7 +24,7 @@ export const Component9 = (props: ComponentProps) => {
     return (
         <>
             <input type="text" onChange={e => setMessage(e.target.value)} />
-            <h1>{props.message}</h1>
+            <h1>{message}</h1>
         </>
     );
 }
