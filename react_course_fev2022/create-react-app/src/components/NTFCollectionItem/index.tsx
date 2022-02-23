@@ -7,7 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
 type NTFCollectionItemProps = {
-  collection: Collection
+  collection?: Collection
 }
 
 export const NTFCollectionItem = (props: NTFCollectionItemProps) => {
@@ -15,10 +15,10 @@ export const NTFCollectionItem = (props: NTFCollectionItemProps) => {
     <>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src={props.collection.imageUrl} />
+          <Avatar alt="Remy Sharp" src={props.collection?.imageUrl} />
         </ListItemAvatar>
         <ListItemText
-          primary={props.collection.name}
+          primary={props.collection?.name}
           secondary={
             <React.Fragment>
               <Typography
@@ -27,7 +27,7 @@ export const NTFCollectionItem = (props: NTFCollectionItemProps) => {
                 variant="body2"
                 color="text.primary"
               >
-                {props.collection.description}
+                {props.collection?.description}
               </Typography>
             </React.Fragment>
           }

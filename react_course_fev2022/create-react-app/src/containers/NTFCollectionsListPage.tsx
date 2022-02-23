@@ -1,21 +1,45 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NTFCollectionList } from '../components/NTFCollectionList';
 import { Collection } from '../models/Collection';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import * as collectionsStore from '../store/collections.duck';
+import { RootState } from '../store/'
+import { NTFCollectionItem } from '../components/NTFCollectionItem';
 
-const collectionList: Array<Collection> = [
-    new Collection(
-        { name: 'Name 1', description: 'description 1', imageUrl: '/assets/1.jpg' },
-    ),
-    new Collection(
-        { name: 'Name 2', description: 'description 2', imageUrl: '/assets/2.jpg' },
-    ),
-    new Collection(
-        { name: 'Name 3', description: 'description 3', imageUrl: '/assets/3.jpg' }
-    )
-];
+const collectionList: Array<Collection> = []
+
+const useCollections = () => {
+    const dispatch = useDispatch();
+
+    const collections = useSelector((state: RootState) => state.collections.listCollections);
+
+    useEffect(() => {
+        axios.get('https://api.opensea.io/api/v1/collections?offset=0&limit=10')
+            .then(function (response) {
+                const payload = {
+                    collections: response.data.collections
+                }
+
+                dispatch(collectionsStore.actions.setCollectionList(payload))
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            })
+    }, []);
+
+    return collections;
+}
 
 export const NTFCollectionsListPage = () => {
-    return (
+
+    const collectionList = useCollections();
+
+    return <>
         <NTFCollectionList listCollections={collectionList} />
-    )
+    </>
 }
