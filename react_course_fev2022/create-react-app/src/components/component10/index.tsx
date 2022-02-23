@@ -4,8 +4,7 @@ type ComponentProps = {
     message: string;
 }
 
-// Functional component
-export const Component9 = (props: ComponentProps) => {
+const useMessage = (props) => {
     const [message, setMessage] = useState<string>(props.message)
     
     //componentDidMount - useEffect permite manipular lifecycle do componente
@@ -19,7 +18,15 @@ export const Component9 = (props: ComponentProps) => {
         console.log("Fetch data from backend - search as you type")
     }, [message]);
 
+    return {message, setMessage};
+}
+
+// Functional component
+export const Component9 = (props: ComponentProps) => {
+    
     console.log("Render funcional component");
+
+    const {message, setMessage} = useMessage(props);
 
     return (
         <>
