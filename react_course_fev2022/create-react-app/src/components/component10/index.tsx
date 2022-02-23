@@ -15,7 +15,7 @@ const useMessage = (props) => {
 
     //componentDidUpdate = [message] - semelhante a:
     useEffect(() => {
-        console.log("Fetch data from backend - search as you type")
+        console.log("Fetch data from backend - executed if message variable is changed")
     }, [message]);
 
     return {message, setMessage};
