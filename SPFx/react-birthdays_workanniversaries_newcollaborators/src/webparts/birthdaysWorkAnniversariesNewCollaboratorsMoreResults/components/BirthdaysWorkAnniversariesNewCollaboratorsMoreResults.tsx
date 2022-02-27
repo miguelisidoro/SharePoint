@@ -8,7 +8,18 @@ import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsW
 import { PersonaInformationMapper } from '../../../mappers';
 import { WebPartTitle } from '@pnp/spfx-controls-react/lib/WebPartTitle';
 import InfiniteScroll from 'react-infinite-scroller';
+import { IPersonaProps, Persona, PersonaSize } from '@fluentui/react';
+import { LivePersona } from '@pnp/spfx-controls-react/lib/controls/LivePersona';
 
+const personaProps: IPersonaProps = {
+  size: PersonaSize.size48,
+  styles: {
+    root: {
+      width: 325,
+      margin: 5,
+    },
+  },
+};
 export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState> {
 
   private sharePointServiceProvider: SharePointServiceProvider;
@@ -28,6 +39,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
     this.loadUsers = this.loadUsers.bind(this);
     this.isWebPartConfigured = this.isWebPartConfigured.bind(this);
+    this.nextPage = this.nextPage.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
@@ -62,7 +74,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
     }
   }
 
-  private async  nextPage() {
+  private async nextPage() {
     if (this.isWebPartConfigured()) {
 
       const informationType: InformationType = this.state.informationType;
@@ -85,10 +97,21 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
           <>
             <InfiniteScroll
               loadMore={this.nextPage}
-              hasMore={this.state.users !== null ? this.state.nextPageUrl : false}
+              hasMore={this.state.users !== null ? this.state.nextPageUrl.length > 0 : false}
               loader={<h4 className="loader" key={0}>Loading ...</h4>}
             >
               <>
+                {
+                  this.state.users !== null && this.state.users.map(user =>
+                    <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
+                      template={
+                        <>
+                          <Persona {...user} {...personaProps} />
+                        </>
+                      }
+                    />
+                  )
+                }
               </>
             </InfiniteScroll>
           </>
