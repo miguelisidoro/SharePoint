@@ -93,7 +93,7 @@ export class SharePointServiceProvider {
         informationType: InformationType,
         informationDisplayType: InformationDisplayType,
         rowLimit: number,
-        firstPage: boolean): Promise<PagedUserInformation> {
+        nextPageUrl: string): Promise<PagedUserInformation> {
         {
             try {
                 let cacheKey = InformationType[informationType] + "Cache";
@@ -178,7 +178,7 @@ export class SharePointServiceProvider {
 
                 //get data from SharePoint
                 const usersSharePointCurrentYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
-                    ViewXml: viewXml                
+                    ViewXml: viewXml
                 });
 
                 //usersSharePointCurrentYear.NextHref --next page, ver se preciso ir buscar dados a outros anos
@@ -188,12 +188,12 @@ export class SharePointServiceProvider {
                     //if there is enough data, map into the object we want to return
                     const mappedUsersSharePoint = UserInformationMapper.mapToUserInformations(usersSharePointCurrentYear.Row);
 
-                    //store data in cache
-                    birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, mappedUsersSharePoint);
-                    
                     const pagedUsers = new PagedUserInformation();
                     pagedUsers.users = mappedUsersSharePoint;
                     pagedUsers.nextPageUrl = usersSharePointCurrentYear.NextHref
+
+                    //store data in cache
+                    birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, pagedUsers);
 
                     return pagedUsers;
                 }
@@ -227,13 +227,13 @@ export class SharePointServiceProvider {
                     // concat the data from current year and the other year
                     const mappedUsersSharePoint = mappedUsersSharePointCurrentYear.concat(mappedUsersSharePointOtherYear);
 
-                    //store data in cache
-                    birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, mappedUsersSharePoint);
-
                     const pagedUsers = new PagedUserInformation();
                     pagedUsers.users = mappedUsersSharePoint;
                     pagedUsers.nextPageUrl = usersSharePointNextYear.NextHref
-                    
+
+                    //store data in cache
+                    birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, pagedUsers);
+
                     return pagedUsers;
                 }
             }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState } from '.';
 import { SharePointServiceProvider } from '../../../api';
 import { InformationDisplayType, InformationType } from '../../../enums';
-import { UserInformation } from '../../../models';
+import { PagedUserInformation, UserInformation } from '../../../models';
 
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartStrings';
 import { PersonaInformationMapper } from '../../../mappers';
@@ -22,6 +22,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
     this.state = {
       users: null,
+      nextPageUrl: null,
       informationType: InformationType.Birthdays,
     };
 
@@ -50,11 +51,28 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
       const informationType: InformationType = this.state.informationType;
 
-      const pagedUsers = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.MoreResults, this.props.numberOfItemsPerPage, false);
+      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.MoreResults, this.props.numberOfItemsPerPage, null);
 
       if (pagedUsers.users != null && pagedUsers.users.length > 0) {
         this.setState({
           users: pagedUsers.users,
+          nextPageUrl: pagedUsers.nextPageUrl
+        });
+      }
+    }
+  }
+
+  private async  nextPage() {
+    if (this.isWebPartConfigured()) {
+
+      const informationType: InformationType = this.state.informationType;
+
+      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.MoreResults, this.props.numberOfItemsPerPage, this.state.nextPageUrl);
+
+      if (pagedUsers.users != null && pagedUsers.users.length > 0) {
+        this.setState({
+          users: pagedUsers.users,
+          nextPageUrl: pagedUsers.nextPageUrl
         });
       }
     }
@@ -65,15 +83,14 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
       if (this.state.users !== null && this.state.users.length > 0) {
         return (
           <>
-          {/* <InfiniteScroll
-            loadMore={this.nextPage}
-            hasMore={this.state.users !== null ? this.state.users.hasNext : false}
-            loader={<h4 className="loader" key={0}>Loading ...</h4>}
-          >
-            <>
-
-            </>
-          </InfiniteScroll> */}
+            <InfiniteScroll
+              loadMore={this.nextPage}
+              hasMore={this.state.users !== null ? this.state.nextPageUrl : false}
+              loader={<h4 className="loader" key={0}>Loading ...</h4>}
+            >
+              <>
+              </>
+            </InfiniteScroll>
           </>
         );
       }

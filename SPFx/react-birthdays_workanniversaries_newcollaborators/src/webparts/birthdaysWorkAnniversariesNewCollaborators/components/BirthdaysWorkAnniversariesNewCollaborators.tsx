@@ -72,7 +72,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
 
       const informationType: InformationType = InformationType[this.props.informationType];
 
-      pagedUsers = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.TopResults, this.props.numberOfItemsToShow, false);
+      pagedUsers = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.TopResults, this.props.numberOfItemsToShow, null);
 
       if (pagedUsers.users != null && pagedUsers.users.length > 0) {
         let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(pagedUsers.users, informationType);
