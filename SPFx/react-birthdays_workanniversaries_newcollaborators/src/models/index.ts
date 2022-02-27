@@ -1,2 +1,3 @@
-export * from './UserInformation';
+export * from './PagedUserInformation';
 export * from './PersonaInformation';
+export * from './UserInformation';

@@ -8,7 +8,7 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { CacheExpiration, SharePointFieldNames } from "../constants";
 import { UserInformationMapper } from "../mappers";
-import { UserInformation } from "../models";
+import { PagedUserInformation, UserInformation } from "../models";
 import * as moment from 'moment';
 import { InformationDisplayType, InformationType } from "../enums";
 import * as localforage from "localforage";
@@ -92,16 +92,17 @@ export class SharePointServiceProvider {
     public async getAnniversariesOrNewCollaborators(
         informationType: InformationType,
         informationDisplayType: InformationDisplayType,
-        rowLimit: number): Promise<UserInformation[]> {
+        rowLimit: number,
+        firstPage: boolean): Promise<PagedUserInformation> {
         {
             try {
                 let cacheKey = InformationType[informationType] + "Cache";
 
                 //check if users are in cache and return from cache if they are
 
-                let cachedAnniversariesOrNewCollaborators: UserInformation[] = await birthdaysWorkAnniversariesNewCollaboratorsCache.getItem(cacheKey);
+                let cachedAnniversariesOrNewCollaborators: PagedUserInformation = await birthdaysWorkAnniversariesNewCollaboratorsCache.getItem(cacheKey);
 
-                if (cachedAnniversariesOrNewCollaborators !== null && cachedAnniversariesOrNewCollaborators !== undefined && cachedAnniversariesOrNewCollaborators.length > 0) {
+                if (cachedAnniversariesOrNewCollaborators !== null && cachedAnniversariesOrNewCollaborators !== undefined && cachedAnniversariesOrNewCollaborators.users.length > 0) {
                     return cachedAnniversariesOrNewCollaborators;
                 }
 
@@ -177,7 +178,7 @@ export class SharePointServiceProvider {
 
                 //get data from SharePoint
                 const usersSharePointCurrentYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
-                    ViewXml: viewXml
+                    ViewXml: viewXml                
                 });
 
                 //usersSharePointCurrentYear.NextHref --next page, ver se preciso ir buscar dados a outros anos
@@ -189,11 +190,15 @@ export class SharePointServiceProvider {
 
                     //store data in cache
                     birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, mappedUsersSharePoint);
+                    
+                    const pagedUsers = new PagedUserInformation();
+                    pagedUsers.users = mappedUsersSharePoint;
+                    pagedUsers.nextPageUrl = usersSharePointCurrentYear.NextHref
 
-                    return mappedUsersSharePoint;
+                    return pagedUsers;
                 }
                 else {
-                    //if we don't have enough data, get data from othe year (next year if birthdays or work anniversaries or previous year if new collaborators)
+                    //if we don't have enough data, get data from other year (next year if birthdays or work anniversaries or previous year if new collaborators)
                     if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                         beginDate = '2000-01-01T00:00:00Z';
                         endDate = currentDateMidNight;
@@ -225,7 +230,11 @@ export class SharePointServiceProvider {
                     //store data in cache
                     birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, mappedUsersSharePoint);
 
-                    return mappedUsersSharePoint;
+                    const pagedUsers = new PagedUserInformation();
+                    pagedUsers.users = mappedUsersSharePoint;
+                    pagedUsers.nextPageUrl = usersSharePointNextYear.NextHref
+                    
+                    return pagedUsers;
                 }
             }
             catch (error) {

@@ -7,6 +7,7 @@ import { UserInformation } from '../../../models';
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartStrings';
 import { PersonaInformationMapper } from '../../../mappers';
 import { WebPartTitle } from '@pnp/spfx-controls-react/lib/WebPartTitle';
+import InfiniteScroll from 'react-infinite-scroller';
 
 export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState> {
 
@@ -20,9 +21,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
       this.props.numberOfDaysToRetrieveForBirthdays);
 
     this.state = {
-      allUsers: null,
-      pagedUsers: null,
-      usersToShow: null,
+      users: null,
       informationType: InformationType.Birthdays,
     };
 
@@ -51,13 +50,11 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
       const informationType: InformationType = this.state.informationType;
 
-      const users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.MoreResults, this.props.numberOfItemsPerPage);
+      const pagedUsers = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.MoreResults, this.props.numberOfItemsPerPage, false);
 
-      if (users != null && users.length > 0) {
-        let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
-
+      if (pagedUsers.users != null && pagedUsers.users.length > 0) {
         this.setState({
-          allUsers: users,
+          users: pagedUsers.users,
         });
       }
     }
@@ -65,9 +62,18 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
   public render(): React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps> {
     if (this.isWebPartConfigured()) {
-      if (this.state.allUsers !== null && this.state.allUsers.length > 0) {
+      if (this.state.users !== null && this.state.users.length > 0) {
         return (
           <>
+          {/* <InfiniteScroll
+            loadMore={this.nextPage}
+            hasMore={this.state.users !== null ? this.state.users.hasNext : false}
+            loader={<h4 className="loader" key={0}>Loading ...</h4>}
+          >
+            <>
+
+            </>
+          </InfiniteScroll> */}
           </>
         );
       }
