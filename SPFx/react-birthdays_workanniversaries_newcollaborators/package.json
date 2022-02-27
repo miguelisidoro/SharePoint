@@ -10,7 +10,7 @@
     "serve": "gulp bundle --custom-serve --max_old_space_size=4096 && fast-serve"
   },
   "dependencies": {
-    "@fluentui/react": "^8.55.3",
+    "@fluentui/react": "^8.56.1",
     "@luudjanssen/localforage-cache": "0.0.4",
     "@microsoft/sp-core-library": "1.14.0",
     "@microsoft/sp-lodash-subset": "1.14.0",
@@ -22,7 +22,6 @@
     "@pnp/spfx-controls-react": "^3.7.0-beta.1834399",
     "@pnp/spfx-property-controls": "^3.5.0-beta.1864915",
     "localforage": "^1.10.0",
-    "office-ui-fabric-react": "7.174.1",
     "react": "16.13.1",
     "react-dom": "16.13.1"
   },
