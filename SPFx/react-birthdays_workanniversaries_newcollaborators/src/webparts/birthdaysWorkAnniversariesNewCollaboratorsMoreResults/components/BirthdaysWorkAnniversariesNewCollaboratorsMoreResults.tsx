@@ -11,6 +11,7 @@ import { DocumentCard, Image, Text } from '@fluentui/react';
 import { LivePersona } from '@pnp/spfx-controls-react/lib/controls/LivePersona';
 import { UserProfileInformation } from '../../../constants';
 import styles from './BirthdaysWorkAnniversariesNewCollaboratorsMoreResults.module.scss'
+import { DateHelper } from '../../../helpers';
 
 export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState> {
 
@@ -106,7 +107,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                           />
                         </div>
                         <div className="title">{user.Title}</div>
-                        <div className="jobTitle">{user.JobTitle}</div>
+                        <div className="date">{DateHelper.getUserFormattedDate(user, this.state.informationType, strings.TodayLabel)}</div>
                     </DocumentCard>
                   )
                 }
