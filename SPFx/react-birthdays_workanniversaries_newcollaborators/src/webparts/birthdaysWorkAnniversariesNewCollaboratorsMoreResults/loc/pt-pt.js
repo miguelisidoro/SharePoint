@@ -19,6 +19,7 @@ define([], function() {
     "NoBirthdaysLabel": "Não existem aniversários",
     "NoWorkAnniversariesLabel": "Não existem aniversários de empresa",
     "NoNewHiresLabel": "Não existem novos colaboradores",
-    "WebPartConfigurationMissing": "Por favor configure a web part"
+    "WebPartConfigurationMissing": "Por favor configure a web part",
+    "FilterByLabel": "Filtar por: "
   }
 });

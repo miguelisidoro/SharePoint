@@ -7,7 +7,7 @@ import { PagedUserInformation } from '../../../models';
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartStrings';
 import { WebPartTitle } from '@pnp/spfx-controls-react/lib/WebPartTitle';
 import InfiniteScroll from 'react-infinite-scroller';
-import { DocumentCard, Image, Text } from '@fluentui/react';
+import { DefaultButton, DocumentCard, Image, Text } from '@fluentui/react';
 import { LivePersona } from '@pnp/spfx-controls-react/lib/controls/LivePersona';
 import { UserProfileInformation } from '../../../constants';
 import styles from './BirthdaysWorkAnniversariesNewCollaboratorsMoreResults.module.scss'
@@ -33,6 +33,9 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
     this.loadUsers = this.loadUsers.bind(this);
     this.isWebPartConfigured = this.isWebPartConfigured.bind(this);
     this.nextPage = this.nextPage.bind(this);
+    this.setBirthdaysFilter = this.setBirthdaysFilter.bind(this);
+    this.setWorkAnniversariesFilter = this.setWorkAnniversariesFilter.bind(this);
+    this.setNewCollaboratorsFilter = this.setNewCollaboratorsFilter.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
@@ -83,11 +86,33 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
     }
   }
 
+  private setBirthdaysFilter(): void {
+    this.setState({
+      informationType: InformationType.Birthdays
+    });
+  }
+
+  private setWorkAnniversariesFilter(): void {
+    this.setState({
+      informationType: InformationType.WorkAnniversaries
+    });
+  }
+
+  private setNewCollaboratorsFilter(): void {
+    this.setState({
+      informationType: InformationType.NewCollaborators
+    });
+  }
+
   public render(): React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps> {
     if (this.isWebPartConfigured()) {
       if (this.state.users !== null && this.state.users.length > 0) {
         return (
           <>
+            {strings.FilterByLabel}
+            <button onClick={this.setBirthdaysFilter} className={styles.filterButton}>Birthdays</button>
+            <button onClick={this.setWorkAnniversariesFilter} className={styles.filterButton}>Work Anniversaries</button>
+            <button onClick={this.setNewCollaboratorsFilter} className={styles.filterButton}>New Collaborators</button>
             <InfiniteScroll
               loadMore={this.nextPage}
               hasMore={this.state.users !== null ? this.state.nextPageUrl.length > 0 : false}
@@ -97,7 +122,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                 {
                   this.state.users !== null && this.state.users.map(user =>
                     <DocumentCard>
-                        <div className="persona">
+                        <div className={styles.persona}>
                           <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
                             template={
                               <>
@@ -106,8 +131,8 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                             }
                           />
                         </div>
-                        <div className="title">{user.Title}</div>
-                        <div className="date">{DateHelper.getUserFormattedDate(user, this.state.informationType, strings.TodayLabel)}</div>
+                        <div className={styles.title}>{user.Title}</div>
+                        <div className={styles.date}>{DateHelper.getUserFormattedDate(user, this.state.informationType, strings.TodayLabel)}</div>
                     </DocumentCard>
                   )
                 }
