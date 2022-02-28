@@ -90,18 +90,21 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
     this.setState({
       informationType: InformationType.Birthdays
     });
+    this.loadUsers();
   }
 
   private setWorkAnniversariesFilter(): void {
     this.setState({
       informationType: InformationType.WorkAnniversaries
     });
+    this.loadUsers();
   }
 
   private setNewCollaboratorsFilter(): void {
     this.setState({
       informationType: InformationType.NewCollaborators
     });
+    this.loadUsers();
   }
 
   public render(): React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps> {
