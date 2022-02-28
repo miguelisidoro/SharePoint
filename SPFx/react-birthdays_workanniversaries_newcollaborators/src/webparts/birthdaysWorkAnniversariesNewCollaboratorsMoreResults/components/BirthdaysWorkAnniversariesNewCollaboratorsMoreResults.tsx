@@ -55,7 +55,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
       const informationType: InformationType = this.state.informationType;
 
-      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getPagedAnniversariesOrNewCollaborators(informationType, this.props.numberOfItemsPerPage, null);
+      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getPagedAnniversariesOrNewCollaborators(informationType,this.props.numberOfItemsPerPage, null);
 
       if (pagedUsers.users != null && pagedUsers.users.length > 0) {
         this.setState({
@@ -96,19 +96,17 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                 {
                   this.state.users !== null && this.state.users.map(user =>
                     <DocumentCard>
-                      <>
                         <div className="persona">
                           <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
                             template={
                               <>
-                                <img className={styles.roundedImage} src={`${UserProfileInformation.profilePictureUrlPrefix + user.Email}`} />
+                                <Image className={styles.roundedImage} src={`${UserProfileInformation.profilePictureUrlPrefix + user.Email}`} />
                               </>
                             }
                           />
                         </div>
                         <div className="title">{user.Title}</div>
                         <div className="jobTitle">{user.JobTitle}</div>
-                      </>
                     </DocumentCard>
                   )
                 }
