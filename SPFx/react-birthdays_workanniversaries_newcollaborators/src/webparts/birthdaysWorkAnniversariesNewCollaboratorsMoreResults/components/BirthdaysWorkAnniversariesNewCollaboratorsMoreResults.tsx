@@ -110,9 +110,9 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
         return (
           <>
             {strings.FilterByLabel}
-            <button onClick={this.setBirthdaysFilter} className={styles.filterButton}>Birthdays</button>
-            <button onClick={this.setWorkAnniversariesFilter} className={styles.filterButton}>Work Anniversaries</button>
-            <button onClick={this.setNewCollaboratorsFilter} className={styles.filterButton}>New Collaborators</button>
+            <button onClick={this.setBirthdaysFilter} className={this.state.informationType === InformationType.Birthdays ? styles.filterButtonActive : styles.filterButton}>Birthdays</button>
+            <button onClick={this.setWorkAnniversariesFilter} className={this.state.informationType === InformationType.WorkAnniversaries ? styles.filterButtonActive : styles.filterButton}>Work Anniversaries</button>
+            <button onClick={this.setNewCollaboratorsFilter} className={this.state.informationType === InformationType.NewCollaborators ? styles.filterButtonActive : styles.filterButton}>New Collaborators</button>
             <InfiniteScroll
               loadMore={this.nextPage}
               hasMore={this.state.users !== null ? this.state.nextPageUrl.length > 0 : false}
