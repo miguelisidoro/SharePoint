@@ -126,7 +126,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                           <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
                             template={
                               <>
-                                <Image className={styles.roundedImage} src={`${UserProfileInformation.profilePictureUrlPrefix + user.Email}`} />
+                                <img className={styles.roundedImage} src={`${UserProfileInformation.profilePictureUrlPrefix + user.Email}`} />
                               </>
                             }
                           />
