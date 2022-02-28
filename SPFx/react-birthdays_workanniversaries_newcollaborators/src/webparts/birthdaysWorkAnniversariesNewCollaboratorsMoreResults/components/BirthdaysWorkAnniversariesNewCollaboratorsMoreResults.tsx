@@ -59,7 +59,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
       const informationType: InformationType = this.state.informationType;
 
-      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getPagedAnniversariesOrNewCollaborators(informationType,this.props.numberOfItemsPerPage, null);
+      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getPagedAnniversariesOrNewCollaborators(informationType, this.props.numberOfItemsPerPage, null);
 
       if (pagedUsers.users != null && pagedUsers.users.length > 0) {
         this.setState({
@@ -108,37 +108,31 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
     if (this.isWebPartConfigured()) {
       if (this.state.users !== null && this.state.users.length > 0) {
         return (
-          <>
+          <div className={styles.mainContainer}>
             {strings.FilterByLabel}
             <button onClick={this.setBirthdaysFilter} className={this.state.informationType === InformationType.Birthdays ? styles.filterButtonActive : styles.filterButton}>Birthdays</button>
             <button onClick={this.setWorkAnniversariesFilter} className={this.state.informationType === InformationType.WorkAnniversaries ? styles.filterButtonActive : styles.filterButton}>Work Anniversaries</button>
             <button onClick={this.setNewCollaboratorsFilter} className={this.state.informationType === InformationType.NewCollaborators ? styles.filterButtonActive : styles.filterButton}>New Collaborators</button>
-            <InfiniteScroll
-              loadMore={this.nextPage}
-              hasMore={this.state.users !== null ? this.state.nextPageUrl.length > 0 : false}
-              loader={<h4 className="loader" key={0}>Loading ...</h4>}
-            >
-              <>
-                {
-                  this.state.users !== null && this.state.users.map(user =>
-                    <div className={styles.container}>
-                        <div className={styles.persona}>
-                          <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
-                            template={
-                              <>
-                                <img className={styles.roundedImage} src={`${UserProfileInformation.profilePictureUrlPrefix + user.Email}`} />
-                              </>
-                            }
-                          />
-                        </div>
-                        <div className={styles.title}>{user.Title}</div>
-                        <div className={styles.date}>{DateHelper.getUserFormattedDate(user, this.state.informationType, strings.TodayLabel)}</div>
+            <div className={styles.contentContainer}>
+              {
+                this.state.users !== null && this.state.users.map(user =>
+                  <div className={styles.itemContainer}>
+                    <div className={styles.persona}>
+                      <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
+                        template={
+                          <>
+                            <img className={styles.roundedImage} src={`${UserProfileInformation.profilePictureUrlPrefix + user.Email}`} />
+                          </>
+                        }
+                      />
                     </div>
-                  )
-                }
-              </>
-            </InfiniteScroll>
-          </>
+                    <div className={styles.title}>{user.Title}</div>
+                    <div className={styles.date}>{DateHelper.getUserFormattedDate(user, this.state.informationType, strings.TodayLabel)}</div>
+                  </div>
+                )
+              }
+            </div>
+          </div>
         );
       }
       else {

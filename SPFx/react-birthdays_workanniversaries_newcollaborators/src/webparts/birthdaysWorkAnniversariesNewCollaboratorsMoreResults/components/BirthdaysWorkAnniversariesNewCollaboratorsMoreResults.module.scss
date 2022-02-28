@@ -34,8 +34,18 @@
   color: white;
 }
 
-.container
+.contentContainer
 {
-  float: left;
-  width: 150px;
+  display: flex;
+  width: 250px;
+}
+
+.itemContainer
+{
+  margin: 0;
+}
+
+.mainContainer
+{
+  margin: 0;
 }
