@@ -89,22 +89,19 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
   private setBirthdaysFilter(): void {
     this.setState({
       informationType: InformationType.Birthdays
-    });
-    this.loadUsers();
+    }, () => { this.loadUsers() });
   }
 
   private setWorkAnniversariesFilter(): void {
     this.setState({
       informationType: InformationType.WorkAnniversaries
-    });
-    this.loadUsers();
+    }, () => { this.loadUsers() });
   }
 
   private setNewCollaboratorsFilter(): void {
     this.setState({
       informationType: InformationType.NewCollaborators
-    });
-    this.loadUsers();
+    }, () => { this.loadUsers() });
   }
 
   public render(): React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps> {
