@@ -121,7 +121,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
               <>
                 {
                   this.state.users !== null && this.state.users.map(user =>
-                    <DocumentCard>
+                    <div className={styles.container}>
                         <div className={styles.persona}>
                           <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
                             template={
@@ -133,7 +133,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                         </div>
                         <div className={styles.title}>{user.Title}</div>
                         <div className={styles.date}>{DateHelper.getUserFormattedDate(user, this.state.informationType, strings.TodayLabel)}</div>
-                    </DocumentCard>
+                    </div>
                   )
                 }
               </>

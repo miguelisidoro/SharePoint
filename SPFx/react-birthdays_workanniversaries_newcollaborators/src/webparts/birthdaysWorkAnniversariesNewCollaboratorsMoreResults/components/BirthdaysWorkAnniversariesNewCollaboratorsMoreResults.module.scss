@@ -5,7 +5,7 @@
 }
 
 .persona {
-  margin: 0;
+  width: 50px;
 }
 
 .title {
@@ -32,4 +32,10 @@
   margin-right: 8px;
   background-color: red;
   color: white;
+}
+
+.container
+{
+  float: left;
+  width: 150px;
 }
