@@ -242,16 +242,6 @@ export class SharePointServiceProvider {
         nextPageUrl: string): Promise<PagedUserInformation> {
         {
             try {
-                let cacheKey = InformationType[informationType] + "Cache";
-
-                //check if users are in cache and return from cache if they are
-
-                let cachedAnniversariesOrNewCollaborators: PagedUserInformation = await birthdaysWorkAnniversariesNewCollaboratorsCache.getItem(cacheKey);
-
-                if (cachedAnniversariesOrNewCollaborators !== null && cachedAnniversariesOrNewCollaborators !== undefined && cachedAnniversariesOrNewCollaborators.users.length > 0) {
-                    return cachedAnniversariesOrNewCollaborators;
-                }
-
                 let beginDate, endDate, today;
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                     today = '2000-' + moment().format('MM-DD');
@@ -338,9 +328,6 @@ export class SharePointServiceProvider {
                     pagedUsers.users = mappedUsersSharePoint;
                     pagedUsers.nextPageUrl = usersSharePointCurrentYear.NextHref
 
-                    //store data in cache
-                    birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, pagedUsers);
-
                     return pagedUsers;
                 }
                 else {
@@ -376,9 +363,6 @@ export class SharePointServiceProvider {
                     const pagedUsers = new PagedUserInformation();
                     pagedUsers.users = mappedUsersSharePoint;
                     pagedUsers.nextPageUrl = usersSharePointNextYear.NextHref
-
-                    //store data in cache
-                    birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, pagedUsers);
 
                     return pagedUsers;
                 }
