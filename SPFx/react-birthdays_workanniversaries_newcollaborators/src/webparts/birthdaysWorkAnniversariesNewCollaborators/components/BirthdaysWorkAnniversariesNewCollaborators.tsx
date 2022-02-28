@@ -4,7 +4,7 @@ import { IBirthdaysWorkAnniversariesNewCollaboratorsProps } from './IBirthdaysWo
 import { escape } from '@microsoft/sp-lodash-subset';
 
 import { SharePointServiceProvider } from '../../../api';
-import { PagedUserInformation } from '../../../models';
+import { PagedUserInformation, UserInformation } from '../../../models';
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
 
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsWebPartStrings';
@@ -68,14 +68,14 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
   private async loadUsers() {
     if (this.isWebPartConfigured()) {
 
-      let pagedUsers: PagedUserInformation = new PagedUserInformation();
+      let users: UserInformation[] = [];
 
       const informationType: InformationType = InformationType[this.props.informationType];
 
-      pagedUsers = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.TopResults, this.props.numberOfItemsToShow, null);
+      users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, this.props.numberOfItemsToShow);
 
-      if (pagedUsers.users != null && pagedUsers.users.length > 0) {
-        let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(pagedUsers.users, informationType);
+      if (users != null && users.length > 0) {
+        let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
 
         this.setState({
           users: usersPersonInformation,

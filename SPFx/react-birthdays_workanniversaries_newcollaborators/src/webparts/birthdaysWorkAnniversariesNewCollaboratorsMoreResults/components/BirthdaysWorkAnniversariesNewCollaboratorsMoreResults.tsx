@@ -63,7 +63,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
       const informationType: InformationType = this.state.informationType;
 
-      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.MoreResults, this.props.numberOfItemsPerPage, null);
+      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getPagedAnniversariesOrNewCollaborators(informationType,this.props.numberOfItemsPerPage, null);
 
       if (pagedUsers.users != null && pagedUsers.users.length > 0) {
         this.setState({
@@ -79,7 +79,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
       const informationType: InformationType = this.state.informationType;
 
-      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, InformationDisplayType.MoreResults, this.props.numberOfItemsPerPage, this.state.nextPageUrl);
+      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getPagedAnniversariesOrNewCollaborators(informationType, this.props.numberOfItemsPerPage, this.state.nextPageUrl);
 
       if (pagedUsers.users != null && pagedUsers.users.length > 0) {
         this.setState({
