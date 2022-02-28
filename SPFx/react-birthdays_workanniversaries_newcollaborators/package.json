@@ -22,6 +22,7 @@
     "@pnp/spfx-controls-react": "^3.7.0-beta.1834399",
     "@pnp/spfx-property-controls": "^3.5.0-beta.1864915",
     "localforage": "^1.10.0",
+    "office-ui-fabric-react": "^7.183.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-infinite-scroller": "^1.2.5"

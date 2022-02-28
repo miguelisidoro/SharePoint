@@ -1,25 +1,17 @@
 import * as React from 'react';
 import { IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState } from '.';
 import { SharePointServiceProvider } from '../../../api';
-import { InformationDisplayType, InformationType } from '../../../enums';
-import { PagedUserInformation, UserInformation } from '../../../models';
+import { InformationType } from '../../../enums';
+import { PagedUserInformation } from '../../../models';
 
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartStrings';
-import { PersonaInformationMapper } from '../../../mappers';
 import { WebPartTitle } from '@pnp/spfx-controls-react/lib/WebPartTitle';
 import InfiniteScroll from 'react-infinite-scroller';
-import { IPersonaProps, Persona, PersonaSize } from '@fluentui/react';
+import { DocumentCard, Image } from '@fluentui/react';
 import { LivePersona } from '@pnp/spfx-controls-react/lib/controls/LivePersona';
+import { UserProfileInformation } from '../../../constants';
+import styles from './BirthdaysWorkAnniversariesNewCollaboratorsMoreResults.module.scss'
 
-const personaProps: IPersonaProps = {
-  size: PersonaSize.size48,
-  styles: {
-    root: {
-      width: 325,
-      margin: 5,
-    },
-  },
-};
 export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState> {
 
   private sharePointServiceProvider: SharePointServiceProvider;
@@ -103,13 +95,17 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
               <>
                 {
                   this.state.users !== null && this.state.users.map(user =>
-                    <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
-                      template={
-                        <>
-                          <Persona {...user} {...personaProps} />
-                        </>
-                      }
-                    />
+                    <DocumentCard>
+                      <>
+                        <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
+                          template={
+                            <>
+                              <img className={styles.roundedImage} src={`${UserProfileInformation.profilePictureUrlPrefix + user.Email}`} />
+                            </>
+                          }
+                        />
+                      </>
+                    </DocumentCard>
                   )
                 }
               </>
