@@ -7,7 +7,7 @@ import { PagedUserInformation } from '../../../models';
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartStrings';
 import { WebPartTitle } from '@pnp/spfx-controls-react/lib/WebPartTitle';
 import InfiniteScroll from 'react-infinite-scroller';
-import { DocumentCard, Image } from '@fluentui/react';
+import { DocumentCard, Image, Text } from '@fluentui/react';
 import { LivePersona } from '@pnp/spfx-controls-react/lib/controls/LivePersona';
 import { UserProfileInformation } from '../../../constants';
 import styles from './BirthdaysWorkAnniversariesNewCollaboratorsMoreResults.module.scss'
@@ -55,7 +55,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
       const informationType: InformationType = this.state.informationType;
 
-      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getPagedAnniversariesOrNewCollaborators(informationType,this.props.numberOfItemsPerPage, null);
+      const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getPagedAnniversariesOrNewCollaborators(informationType, this.props.numberOfItemsPerPage, null);
 
       if (pagedUsers.users != null && pagedUsers.users.length > 0) {
         this.setState({
@@ -97,13 +97,17 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                   this.state.users !== null && this.state.users.map(user =>
                     <DocumentCard>
                       <>
-                        <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
-                          template={
-                            <>
-                              <img className={styles.roundedImage} src={`${UserProfileInformation.profilePictureUrlPrefix + user.Email}`} />
-                            </>
-                          }
-                        />
+                        <div className="persona">
+                          <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
+                            template={
+                              <>
+                                <img className={styles.roundedImage} src={`${UserProfileInformation.profilePictureUrlPrefix + user.Email}`} />
+                              </>
+                            }
+                          />
+                        </div>
+                        <div className="title">{user.Title}</div>
+                        <div className="jobTitle">{user.JobTitle}</div>
                       </>
                     </DocumentCard>
                   )
