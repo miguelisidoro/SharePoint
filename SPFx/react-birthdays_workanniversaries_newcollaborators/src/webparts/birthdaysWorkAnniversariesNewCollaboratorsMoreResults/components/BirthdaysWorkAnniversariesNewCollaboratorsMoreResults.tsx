@@ -15,6 +15,7 @@ import { DateHelper } from '../../../helpers';
 
 const emailImage: string = require('.../../../assets/email.png');
 const teamsImage: string = require('.../../../assets/teams.png');
+
 export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState> {
 
   private sharePointServiceProvider: SharePointServiceProvider;

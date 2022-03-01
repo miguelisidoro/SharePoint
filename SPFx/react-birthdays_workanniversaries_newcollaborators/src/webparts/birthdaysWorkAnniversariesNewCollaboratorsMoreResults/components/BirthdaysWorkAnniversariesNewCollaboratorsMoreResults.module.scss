@@ -69,7 +69,10 @@
 
 .bottomImagesContainer
 {
-  margin: 0;
+  margin-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .emailContainer
@@ -79,8 +82,10 @@
 
 .emailImage
 {
-    width: 118px;
-    height: 71px;
+    width: 20px;
+    height: 12px;
+    align-self: center;
+    margin-right: 5px;
 }
 
 .teamsContainer
@@ -90,6 +95,7 @@
 
 .teamsImage
 {
-    width: 75px;
-    height: 71px;
+    width: 20px;
+    height: 18px;
+    align-self: center;
 }
