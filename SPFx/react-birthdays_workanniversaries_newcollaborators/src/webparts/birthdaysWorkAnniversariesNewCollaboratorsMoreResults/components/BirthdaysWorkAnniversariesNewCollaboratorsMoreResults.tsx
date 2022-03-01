@@ -133,7 +133,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
               }
             </div>
             <div className={styles.bottomContainer}>
-              <button className={styles.loadMoreButton} onClick={this.loadMore}>Load more...</button>
+              <button className={styles.loadMoreButton} onClick={this.loadMore}>{strings.LoadMoreLabel}</button>
             </div>
           </div>
         );
