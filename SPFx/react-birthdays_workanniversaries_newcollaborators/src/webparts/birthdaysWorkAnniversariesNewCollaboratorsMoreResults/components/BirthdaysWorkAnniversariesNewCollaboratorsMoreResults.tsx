@@ -136,7 +136,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                         <a href={`mailto:${user.Email}`}><img src={emailImage} className={styles.emailImage} /></a>
                       </div>
                       <div className={styles.teamsContainer}>
-                        <img src={teamsImage} className={styles.teamsImage} />
+                        <a href={`https://teams.microsoft.com/l/chat/0/0?users=${user.Email}`}><img src={teamsImage} className={styles.teamsImage} /></a>
                       </div>
                     </div>
                   </div>
