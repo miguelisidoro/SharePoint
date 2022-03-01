@@ -1,4 +1,4 @@
-@import '~office-ui-fabric-react/dist/sass/References.scss';
+@import "~office-ui-fabric-react/dist/sass/References.scss";
 
 .roundedImage {
   border-radius: 50%;
@@ -17,16 +17,14 @@
   text-align: center;
 }
 
-.filterButton
-{
+.filterButton {
   cursor: pointer;
   border-radius: 24px;
   padding: 8px 12px;
   margin-right: 8px;
 }
 
-.filterButtonActive
-{
+.filterButtonActive {
   cursor: pointer;
   border-radius: 24px;
   padding: 8px 12px;
@@ -35,69 +33,72 @@
   color: white;
 }
 
-.contentContainer
-{
+.contentContainer {
   margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
 }
 
-.itemContainer
-{
+.itemContainer {
   margin-left: 10px;
   width: 20%;
   margin-bottom: 10px;
   border-top: 5px solid;
 }
 
-.mainContainer
-{
+.mainContainer {
   margin: 0;
 }
 
-.bottomContainer
-{
+.bottomContainer {
   margin-top: 10px;
   text-align: center;
 }
 
-.loadMoreButton
-{
+.loadMoreButton {
   cursor: pointer;
   border-radius: 24px;
   padding: 8px 12px;
   margin-right: 8px;
 }
 
-.bottomImagesContainer
-{
+.bottomImagesContainer {
   margin-top: 25px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.emailContainer
-{
+.emailContainer {
   margin: 0;
 }
 
-.emailImage
-{
-    width: 23px;
-    height: 14px;
-    align-self: center;
-    margin-right: 5px;
+.emailImage {
+  width: 27px;
+  height: 18px;
+  align-self: center;
+  margin-right: 5px;
+  margin-top: 2px;
 }
 
-.teamsContainer
-{
+.teamsCallImage {
+  width: 25px;
+  height: 30px;
+  align-self: center;
+  margin-right: 5px;
+}
+
+.teamsCallContainer {
   margin: 0;
 }
 
-.teamsImage
-{
-    width: 20px;
-    height: 18px;
-    align-self: center;
+.teamsChatContainer {
+  margin: 0;
+}
+
+.teamsChatImage {
+  width: 25px;
+  height: 30px;
+  align-self: center;
+  margin-right: 5px;
 }

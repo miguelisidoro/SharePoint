@@ -14,7 +14,8 @@ import styles from './BirthdaysWorkAnniversariesNewCollaboratorsMoreResults.modu
 import { DateHelper } from '../../../helpers';
 
 const emailImage: string = require('.../../../assets/email.png');
-const teamsImage: string = require('.../../../assets/teams.png');
+const teamsCallImage: string = require('.../../../assets/teams_call.png');
+const teamsChatImage: string = require('.../../../assets/teams_chat.png');
 
 export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState> {
 
@@ -133,10 +134,13 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                     <div className={styles.date}>{DateHelper.getUserFormattedDate(user, this.state.informationType, strings.TodayLabel)}</div>
                     <div className={styles.bottomImagesContainer}>
                       <div className={styles.emailContainer}>
-                        <a href={`mailto:${user.Email}`}><img src={emailImage} className={styles.emailImage} /></a>
+                        <a href={`mailto:${user.Email}`}><img alt={strings.EmailToText} title={strings.EmailToText} src={emailImage} className={styles.emailImage} /></a>
                       </div>
-                      <div className={styles.teamsContainer}>
-                        <a href={`https://teams.microsoft.com/l/chat/0/0?users=${user.Email}`}><img src={teamsImage} className={styles.teamsImage} /></a>
+                      <div className={styles.teamsCallContainer}>
+                        <a href={`https://teams.microsoft.com/l/call/0/0?users=${user.Email}`}><img alt={strings.TeamsCallText} title={strings.TeamsCallText} src={teamsCallImage} className={styles.teamsCallImage} /></a>
+                      </div>
+                      <div className={styles.teamsChatContainer}>
+                        <a href={`https://teams.microsoft.com/l/chat/0/0?users=${user.Email}`}><img alt={strings.TeamsChatText} title={strings.TeamsChatText} src={teamsChatImage} className={styles.teamsChatImage} /></a>
                       </div>
                     </div>
                   </div>

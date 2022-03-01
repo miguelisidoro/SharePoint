@@ -24,6 +24,9 @@ declare interface BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartSt
   WorkAnniversariesLabel: string;
   NewCollaboratorsLabel: string;
   LoadMoreLabel: string;
+  EmailToText: string;
+  TeamsCallText: string;
+  TeamsChatText: string;
 }
 
 declare module 'BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartStrings' {

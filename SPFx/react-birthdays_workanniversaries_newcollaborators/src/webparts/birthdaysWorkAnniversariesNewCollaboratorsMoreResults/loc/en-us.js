@@ -24,6 +24,9 @@ define([], function() {
     "BirthdaysLabel": "Birthdays",
     "WorkAnniversariesLabel": "Work Anniversaries",
     "NewCollaboratorsLabel": "New Collaborators",
-    "LoadMoreLabel": "Load more..."
+    "LoadMoreLabel": "Load more...",
+    "EmailToText": "Send an email",
+    "TeamsCallText": "Make a Microsoft Teams Call",
+    "TeamsChatText": "Chat using Microsoft Teams"
   }
 });
