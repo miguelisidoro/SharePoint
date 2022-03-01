@@ -37,12 +37,13 @@
 .contentContainer
 {
   display: flex;
-  width: 250px;
+  flex-wrap: wrap;
 }
 
 .itemContainer
 {
   margin: 0;
+  width: 20%;
 }
 
 .mainContainer
