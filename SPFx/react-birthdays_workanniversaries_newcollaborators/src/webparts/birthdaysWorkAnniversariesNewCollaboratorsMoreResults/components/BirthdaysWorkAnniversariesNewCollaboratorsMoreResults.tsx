@@ -13,6 +13,8 @@ import { UserProfileInformation } from '../../../constants';
 import styles from './BirthdaysWorkAnniversariesNewCollaboratorsMoreResults.module.scss'
 import { DateHelper } from '../../../helpers';
 
+const emailImage: string = require('.../../../assets/email.png');
+const teamsImage: string = require('.../../../assets/teams.png');
 export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState> {
 
   private sharePointServiceProvider: SharePointServiceProvider;
@@ -128,6 +130,14 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                     </div>
                     <div className={styles.title}>{user.Title}</div>
                     <div className={styles.date}>{DateHelper.getUserFormattedDate(user, this.state.informationType, strings.TodayLabel)}</div>
+                    <div className={styles.bottomImagesContainer}>
+                      <div className={styles.emailContainer}>
+                        <img src={emailImage} className={styles.emailImage} />
+                      </div>
+                      <div className={styles.teamsContainer}>
+                        <img src={teamsImage} className={styles.teamsImage} />
+                      </div>
+                    </div>
                   </div>
                 )
               }
