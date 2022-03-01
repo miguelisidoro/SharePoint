@@ -133,7 +133,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                     <div className={styles.date}>{DateHelper.getUserFormattedDate(user, this.state.informationType, strings.TodayLabel)}</div>
                     <div className={styles.bottomImagesContainer}>
                       <div className={styles.emailContainer}>
-                        <img src={emailImage} className={styles.emailImage} />
+                        <a href={`mailto:${user.Email}`}><img src={emailImage} className={styles.emailImage} /></a>
                       </div>
                       <div className={styles.teamsContainer}>
                         <img src={teamsImage} className={styles.teamsImage} />
