@@ -20,6 +20,10 @@ define([], function() {
     "NoWorkAnniversariesLabel": "Não existem aniversários de empresa",
     "NoNewHiresLabel": "Não existem novos colaboradores",
     "WebPartConfigurationMissing": "Por favor configure a web part",
-    "FilterByLabel": "Filtar por: "
+    "FilterByLabel": "Filtar por: ",
+    "BirthdaysLabel": "Aniversários",
+    "WorkAnniversariesLabel": "Aniversários Empresa",
+    "NewCollaboratorsLabel": "Novos Colaboradores",
+    "LoadMoreLabel": "Carregar mais..."
   }
 });

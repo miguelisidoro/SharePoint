@@ -20,6 +20,10 @@ declare interface BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartSt
   NoNewHiresLabel: string;
   WebPartConfigurationMissing: string;
   FilterByLabel: string;
+  BirthdaysLabel: string;
+  WorkAnniversariesLabel: string;
+  NewCollaboratorsLabel: string;
+  LoadMoreLabel: string;
 }
 
 declare module 'BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartStrings' {

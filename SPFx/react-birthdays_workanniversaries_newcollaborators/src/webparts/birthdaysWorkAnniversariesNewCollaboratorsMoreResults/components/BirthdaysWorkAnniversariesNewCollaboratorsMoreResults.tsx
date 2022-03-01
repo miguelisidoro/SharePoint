@@ -32,7 +32,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
     this.loadUsers = this.loadUsers.bind(this);
     this.isWebPartConfigured = this.isWebPartConfigured.bind(this);
-    this.nextPage = this.nextPage.bind(this);
+    this.loadMore = this.loadMore.bind(this);
     this.setBirthdaysFilter = this.setBirthdaysFilter.bind(this);
     this.setWorkAnniversariesFilter = this.setWorkAnniversariesFilter.bind(this);
     this.setNewCollaboratorsFilter = this.setNewCollaboratorsFilter.bind(this);
@@ -70,7 +70,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
     }
   }
 
-  private async nextPage() {
+  private async loadMore() {
     if (this.isWebPartConfigured()) {
 
       const informationType: InformationType = this.state.informationType;
@@ -110,9 +110,9 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
         return (
           <div className={styles.mainContainer}>
             {strings.FilterByLabel}
-            <button onClick={this.setBirthdaysFilter} className={this.state.informationType === InformationType.Birthdays ? styles.filterButtonActive : styles.filterButton}>Birthdays</button>
-            <button onClick={this.setWorkAnniversariesFilter} className={this.state.informationType === InformationType.WorkAnniversaries ? styles.filterButtonActive : styles.filterButton}>Work Anniversaries</button>
-            <button onClick={this.setNewCollaboratorsFilter} className={this.state.informationType === InformationType.NewCollaborators ? styles.filterButtonActive : styles.filterButton}>New Collaborators</button>
+            <button onClick={this.setBirthdaysFilter} className={this.state.informationType === InformationType.Birthdays ? styles.filterButtonActive : styles.filterButton}>{strings.BirthdaysLabel}</button>
+            <button onClick={this.setWorkAnniversariesFilter} className={this.state.informationType === InformationType.WorkAnniversaries ? styles.filterButtonActive : styles.filterButton}>{strings.WorkAnniversariesLabel}</button>
+            <button onClick={this.setNewCollaboratorsFilter} className={this.state.informationType === InformationType.NewCollaborators ? styles.filterButtonActive : styles.filterButton}>{strings.NewCollaboratorsLabel}</button>
             <div className={styles.contentContainer}>
               {
                 this.state.users !== null && this.state.users.map(user =>
@@ -131,6 +131,9 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                   </div>
                 )
               }
+            </div>
+            <div className={styles.bottomContainer}>
+              <button className={styles.loadMoreButton} onClick={this.loadMore}>Load more...</button>
             </div>
           </div>
         );
