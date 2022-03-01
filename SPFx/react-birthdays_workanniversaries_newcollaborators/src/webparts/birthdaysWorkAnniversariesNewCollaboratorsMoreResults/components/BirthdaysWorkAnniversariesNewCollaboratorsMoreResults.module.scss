@@ -2,6 +2,7 @@
 
 .roundedImage {
   border-radius: 50%;
+  margin-top: 10px;
 }
 
 .persona {
@@ -43,9 +44,10 @@
 
 .itemContainer
 {
-  margin: 0;
+  margin-left: 10px;
   width: 20%;
   margin-bottom: 10px;
+  border-top: 5px solid;
 }
 
 .mainContainer
@@ -69,7 +71,7 @@
 
 .bottomImagesContainer
 {
-  margin-top: 5px;
+  margin-top: 25px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
