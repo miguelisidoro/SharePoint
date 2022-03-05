@@ -1,6 +1,6 @@
+import { InformationType } from "@app/enums";
+import { UserInformation } from "@app/models";
 import * as moment from "moment";
-import { InformationType } from "../enums";
-import { UserInformation } from "../models";
 
 /// Date helper class
 export class DateHelper {

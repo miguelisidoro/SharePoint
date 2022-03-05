@@ -1,6 +1,4 @@
-import { UserProfileInformation } from '../constants';
-import { UserInformation } from '../models';
-
+import { UserInformation } from "@app/models";
 export class UserInformationMapper
 {
     public static mapToUserInformations(usersSharePoint: any[]): UserInformation[]

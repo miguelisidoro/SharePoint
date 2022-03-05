@@ -6,13 +6,13 @@ import "@pnp/graph/search";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import { CacheExpiration, SharePointFieldNames } from "../constants";
-import { UserInformationMapper } from "../mappers";
-import { PagedUserInformation, UserInformation } from "../models";
 import * as moment from 'moment';
-import { InformationDisplayType, InformationType } from "../enums";
 import * as localforage from "localforage";
 import cache from "@luudjanssen/localforage-cache";
+import { CacheExpiration, SharePointFieldNames } from "@app/constants";
+import { InformationType } from "@app/enums";
+import { PagedUserInformation, UserInformation } from "@app/models";
+import { UserInformationMapper } from "@app/mappers";
 
 const LOG_SOURCE: string = "BirthdaysWorkAnniverariesNewHires";
 

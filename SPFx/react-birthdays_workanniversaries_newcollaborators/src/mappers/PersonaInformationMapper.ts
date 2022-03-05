@@ -1,10 +1,9 @@
 import * as moment from 'moment';
-import { UserProfileInformation } from '../constants';
-import { PersonaInformation, UserInformation } from '../models';
-import { InformationType } from '../enums';
-
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsWebPartStrings';
-import { DateHelper } from '../helpers';
+import { PersonaInformation, UserInformation } from '@app/models';
+import { InformationType } from '@app/enums';
+import { DateHelper } from '@app/helpers';
+import { UserProfileInformation } from '@app/constants';
 
 export class PersonaInformationMapper {
     public static mapToPersonaInformations(users: UserInformation[], informationType: InformationType): PersonaInformation[] {

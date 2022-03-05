@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState } from '.';
-import { InformationType } from '../../../enums';
-import { PagedUserInformation } from '../../../models';
 
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPartStrings';
 import { WebPartTitle } from '@pnp/spfx-controls-react/lib/WebPartTitle';
-import InfiniteScroll from 'react-infinite-scroller';
-import { DefaultButton, DocumentCard, Image, Text } from '@fluentui/react';
 import { LivePersona } from '@pnp/spfx-controls-react/lib/controls/LivePersona';
-import { UserProfileInformation } from '../../../constants';
 import styles from './BirthdaysWorkAnniversariesNewCollaboratorsMoreResults.module.scss';
-import { DateHelper } from '../../../helpers';
 import { SharePointServiceProvider } from '@app/api';
+import { InformationType } from '@app/enums';
+import { PagedUserInformation } from '@app/models';
+import { UserProfileInformation } from '@app/constants';
+import { DateHelper } from '@app/helpers';
 
 const emailImage: string = require('.../../../assets/email.png');
 const teamsCallImage: string = require('.../../../assets/teams_call.png');
