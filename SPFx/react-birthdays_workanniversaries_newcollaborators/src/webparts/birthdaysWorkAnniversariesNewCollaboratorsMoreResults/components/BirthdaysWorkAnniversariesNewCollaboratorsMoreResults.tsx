@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState } from '.';
-import { SharePointServiceProvider } from '../../../api';
 import { InformationType } from '../../../enums';
 import { PagedUserInformation } from '../../../models';
 
@@ -12,6 +11,7 @@ import { LivePersona } from '@pnp/spfx-controls-react/lib/controls/LivePersona';
 import { UserProfileInformation } from '../../../constants';
 import styles from './BirthdaysWorkAnniversariesNewCollaboratorsMoreResults.module.scss'
 import { DateHelper } from '../../../helpers';
+import { SharePointServiceProvider } from '../../../api';
 
 const emailImage: string = require('.../../../assets/email.png');
 const teamsCallImage: string = require('.../../../assets/teams_call.png');
