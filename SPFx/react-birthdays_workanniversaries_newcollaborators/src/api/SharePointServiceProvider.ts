@@ -326,7 +326,7 @@ export class SharePointServiceProvider {
 
                     const pagedUsers = new PagedUserInformation();
                     pagedUsers.users = mappedUsersSharePoint;
-                    pagedUsers.nextPageUrl = usersSharePointCurrentYear.NextHref
+                    pagedUsers.nextPageUrl = usersSharePointCurrentYear.NextHref;
 
                     return pagedUsers;
                 }
@@ -362,7 +362,7 @@ export class SharePointServiceProvider {
 
                     const pagedUsers = new PagedUserInformation();
                     pagedUsers.users = mappedUsersSharePoint;
-                    pagedUsers.nextPageUrl = usersSharePointNextYear.NextHref
+                    pagedUsers.nextPageUrl = usersSharePointNextYear.NextHref;
 
                     return pagedUsers;
                 }

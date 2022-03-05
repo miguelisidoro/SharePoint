@@ -9,9 +9,9 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { DefaultButton, DocumentCard, Image, Text } from '@fluentui/react';
 import { LivePersona } from '@pnp/spfx-controls-react/lib/controls/LivePersona';
 import { UserProfileInformation } from '../../../constants';
-import styles from './BirthdaysWorkAnniversariesNewCollaboratorsMoreResults.module.scss'
+import styles from './BirthdaysWorkAnniversariesNewCollaboratorsMoreResults.module.scss';
 import { DateHelper } from '../../../helpers';
-import { SharePointServiceProvider } from '../../../api';
+import { SharePointServiceProvider } from '@app/api';
 
 const emailImage: string = require('.../../../assets/email.png');
 const teamsCallImage: string = require('.../../../assets/teams_call.png');
@@ -93,19 +93,19 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
   private setBirthdaysFilter(): void {
     this.setState({
       informationType: InformationType.Birthdays
-    }, () => { this.loadUsers() });
+    }, () => { this.loadUsers(); });
   }
 
   private setWorkAnniversariesFilter(): void {
     this.setState({
       informationType: InformationType.WorkAnniversaries
-    }, () => { this.loadUsers() });
+    }, () => { this.loadUsers(); });
   }
 
   private setNewCollaboratorsFilter(): void {
     this.setState({
       informationType: InformationType.NewCollaborators
-    }, () => { this.loadUsers() });
+    }, () => { this.loadUsers(); });
   }
 
   public render(): React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps> {

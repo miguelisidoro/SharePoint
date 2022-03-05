@@ -11,7 +11,7 @@ const path = require("path");
 const webpackConfig = {
   resolve: {
     alias: {
-      "@src": path.resolve(__dirname, "..", "src")
+      "@app": path.resolve(__dirname, "..", "src")
     }
   }
 }

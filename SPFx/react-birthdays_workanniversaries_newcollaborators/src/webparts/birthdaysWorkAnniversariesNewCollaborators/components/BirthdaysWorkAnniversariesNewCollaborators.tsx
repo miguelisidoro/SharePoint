@@ -3,7 +3,6 @@ import styles from './BirthdaysWorkAnniversariesNewCollaborators.module.scss';
 import { IBirthdaysWorkAnniversariesNewCollaboratorsProps } from './IBirthdaysWorkAnniversariesNewCollaboratorsProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 
-import { SharePointServiceProvider } from '../../../api';
 import { PagedUserInformation, UserInformation } from '../../../models';
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
 
@@ -20,6 +19,7 @@ import { LivePersona } from "@pnp/spfx-controls-react/lib/controls/LivePersona";
 import { IBirthdaysWorkAnniversariesNewCollaboratorsState } from './IBirthdaysWorkAnniversariesNewCollaboratorsState';
 import { PersonaInformationMapper } from '../../../mappers';
 import { InformationDisplayType, InformationType } from '../../../enums';
+import { SharePointServiceProvider } from '@app/api';
 
 const personaProps: IPersonaProps = {
   size: PersonaSize.size48,

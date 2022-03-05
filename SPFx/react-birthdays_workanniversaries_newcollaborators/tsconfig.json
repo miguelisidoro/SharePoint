@@ -26,7 +26,13 @@
       "dom",
       "es2015.collection",
       "es2015.promise"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": [
+        "src/*"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts",
