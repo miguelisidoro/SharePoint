@@ -10,10 +10,41 @@ import { InformationType } from '@app/enums';
 import { PagedUserInformation } from '@app/models';
 import { UserProfileInformation } from '@app/constants';
 import { DateHelper } from '@app/helpers';
+import { Dropdown, FontIcon, IDropdownOption, mergeStyles } from '@fluentui/react';
 
 const emailImage: string = require('.../../../assets/email.png');
 const teamsCallImage: string = require('.../../../assets/teams_call.png');
 const teamsChatImage: string = require('.../../../assets/teams_chat.png');
+
+const emailIconClass = mergeStyles({
+  fontSize: 16,
+  height: 16,
+  width: 16,
+  margin: '0 5px',
+  color: 'black'
+});
+
+const teamsIconClass = mergeStyles({
+  fontSize: 16,
+  height: 16,
+  width: 16,
+  margin: '0 5px',
+  color: '#4149B3'
+});
+
+const teamsCallIconClass = mergeStyles({
+  fontSize: 16,
+  height: 16,
+  width: 16,
+  margin: '0 5px',
+  color: '#4149B3'
+});
+
+const filterDropDownOptions = [
+  { key: 'Birthdays', text: 'Birthdays' },
+  { key: 'WorkAnniversaries', text: 'Work Anniversaries' },
+  { key: 'NewCollaborators', text: 'New Collaborators' },
+];
 
 export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState> {
 
@@ -35,9 +66,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
     this.loadUsers = this.loadUsers.bind(this);
     this.isWebPartConfigured = this.isWebPartConfigured.bind(this);
     this.loadMore = this.loadMore.bind(this);
-    this.setBirthdaysFilter = this.setBirthdaysFilter.bind(this);
-    this.setWorkAnniversariesFilter = this.setWorkAnniversariesFilter.bind(this);
-    this.setNewCollaboratorsFilter = this.setNewCollaboratorsFilter.bind(this);
+    this.onFilterChange = this.onFilterChange.bind(this);
   }
 
   public async componentDidMount(): Promise<void> {
@@ -88,33 +117,31 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
     }
   }
 
-  private setBirthdaysFilter(): void {
+  private onFilterChange(event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void {
+    const informationType: InformationType = InformationType[item.key];
     this.setState({
-      informationType: InformationType.Birthdays
+      informationType: informationType
     }, () => { this.loadUsers(); });
-  }
-
-  private setWorkAnniversariesFilter(): void {
-    this.setState({
-      informationType: InformationType.WorkAnniversaries
-    }, () => { this.loadUsers(); });
-  }
-
-  private setNewCollaboratorsFilter(): void {
-    this.setState({
-      informationType: InformationType.NewCollaborators
-    }, () => { this.loadUsers(); });
-  }
+  };
 
   public render(): React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps> {
     if (this.isWebPartConfigured()) {
       if (this.state.users !== null && this.state.users.length > 0) {
         return (
           <div className={styles.mainContainer}>
-            {strings.FilterByLabel}
-            <button onClick={this.setBirthdaysFilter} className={this.state.informationType === InformationType.Birthdays ? styles.filterButtonActive : styles.filterButton}>{strings.BirthdaysLabel}</button>
-            <button onClick={this.setWorkAnniversariesFilter} className={this.state.informationType === InformationType.WorkAnniversaries ? styles.filterButtonActive : styles.filterButton}>{strings.WorkAnniversariesLabel}</button>
-            <button onClick={this.setNewCollaboratorsFilter} className={this.state.informationType === InformationType.NewCollaborators ? styles.filterButtonActive : styles.filterButton}>{strings.NewCollaboratorsLabel}</button>
+            <div>
+              <div className={styles.fliterLabel}>
+                {strings.FilterByLabel}
+              </div>
+              <div className={styles.filterDropdownContainer}>
+                <Dropdown
+                  onChange={this.onFilterChange}
+                  placeholder="Select an option"
+                  options={filterDropDownOptions}
+                  className={styles.filterDropdown}
+                />
+              </div>
+            </div>
             <div className={styles.contentContainer}>
               {
                 this.state.users !== null && this.state.users.map(user =>
@@ -132,13 +159,19 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
                     <div className={styles.date}>{DateHelper.getUserFormattedDate(user, this.state.informationType, strings.TodayLabel)}</div>
                     <div className={styles.bottomImagesContainer}>
                       <div className={styles.emailContainer}>
-                        <a href={`mailto:${user.Email}`}><img alt={strings.EmailToText} title={strings.EmailToText} src={emailImage} className={styles.emailImage} /></a>
+                        <a href={`mailto:${user.Email}`}>
+                          <FontIcon aria-label="Compass" iconName="MailSolid" className={emailIconClass} />
+                        </a>
                       </div>
                       <div className={styles.teamsCallContainer}>
-                        <a href={`https://teams.microsoft.com/l/call/0/0?users=${user.Email}`}><img alt={strings.TeamsCallText} title={strings.TeamsCallText} src={teamsCallImage} className={styles.teamsCallImage} /></a>
+                        <a href={`https://teams.microsoft.com/l/call/0/0?users=${user.Email}`}>
+                          <FontIcon aria-label="Compass" iconName="Phone" className={teamsCallIconClass} />
+                        </a>
                       </div>
                       <div className={styles.teamsChatContainer}>
-                        <a href={`https://teams.microsoft.com/l/chat/0/0?users=${user.Email}`}><img alt={strings.TeamsChatText} title={strings.TeamsChatText} src={teamsChatImage} className={styles.teamsChatImage} /></a>
+                        <a href={`https://teams.microsoft.com/l/chat/0/0?users=${user.Email}`}>
+                          <FontIcon aria-label="Compass" iconName="TeamsLogo16" className={teamsIconClass} />
+                        </a>
                       </div>
                     </div>
                   </div>
