@@ -10,7 +10,7 @@
     "rebundle": "gulp clean && gulp build && gulp bundle",
     "serve-space": "gulp serve --max-old-space-size=8192",
     "space": "gulp serve --max-old-space-size=8192 --nobrowser",
-    "fast-serve": "gulp bundle --custom-serve --max_old_space_size=8192 && fast-serve"
+    "fast-serve": "gulp bundle --custom-serve --max_old_space_size=8192 && node -e \"console.log(`\u001b[1;33m`,'Add ?debug=true&noredir=true&debugManifestsFile=https://localhost:4321/temp/manifests.js to debug with local scripts')\" && fast-serve"
   },
   "dependencies": {
     "@fluentui/react": "^8.56.1",
