@@ -9,7 +9,8 @@
     "test": "gulp test",
     "rebundle": "gulp clean && gulp build && gulp bundle",
     "serve-space": "gulp serve --max-old-space-size=8192",
-    "serve": "gulp bundle --custom-serve --max_old_space_size=4096 && fast-serve"
+    "space": "gulp serve --max-old-space-size=8192 --nobrowser",
+    "fast-serve": "gulp bundle --custom-serve --max_old_space_size=8192 && fast-serve"
   },
   "dependencies": {
     "@fluentui/react": "^8.56.1",
