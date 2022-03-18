@@ -1,0 +1,17 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "version": "1.14.0",
+    "libraryName": "react-listview-commandset",
+    "libraryId": "0226cc92-95b4-4854-bcf9-54c636a31412",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "react-listview-commandset",
+    "solutionShortDescription": "react-listview-commandset description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "extension",
+    "extensionType": "ListViewCommandSet"
+  }
+}
