@@ -93,13 +93,13 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
               updateProperty={this.props.updateTitleProperty} />
             {
               this.state.users !== null && this.state.users.map(user =>
-                <LivePersona serviceScope={this.context.serviceScope} upn={user.userPrincipalName}
+                <LivePersona upn={user.userPrincipalName}
                   template={
                     <>
                       <Persona {...user} {...personaProps} />
                     </>
                   }
-                />
+                  serviceScope={this.context.serviceScope} />
               )
             }
             <Link href={this.props.showMoreUrl}>
