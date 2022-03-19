@@ -176,8 +176,8 @@ export class SharePointServiceProvider {
 
                 //get data from SharePoint
                 const usersSharePointCurrentYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
-                    ViewXml: viewXml
                 });
+                ViewXml: viewXml
 
                 //usersSharePointCurrentYear.NextHref --next page, ver se preciso ir buscar dados a outros anos
 
