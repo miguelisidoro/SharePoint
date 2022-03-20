@@ -99,7 +99,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
                       <Persona {...user} {...personaProps} />
                     </>
                   }
-                  serviceScope={this.context.serviceScope} />
+                  serviceScope={this.props.context.serviceScope} />
               )
             }
             <Link href={this.props.showMoreUrl}>
