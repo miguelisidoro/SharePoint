@@ -29,9 +29,9 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResultsWebPar
       {
         numberOfItemsPerPage: this.properties.numberOfItemsPerPage,
         numberOfDaysToRetrieveForBirthdays: this.properties.numberOfDaysToRetrieveForBirthdays,
-        numberOfDaysToRetrieveForWorkAnniveraries: 
+        numberOfDaysToRetrieveForWorkAnniveraries:
         this.properties.numberOfDaysToRetrieveForWorkAnniveraries,
-        numberOfDaysToRetrieveForNewCollaborators: 
+        numberOfDaysToRetrieveForNewCollaborators:
         this.properties.numberOfDaysToRetrieveForNewCollaborators,
         sharePointRelativeListUrl: this.properties.sharePointRelativeListUrl,
         context: this.context,

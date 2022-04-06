@@ -1,7 +1,6 @@
 import { UserInformation } from ".";
 
-export class PagedUserInformation
-{
+export class PagedUserInformation {
     public users: UserInformation[];
     public nextPageUrl: string;
 

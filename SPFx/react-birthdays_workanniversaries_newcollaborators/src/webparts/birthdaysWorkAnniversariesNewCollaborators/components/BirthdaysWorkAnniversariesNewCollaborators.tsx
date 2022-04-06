@@ -1,5 +1,4 @@
 import * as React from 'react';
-import styles from './BirthdaysWorkAnniversariesNewCollaborators.module.scss';
 import { IBirthdaysWorkAnniversariesNewCollaboratorsProps } from './IBirthdaysWorkAnniversariesNewCollaboratorsProps';
 
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
@@ -25,9 +24,9 @@ const personaProps: IPersonaProps = {
   styles: {
     root: {
       width: 325,
-      margin: 5,
-    },
-  },
+      margin: 5
+    }
+  }
 };
 export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsProps, IBirthdaysWorkAnniversariesNewCollaboratorsState> {
 
@@ -41,7 +40,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
       this.props.numberOfDaysToRetrieve);
 
     this.state = {
-      users: null,
+      users: null
     };
 
     this.loadUsers = this.loadUsers.bind(this);
@@ -54,8 +53,8 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
 
   /// Checkes if web part is properly configured
   private isWebPartConfigured(): boolean {
-    const isWebPartConfigured = (this.props.sharePointRelativeListUrl != null && this.props.sharePointRelativeListUrl != undefined
-      && this.props.showMoreUrl != null && this.props.showMoreUrl != undefined
+    const isWebPartConfigured = (this.props.sharePointRelativeListUrl !== null && this.props.sharePointRelativeListUrl !== undefined
+      && this.props.showMoreUrl !== null && this.props.showMoreUrl !== undefined
       && this.props.numberOfItemsToShow !== null && this.props.numberOfItemsToShow !== undefined
       && this.props.numberOfDaysToRetrieve !== null && this.props.numberOfDaysToRetrieve !== undefined
       && this.props.informationType !== null && this.props.informationType !== undefined);
@@ -73,11 +72,11 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
 
       users = await this.sharePointServiceProvider.getAnniversariesOrNewCollaborators(informationType, this.props.numberOfItemsToShow);
 
-      if (users != null && users.length > 0) {
-        let usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
+      if (users !== null && users.length > 0) {
+        const usersPersonInformation = PersonaInformationMapper.mapToPersonaInformations(users, informationType);
 
         this.setState({
-          users: usersPersonInformation,
+          users: usersPersonInformation
         });
       }
     }
@@ -93,7 +92,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
               updateProperty={this.props.updateTitleProperty} />
             {
               this.state.users !== null && this.state.users.map(user =>
-                <LivePersona upn={user.userPrincipalName}
+                <LivePersona key={user.userPrincipalName} upn={user.userPrincipalName}
                   template={
                     <>
                       <Persona {...user} {...personaProps} />
@@ -107,17 +106,14 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
             </Link>
           </>
         );
-      }
-      else {
+      } else {
         let noUsersMessage;
         const informationType: InformationType = InformationType[this.props.informationType];
         if (informationType === InformationType.Birthdays) {
           noUsersMessage = strings.NoBirthdaysLabel;
-        }
-        else if (informationType === InformationType.WorkAnniversaries) {
+        } else if (informationType === InformationType.WorkAnniversaries) {
           noUsersMessage = strings.NoWorkAnniversariesLabel;
-        }
-        else {
+        } else {
           noUsersMessage = strings.NoNewHiresLabel;
         }
         return (<div>
@@ -127,8 +123,7 @@ export default class BirthdaysWorkAnniversariesNewCollaborators extends React.Co
           {noUsersMessage}
         </div>);
       }
-    }
-    else {
+    } else {
       return (<div>
         {strings.WebPartConfigurationMissing}
       </div>);

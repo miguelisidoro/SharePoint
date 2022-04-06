@@ -1,5 +1,3 @@
-import { Log } from "@microsoft/sp-core-library";
-import { SPComponentLoader } from "@microsoft/sp-loader";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { sp } from "@pnp/sp";
 import "@pnp/graph/search";
@@ -13,8 +11,9 @@ import { CacheExpiration, SharePointFieldNames } from "@app/constants";
 import { InformationType } from "@app/enums";
 import { PagedUserInformation, UserInformation } from "@app/models";
 import { UserInformationMapper } from "@app/mappers";
+import { Log } from "@microsoft/sp-core-library";
 
-const LOG_SOURCE: string = "BirthdaysWorkAnniverariesNewHires";
+const LOG_SOURCE = "BirthdaysWorkAnniverariesNewHires";
 
 const birthdaysWorkAnniversariesNewCollaboratorsCache = cache.createInstance({
     name: "BirthdaysWorkAnniversariesNewCollaboratorsCache",
@@ -50,11 +49,9 @@ export class SharePointServiceProvider {
         let filterField;
         if (informationType === InformationType.Birthdays) {
             filterField = SharePointFieldNames.BirthDate;
-        }
-        else if (informationType === InformationType.WorkAnniversaries) {
+        } else if (informationType === InformationType.WorkAnniversaries) {
             filterField = SharePointFieldNames.WorkAnniversary;
-        }
-        else { // New Collaborators
+        } else { // New Collaborators
             filterField = SharePointFieldNames.HireDate;
         }
         const sortAscending = (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) ?
@@ -94,11 +91,11 @@ export class SharePointServiceProvider {
         rowLimit: number): Promise<UserInformation[]> {
         {
             try {
-                let cacheKey = InformationType[informationType] + "Cache";
+                const cacheKey = InformationType[informationType] + "Cache";
 
                 //check if users are in cache and return from cache if they are
 
-                let cachedAnniversariesOrNewCollaborators: UserInformation[] = await birthdaysWorkAnniversariesNewCollaboratorsCache.getItem(cacheKey);
+                const cachedAnniversariesOrNewCollaborators: UserInformation[] = await birthdaysWorkAnniversariesNewCollaboratorsCache.getItem(cacheKey);
 
                 if (cachedAnniversariesOrNewCollaborators !== null && cachedAnniversariesOrNewCollaborators !== undefined && cachedAnniversariesOrNewCollaborators.length > 0) {
                     return cachedAnniversariesOrNewCollaborators;
@@ -107,8 +104,7 @@ export class SharePointServiceProvider {
                 let beginDate, endDate, today;
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                     today = '2000-' + moment().format('MM-DD');
-                }
-                else {
+                } else {
                     today = moment().format('yyyy-MM-DD');
                 }
                 //const today = '2000-01-07';
@@ -119,8 +115,7 @@ export class SharePointServiceProvider {
                 //we cannot retrieve the whole year due to performance if we have a lot of users
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                     currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
-                }
-                else {
+                } else {
                     currentDatewithDaysToRetrieve.setDate(currentDate.getDate() - this._numberOfDaysToRetrieve);
                 }
 
@@ -129,7 +124,6 @@ export class SharePointServiceProvider {
 
                 //get begin and end dates to filter data
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
-
                     currentDateMidNight = '2000-' + moment(today).format('MM-DD') + 'T00:00:00Z';
                     currentDatewithDaysToRetrieveMidNight = '2000-' + moment(currentDatewithDaysToRetrieve).format('MM-DD') + 'T00:00:00Z';
 
@@ -138,30 +132,26 @@ export class SharePointServiceProvider {
                     // check if end date should be the end of year or the current date plus days to retrieve depending on the difference between current date and end of year
                     const endOfYearDate = moment('2000-12-31').toDate();
 
-                    let numberOfMiliSecondsBetweenCurrentDateAndEndOfYear: number = endOfYearDate.getTime() - currentDate.getTime();
-                    let numberOfDaysBetweenCurrentDateAndEndOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndEndOfYear / (1000 * 60 * 60 * 24));
+                    const numberOfMiliSecondsBetweenCurrentDateAndEndOfYear: number = endOfYearDate.getTime() - currentDate.getTime();
+                    const numberOfDaysBetweenCurrentDateAndEndOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndEndOfYear / (1000 * 60 * 60 * 24));
 
                     if (numberOfDaysBetweenCurrentDateAndEndOfYear < this._numberOfDaysToRetrieve) {
                         endDate = '2000-12-31T00:00:00Z';
-                    }
-                    else {
+                    } else {
                         endDate = currentDatewithDaysToRetrieveMidNight;
                     }
-                }
-                else //New Collaborators
-                {
+                } else { //New Collaborators
                     currentDateMidNight = moment(today).format('yyyy-MM-DD') + 'T00:00:00Z';
                     currentDatewithDaysToRetrieveMidNight = moment(currentDatewithDaysToRetrieve).format('yyyy-MM-DD') + 'T00:00:00Z';
                     // check if begin date should be the beginning of year or the current date minus days to retrieve depending on the difference between current date and beginning of year
                     const begginingOfYearDate = moment('yyyy-01-01').toDate();
 
-                    let numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear: number = currentDate.getTime() - begginingOfYearDate.getTime();
-                    let numberOfDaysBetweenCurrentDateAndBeginningOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear / (1000 * 60 * 60 * 24));
+                    const numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear: number = currentDate.getTime() - begginingOfYearDate.getTime();
+                    const numberOfDaysBetweenCurrentDateAndBeginningOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear / (1000 * 60 * 60 * 24));
 
                     if (numberOfDaysBetweenCurrentDateAndBeginningOfYear >= 0 && numberOfDaysBetweenCurrentDateAndBeginningOfYear < this._numberOfDaysToRetrieve) {
                         beginDate = currentDatewithDaysToRetrieveMidNight;
-                    }
-                    else {
+                    } else {
                         beginDate = moment(today).format('yyyy') + '-01-01T00:00:00Z';
                     }
                     endDate = currentDateMidNight;
@@ -176,8 +166,8 @@ export class SharePointServiceProvider {
 
                 //get data from SharePoint
                 const usersSharePointCurrentYear = await sp.web.getList(this._sharePointRelativeListUrl).renderListDataAsStream({
+                    ViewXml: viewXml
                 });
-                ViewXml: viewXml
 
                 //usersSharePointCurrentYear.NextHref --next page, ver se preciso ir buscar dados a outros anos
 
@@ -190,15 +180,12 @@ export class SharePointServiceProvider {
                     birthdaysWorkAnniversariesNewCollaboratorsCache.setItem(cacheKey, mappedUsersSharePoint);
 
                     return mappedUsersSharePoint;
-                }
-                else {
+                } else {
                     //if we don't have enough data, get data from othe year (next year if birthdays or work anniversaries or previous year if new collaborators)
                     if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                         beginDate = '2000-01-01T00:00:00Z';
                         endDate = currentDateMidNight;
-                    }
-                    else //New Collaborators
-                    {
+                    } else { //New Collaborators
                         beginDate = moment(currentDatewithDaysToRetrieveMidNight).format('yyyy-MM-DD') + 'T00:00:00Z';
                         endDate = moment(currentDatewithDaysToRetrieveMidNight).format('yyyy') + '-12-31T00:00:00Z';
                     }
@@ -226,8 +213,7 @@ export class SharePointServiceProvider {
 
                     return mappedUsersSharePoint;
                 }
-            }
-            catch (error) {
+            } catch (error) {
                 Log.error(LOG_SOURCE, error, this.context.serviceScope);
                 throw new Error(error.message);
             }
@@ -245,8 +231,7 @@ export class SharePointServiceProvider {
                 let beginDate, endDate, today;
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                     today = '2000-' + moment().format('MM-DD');
-                }
-                else {
+                } else {
                     today = moment().format('yyyy-MM-DD');
                 }
                 //const today = '2000-01-07';
@@ -257,8 +242,7 @@ export class SharePointServiceProvider {
                 //we cannot retrieve the whole year due to performance if we have a lot of users
                 if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                     currentDatewithDaysToRetrieve.setDate(currentDate.getDate() + this._numberOfDaysToRetrieve);
-                }
-                else {
+                } else {
                     currentDatewithDaysToRetrieve.setDate(currentDate.getDate() - this._numberOfDaysToRetrieve);
                 }
 
@@ -276,30 +260,26 @@ export class SharePointServiceProvider {
                     // check if end date should be the end of year or the current date plus days to retrieve depending on the difference between current date and end of year
                     const endOfYearDate = moment('2000-12-31').toDate();
 
-                    let numberOfMiliSecondsBetweenCurrentDateAndEndOfYear: number = endOfYearDate.getTime() - currentDate.getTime();
-                    let numberOfDaysBetweenCurrentDateAndEndOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndEndOfYear / (1000 * 60 * 60 * 24));
+                    const numberOfMiliSecondsBetweenCurrentDateAndEndOfYear: number = endOfYearDate.getTime() - currentDate.getTime();
+                    const numberOfDaysBetweenCurrentDateAndEndOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndEndOfYear / (1000 * 60 * 60 * 24));
 
                     if (numberOfDaysBetweenCurrentDateAndEndOfYear < this._numberOfDaysToRetrieve) {
                         endDate = '2000-12-31T00:00:00Z';
-                    }
-                    else {
+                    } else {
                         endDate = currentDatewithDaysToRetrieveMidNight;
                     }
-                }
-                else //New Collaborators
-                {
+                } else { //New Collaborators
                     currentDateMidNight = moment(today).format('yyyy-MM-DD') + 'T00:00:00Z';
                     currentDatewithDaysToRetrieveMidNight = moment(currentDatewithDaysToRetrieve).format('yyyy-MM-DD') + 'T00:00:00Z';
                     // check if begin date should be the beginning of year or the current date minus days to retrieve depending on the difference between current date and beginning of year
                     const begginingOfYearDate = moment('yyyy-01-01').toDate();
 
-                    let numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear: number = currentDate.getTime() - begginingOfYearDate.getTime();
-                    let numberOfDaysBetweenCurrentDateAndBeginningOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear / (1000 * 60 * 60 * 24));
+                    const numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear: number = currentDate.getTime() - begginingOfYearDate.getTime();
+                    const numberOfDaysBetweenCurrentDateAndBeginningOfYear: number = Math.ceil(numberOfMiliSecondsBetweenCurrentDateAndBeginningOfYear / (1000 * 60 * 60 * 24));
 
                     if (numberOfDaysBetweenCurrentDateAndBeginningOfYear >= 0 && numberOfDaysBetweenCurrentDateAndBeginningOfYear < this._numberOfDaysToRetrieve) {
                         beginDate = currentDatewithDaysToRetrieveMidNight;
-                    }
-                    else {
+                    } else {
                         beginDate = moment(today).format('yyyy') + '-01-01T00:00:00Z';
                     }
                     endDate = currentDateMidNight;
@@ -329,15 +309,12 @@ export class SharePointServiceProvider {
                     pagedUsers.nextPageUrl = usersSharePointCurrentYear.NextHref;
 
                     return pagedUsers;
-                }
-                else {
+                } else {
                     //if we don't have enough data, get data from other year (next year if birthdays or work anniversaries or previous year if new collaborators)
                     if (informationType === InformationType.Birthdays || informationType === InformationType.WorkAnniversaries) {
                         beginDate = '2000-01-01T00:00:00Z';
                         endDate = currentDateMidNight;
-                    }
-                    else //New Collaborators
-                    {
+                    } else { //New Collaborators
                         beginDate = moment(currentDatewithDaysToRetrieveMidNight).format('yyyy-MM-DD') + 'T00:00:00Z';
                         endDate = moment(currentDatewithDaysToRetrieveMidNight).format('yyyy') + '-12-31T00:00:00Z';
                     }
@@ -366,8 +343,7 @@ export class SharePointServiceProvider {
 
                     return pagedUsers;
                 }
-            }
-            catch (error) {
+            } catch (error) {
                 Log.error(LOG_SOURCE, error, this.context.serviceScope);
                 throw new Error(error.message);
             }

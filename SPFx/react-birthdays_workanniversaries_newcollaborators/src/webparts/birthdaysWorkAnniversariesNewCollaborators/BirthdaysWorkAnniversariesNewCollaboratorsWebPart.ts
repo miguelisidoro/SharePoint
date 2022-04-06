@@ -8,7 +8,7 @@ import {
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 
 import {
-  PropertyPaneDropdown,
+  PropertyPaneDropdown
 } from '@microsoft/sp-property-pane';
 
 import { PropertyFieldNumber } from '@pnp/spfx-property-controls/lib/PropertyFieldNumber';
@@ -95,10 +95,10 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsWebPart extends B
                 }),
                 PropertyPaneDropdown('informationType', {
                   label: strings.InformationTypeLabel,
-                  options: [ 
-                    { key: 'Birthdays', text: strings.BirthdaysInformationTypeLabel }, 
-                    { key: 'WorkAnniversaries', text: strings.WorkAnniversariesInformationTypeLabel }, 
-                    { key: 'NewCollaborators', text: strings.NewCollaboratorsInformationTypeLabel }, 
+                  options: [
+                    { key: 'Birthdays', text: strings.BirthdaysInformationTypeLabel },
+                    { key: 'WorkAnniversaries', text: strings.WorkAnniversariesInformationTypeLabel },
+                    { key: 'NewCollaborators', text: strings.NewCollaboratorsInformationTypeLabel }
                   ]})
               ]
             }

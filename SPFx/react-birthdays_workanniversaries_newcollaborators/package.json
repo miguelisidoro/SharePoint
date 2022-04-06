@@ -38,8 +38,13 @@
     "@types/react": "16.9.51",
     "@types/react-dom": "16.9.8",
     "@types/webpack-env": "1.14.0",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
     "ajv": "~5.2.2",
+    "eslint": "^8.12.0",
+    "eslint-plugin-react": "^7.29.4",
     "gulp": "~4.0.2",
+    "gulp-eslint7": "^0.3.2",
     "spfx-fast-serve-helpers": "~1.14.0"
   }
 }

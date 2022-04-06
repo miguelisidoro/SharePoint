@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import * as strings from 'BirthdaysWorkAnniversariesNewCollaboratorsWebPartStrings';
 import { PersonaInformation, UserInformation } from '@app/models';
 import { InformationType } from '@app/enums';
@@ -10,16 +9,11 @@ export class PersonaInformationMapper {
         const mappedPersonas = users.map(user => {
             let secondaryText: string;
 
-            if (informationType === InformationType.Birthdays)
-            {
+            if (informationType === InformationType.Birthdays) {
                 secondaryText = DateHelper.isDateToday(user.BirthDate) ? strings.TodayLabel : DateHelper.formatDateToString(user.BirthDate);
-            }
-            else if (informationType === InformationType.WorkAnniversaries)
-            {
+            } else if (informationType === InformationType.WorkAnniversaries) {
                 secondaryText = DateHelper.isDateToday(user.WorkAnniversary) ? strings.TodayLabel : DateHelper.formatDateToString(user.WorkAnniversary);
-            }
-            else //New Collaborators
-            {
+            } else { //New Collaborators
                 secondaryText = DateHelper.isDateToday(user.HireDate) ? strings.TodayLabel : DateHelper.formatDateToString(user.HireDate);
             }
 
@@ -27,7 +21,7 @@ export class PersonaInformationMapper {
                 imageUrl: UserProfileInformation.profilePictureUrlPrefix + user.Email,
                 text: user.Title,
                 secondaryText: secondaryText,
-                userPrincipalName: user.Email,
+                userPrincipalName: user.Email
             });
         });
 

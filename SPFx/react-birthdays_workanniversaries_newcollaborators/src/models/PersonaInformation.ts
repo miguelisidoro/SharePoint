@@ -1,5 +1,4 @@
-export class PersonaInformation
-{
+export class PersonaInformation {
     public imageUrl: string;
     public text: string;
     public secondaryText: string;

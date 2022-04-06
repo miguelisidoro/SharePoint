@@ -1,5 +1,4 @@
-export class UserInformation
-{
+export class UserInformation {
     public Title: string;
     public Email: string;
     public JobTitle: string;

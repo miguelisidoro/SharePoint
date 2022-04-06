@@ -24,12 +24,9 @@ export class DateHelper {
         let formattedDate;
         if (informationType === InformationType.Birthdays) {
             formattedDate = DateHelper.isDateToday(user.BirthDate) ? todayDateAsString : DateHelper.formatDateToString(user.BirthDate);
-        }
-        else if (informationType === InformationType.WorkAnniversaries) {
+        } else if (informationType === InformationType.WorkAnniversaries) {
             formattedDate = DateHelper.isDateToday(user.WorkAnniversary) ? todayDateAsString : DateHelper.formatDateToString(user.WorkAnniversary);
-        }
-        else //New Collaborators
-        {
+        } else { //New Collaborators
             formattedDate = DateHelper.isDateToday(user.HireDate) ? todayDateAsString : DateHelper.formatDateToString(user.HireDate);
         }
 

@@ -1,0 +1,68 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module",
+      "project": "./tsconfig.json",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    },
+    "ignorePatterns": [
+      "*.js",
+      "*.d.ts"
+    ],
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended"
+    ],
+    "rules": {
+      "eqeqeq": "error",
+      "guard-for-in": "error",
+      "no-nonoctal-decimal-escape": "error",
+      "no-unsafe-optional-chaining": "error",
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-prototype-builtins": "off",
+      "comma-dangle": "warn",
+      "semi": "off",
+      "no-trailing-spaces": "warn",
+      "brace-style": "warn",
+      "@typescript-eslint/semi": [
+        "warn"
+      ],
+      "@typescript-eslint/ban-ts-comment": [
+        "error",
+        {
+          "ts-ignore": "allow-with-description"
+        }
+      ],
+      "@typescript-eslint/no-empty-interface": "off",
+      "@typescript-eslint/no-empty-function": [
+        "error",
+        {
+          "allow": [
+            "constructors"
+          ]
+        }
+      ],
+      "react/prop-types": [
+        "error",
+        {
+          "ignore": [
+            "children"
+          ]
+        }
+      ]
+    }
+  }  

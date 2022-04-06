@@ -12,10 +12,6 @@ import { UserProfileInformation } from '@app/constants';
 import { DateHelper } from '@app/helpers';
 import { Dropdown, FontIcon, IDropdownOption, mergeStyles } from '@fluentui/react';
 
-const emailImage: string = require('.../../../assets/email.png');
-const teamsCallImage: string = require('.../../../assets/teams_call.png');
-const teamsChatImage: string = require('.../../../assets/teams_chat.png');
-
 const emailIconClass = mergeStyles({
   fontSize: 16,
   height: 16,
@@ -43,7 +39,7 @@ const teamsCallIconClass = mergeStyles({
 const filterDropDownOptions = [
   { key: 'Birthdays', text: 'Birthdays' },
   { key: 'WorkAnniversaries', text: 'Work Anniversaries' },
-  { key: 'NewCollaborators', text: 'New Collaborators' },
+  { key: 'NewCollaborators', text: 'New Collaborators' }
 ];
 
 export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults extends React.Component<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps, IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsState> {
@@ -60,7 +56,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
     this.state = {
       users: null,
       nextPageUrl: null,
-      informationType: InformationType.Birthdays,
+      informationType: InformationType.Birthdays
     };
 
     this.loadUsers = this.loadUsers.bind(this);
@@ -75,8 +71,8 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
   /// Checkes if web part is properly configured
   private isWebPartConfigured(): boolean {
-    const isWebPartConfigured = (this.props.sharePointRelativeListUrl != null && this.props.sharePointRelativeListUrl != undefined
-      && this.props.numberOfDaysToRetrieveForBirthdays != null && this.props.numberOfDaysToRetrieveForBirthdays != undefined
+    const isWebPartConfigured = (this.props.sharePointRelativeListUrl !== null && this.props.sharePointRelativeListUrl !== undefined
+      && this.props.numberOfDaysToRetrieveForBirthdays !== null && this.props.numberOfDaysToRetrieveForBirthdays !== undefined
       && this.props.numberOfDaysToRetrieveForNewCollaborators !== null && this.props.numberOfDaysToRetrieveForNewCollaborators !== undefined
       && this.props.numberOfDaysToRetrieveForWorkAnniveraries !== null && this.props.numberOfDaysToRetrieveForWorkAnniveraries !== undefined
       && this.props.numberOfItemsPerPage !== null && this.props.numberOfItemsPerPage !== undefined);
@@ -92,7 +88,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
       const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getPagedAnniversariesOrNewCollaborators(informationType, this.props.numberOfItemsPerPage, null);
 
-      if (pagedUsers.users != null && pagedUsers.users.length > 0) {
+      if (pagedUsers.users !== null && pagedUsers.users.length > 0) {
         this.setState({
           users: pagedUsers.users,
           nextPageUrl: pagedUsers.nextPageUrl
@@ -108,7 +104,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
 
       const pagedUsers: PagedUserInformation = await this.sharePointServiceProvider.getPagedAnniversariesOrNewCollaborators(informationType, this.props.numberOfItemsPerPage, this.state.nextPageUrl);
 
-      if (pagedUsers.users != null && pagedUsers.users.length > 0) {
+      if (pagedUsers.users !== null && pagedUsers.users.length > 0) {
         this.setState({
           users: pagedUsers.users,
           nextPageUrl: pagedUsers.nextPageUrl
@@ -121,8 +117,10 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
     const informationType: InformationType = InformationType[item.key];
     this.setState({
       informationType: informationType
-    }, () => { this.loadUsers(); });
-  };
+    }, () => {
+      this.loadUsers();
+    });
+  }
 
   public render(): React.ReactElement<IBirthdaysWorkAnniversariesNewCollaboratorsMoreResultsProps> {
     if (this.isWebPartConfigured()) {
@@ -145,7 +143,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
             <div className={styles.contentContainer}>
               {
                 this.state.users !== null && this.state.users.map(user =>
-                  <div className={styles.itemContainer}>
+                  <div key={user.Email} className={styles.itemContainer}>
                     <div className={styles.persona}>
                       <LivePersona serviceScope={this.context.serviceScope} upn={user.Email}
                         template={
@@ -183,17 +181,14 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
             </div>
           </div>
         );
-      }
-      else {
+      } else {
         let noUsersMessage;
         const informationType: InformationType = this.state.informationType;
         if (informationType === InformationType.Birthdays) {
           noUsersMessage = strings.NoBirthdaysLabel;
-        }
-        else if (informationType === InformationType.WorkAnniversaries) {
+        } else if (informationType === InformationType.WorkAnniversaries) {
           noUsersMessage = strings.NoWorkAnniversariesLabel;
-        }
-        else {
+        } else {
           noUsersMessage = strings.NoNewHiresLabel;
         }
         return (<div>
@@ -203,8 +198,7 @@ export default class BirthdaysWorkAnniversariesNewCollaboratorsMoreResults exten
           {noUsersMessage}
         </div>);
       }
-    }
-    else {
+    } else {
       return (<div>
         {strings.WebPartConfigurationMissing}
       </div>);
