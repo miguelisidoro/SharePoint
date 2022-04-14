@@ -4,13 +4,17 @@
   "private": true,
   "main": "lib/index.js",
   "scripts": {
-    "build": "gulp bundle",
+    "build": "gulp bundle --max_old_space_size=8192",
     "clean": "gulp clean",
     "test": "gulp test",
-    "rebundle": "gulp clean && gulp build && gulp bundle",
+    "rebundle": "gulp clean && gulp build && gulp bundle --max_old_space_size=8192",
     "serve-space": "gulp serve --max-old-space-size=8192",
-    "space": "gulp serve --max-old-space-size=8192 --nobrowser",
-    "fast-serve": "gulp bundle --custom-serve --max_old_space_size=8192 && fast-serve"
+    "serve": "gulp serve --max-old-space-size=8192 --nobrowser",
+    "fast-serve": "gulp bundle --custom-serve --max_old_space_size=8192 && fast-serve",
+    "eslint": "eslint .",
+    "eslint-fix": "eslint . --fix",
+    "depcruise": "depcruise --exclude \"^node_modules\" --max-depth 2 --output-type dot src | dot -T svg > dependencygraph-depth2.svg"
+
   },
   "dependencies": {
     "@fluentui/react": "^8.56.1",
