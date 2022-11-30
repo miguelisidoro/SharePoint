@@ -29,6 +29,7 @@
     "@pnp/spfx-controls-react": "^3.7.0",
     "@pnp/spfx-property-controls": "^3.6.0",
     "localforage": "^1.10.0",
+    "moment": "^2.29.4",
     "office-ui-fabric-react": "^7.183.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
