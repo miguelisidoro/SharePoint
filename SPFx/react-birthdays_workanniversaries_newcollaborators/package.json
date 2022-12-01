@@ -13,7 +13,8 @@
     "fast-serve": "gulp bundle --custom-serve --max_old_space_size=8192 && fast-serve",
     "eslint": "eslint .",
     "eslint-fix": "eslint . --fix",
-    "depcruise": "depcruise --exclude \"^node_modules\" --max-depth 2 --output-type dot src | dot -T svg > dependencygraph-depth2.svg"
+    "depcruise": "depcruise --exclude \"^node_modules\" --max-depth 2 --output-type dot src | dot -T svg > dependencygraph-depth2.svg",
+    "pnpm": "pnpm install --shamefully-hoist=true"
   },
   "dependencies": {
     "@fluentui/react": "^8.56.1",
