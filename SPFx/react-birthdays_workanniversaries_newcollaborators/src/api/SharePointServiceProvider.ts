@@ -30,7 +30,7 @@ export class SharePointServiceProvider {
 
         // Setup Context to PnP JS
         sp.setup({
-            spfxContext: this.context
+            spfxContext: this.context as any
         });
 
         localforage.config({
